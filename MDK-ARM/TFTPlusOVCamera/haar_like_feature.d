@@ -1,0 +1,10 @@
+tftplusovcamera\haar_like_feature.o: ..\External\face_detection\Src\haar_like_feature.c
+tftplusovcamera\haar_like_feature.o: ..\External\face_detection\Inc\haar_like_feature.h
+tftplusovcamera\haar_like_feature.o: ..\External\face_detection\Inc\haar_like_feature_defs.h
+tftplusovcamera\haar_like_feature.o: ..\External\face_detection\Inc\face_detection_defs.h
+tftplusovcamera\haar_like_feature.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+tftplusovcamera\haar_like_feature.o: ..\External\face_detection\Inc\integral_image.h
+tftplusovcamera\haar_like_feature.o: ..\External\face_detection\Inc\integral_image_defs.h
+tftplusovcamera\haar_like_feature.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+tftplusovcamera\haar_like_feature.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+tftplusovcamera\haar_like_feature.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
