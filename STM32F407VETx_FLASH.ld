@@ -131,6 +131,15 @@ SECTIONS
     PROVIDE_HIDDEN (__fini_array_end = .);
   } >FLASH
 
+  _start_classifiers_load = LOADADDR(.classifiers);
+
+  .classifiers :
+  {
+    . = ALIGN(4);
+    KEEP(*lbpcascade_frontalface_integer.o)
+    . = ALIGN(4);
+  } >CCMRAM AT> FLASH
+
   /* used by the startup to initialize data */
   _sidata = LOADADDR(.data);
 
@@ -160,7 +169,7 @@ SECTIONS
     _sccmram = .;       /* create a global symbol at ccmram start */
     *(.ccmram)
     *(.ccmram*)
-    
+
     . = ALIGN(4);
     _eccmram = .;       /* create a global symbol at ccmram end */
   } >CCMRAM AT> FLASH

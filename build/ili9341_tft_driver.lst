@@ -1,4 +1,4 @@
-ARM GAS  /tmp/ccwLNTjC.s 			page 1
+ARM GAS  /tmp/ccS19chs.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -58,7 +58,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
   29:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** static inline bool is_not_safe_call(void *const function_ptr);
   30:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** static ili9341_tft_driver_status io_init(void);
   31:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** __attribute__((always_inline))
-ARM GAS  /tmp/ccwLNTjC.s 			page 2
+ARM GAS  /tmp/ccS19chs.s 			page 2
 
 
   32:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** static inline ili9341_tft_driver_status io_write_data(uint16_t data);
@@ -118,7 +118,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
   86:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** }
   87:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** 
   88:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** static void ili9341_send_default_registers()
-ARM GAS  /tmp/ccwLNTjC.s 			page 3
+ARM GAS  /tmp/ccS19chs.s 			page 3
 
 
   89:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** {
@@ -178,7 +178,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
   28              		.loc 1 142 1 view -0
   29              		.cfi_startproc
   30              		@ args = 0, pretend = 0, frame = 0
-ARM GAS  /tmp/ccwLNTjC.s 			page 4
+ARM GAS  /tmp/ccS19chs.s 			page 4
 
 
   31              		@ frame_needed = 0, uses_anonymous_args = 0
@@ -238,7 +238,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  187:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** 		area->end > ILI9341_HRES ||
  188:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** 		area->top > area->bottom ||
  189:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** 		area->bottom > ILI9341_VRES;
-ARM GAS  /tmp/ccwLNTjC.s 			page 5
+ARM GAS  /tmp/ccS19chs.s 			page 5
 
 
  190:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** }
@@ -298,7 +298,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  244:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** 		status |= io_write_data(color);
  245:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** 	
  246:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** 	return status;
-ARM GAS  /tmp/ccwLNTjC.s 			page 6
+ARM GAS  /tmp/ccS19chs.s 			page 6
 
 
  247:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** }
@@ -358,7 +358,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  301:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** 
  302:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** static ili9341_draw_area ili9341_get_max_area()
  303:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** {
-ARM GAS  /tmp/ccwLNTjC.s 			page 7
+ARM GAS  /tmp/ccS19chs.s 			page 7
 
 
  304:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** 	return (ili9341_draw_area) {
@@ -418,7 +418,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  315:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** }
   54              		.loc 1 315 27 is_stmt 0 view .LVU7
   55 0008 13B1     		cbz	r3, .L1
-ARM GAS  /tmp/ccwLNTjC.s 			page 8
+ARM GAS  /tmp/ccS19chs.s 			page 8
 
 
  315:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** }
@@ -478,7 +478,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
   99              		.loc 1 188 28 view .LVU18
  100 0004 9A42     		cmp	r2, r3
  101 0006 0AD8     		bhi	.L8
-ARM GAS  /tmp/ccwLNTjC.s 			page 9
+ARM GAS  /tmp/ccS19chs.s 			page 9
 
 
  186:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** 		area->end > ILI9341_HRES ||
@@ -538,7 +538,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  188:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** 		area->bottom > ILI9341_VRES;
  143              		.loc 1 188 28 discriminator 3 view .LVU32
  144 002a 0020     		movs	r0, #0
-ARM GAS  /tmp/ccwLNTjC.s 			page 10
+ARM GAS  /tmp/ccS19chs.s 			page 10
 
 
  145              	.LVL13:
@@ -598,7 +598,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  192              		.loc 1 315 2 view .LVU41
  315:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** }
  193              		.loc 1 315 27 is_stmt 0 view .LVU42
-ARM GAS  /tmp/ccwLNTjC.s 			page 11
+ARM GAS  /tmp/ccS19chs.s 			page 11
 
 
  194 000c 43B3     		cbz	r3, .L18
@@ -658,7 +658,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  315:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** }
  236              		.loc 1 315 27 discriminator 2 view .LVU58
  237 0020 22B3     		cbz	r2, .L21
-ARM GAS  /tmp/ccwLNTjC.s 			page 12
+ARM GAS  /tmp/ccS19chs.s 			page 12
 
 
  238              	.LVL23:
@@ -718,7 +718,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  277              		.loc 1 315 27 discriminator 2 view .LVU73
  278 0032 FAB1     		cbz	r2, .L23
  279              	.LVL29:
-ARM GAS  /tmp/ccwLNTjC.s 			page 13
+ARM GAS  /tmp/ccS19chs.s 			page 13
 
 
  315:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** }
@@ -778,7 +778,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  319 0044 D2B1     		cbz	r2, .L25
  320              	.LVL35:
  315:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** }
-ARM GAS  /tmp/ccwLNTjC.s 			page 14
+ARM GAS  /tmp/ccS19chs.s 			page 14
 
 
  321              		.loc 1 315 27 discriminator 2 view .LVU89
@@ -838,7 +838,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  361              	.LVL41:
  315:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** }
  362              		.loc 1 315 27 discriminator 2 view .LVU104
-ARM GAS  /tmp/ccwLNTjC.s 			page 15
+ARM GAS  /tmp/ccS19chs.s 			page 15
 
 
  363              	.LBE320:
@@ -898,7 +898,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  332:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** 	
  407              		.loc 1 332 10 view .LVU115
  408              	.LBE306:
-ARM GAS  /tmp/ccwLNTjC.s 			page 16
+ARM GAS  /tmp/ccS19chs.s 			page 16
 
 
  409              	.LBE323:
@@ -958,7 +958,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  459              		.thumb
  460              		.thumb_func
  462              	ili9341_write_y_coordinates:
-ARM GAS  /tmp/ccwLNTjC.s 			page 17
+ARM GAS  /tmp/ccS19chs.s 			page 17
 
 
  463              	.LVL53:
@@ -1018,7 +1018,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  345:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** 	
  506              		.loc 1 345 2 is_stmt 1 view .LVU132
  507 0010 2B20     		movs	r0, #43
-ARM GAS  /tmp/ccwLNTjC.s 			page 18
+ARM GAS  /tmp/ccS19chs.s 			page 18
 
 
  508              	.LVL57:
@@ -1078,7 +1078,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  336:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** }
  550              		.loc 1 336 2 view .LVU148
  336:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** }
-ARM GAS  /tmp/ccwLNTjC.s 			page 19
+ARM GAS  /tmp/ccS19chs.s 			page 19
 
 
  551              		.loc 1 336 9 is_stmt 0 view .LVU149
@@ -1138,7 +1138,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  591              		.loc 1 336 2 view .LVU163
  336:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** }
  592              		.loc 1 336 9 is_stmt 0 view .LVU164
-ARM GAS  /tmp/ccwLNTjC.s 			page 20
+ARM GAS  /tmp/ccS19chs.s 			page 20
 
 
  593 0036 0023     		movs	r3, #0
@@ -1198,7 +1198,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  336:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** }
  633              		.loc 1 336 9 is_stmt 0 view .LVU179
  634 0048 0023     		movs	r3, #0
-ARM GAS  /tmp/ccwLNTjC.s 			page 21
+ARM GAS  /tmp/ccS19chs.s 			page 21
 
 
  635              	.L35:
@@ -1258,7 +1258,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  674              		.loc 1 336 9 is_stmt 0 view .LVU194
  675 005a 0020     		movs	r0, #0
  676              	.L36:
-ARM GAS  /tmp/ccwLNTjC.s 			page 22
+ARM GAS  /tmp/ccS19chs.s 			page 22
 
 
  677              	.LVL82:
@@ -1318,7 +1318,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  723              	.L43:
  332:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** 	
  724              		.loc 1 332 10 view .LVU203
-ARM GAS  /tmp/ccwLNTjC.s 			page 23
+ARM GAS  /tmp/ccS19chs.s 			page 23
 
 
  725              	.LBE341:
@@ -1378,7 +1378,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  775              		.loc 1 288 2 view .LVU209
  288:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** }
  776              		.loc 1 288 14 is_stmt 0 view .LVU210
-ARM GAS  /tmp/ccwLNTjC.s 			page 24
+ARM GAS  /tmp/ccS19chs.s 			page 24
 
 
  777 0000 4288     		ldrh	r2, [r0, #2]
@@ -1438,7 +1438,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  310:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** 
  821              		.loc 1 310 1 view .LVU223
  822 000a 1846     		mov	r0, r3
-ARM GAS  /tmp/ccwLNTjC.s 			page 25
+ARM GAS  /tmp/ccS19chs.s 			page 25
 
 
  823 000c 7047     		bx	lr
@@ -1498,7 +1498,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  325:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** }
  870              		.loc 1 325 2 view .LVU233
  325:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** }
-ARM GAS  /tmp/ccwLNTjC.s 			page 26
+ARM GAS  /tmp/ccS19chs.s 			page 26
 
 
  871              		.loc 1 325 9 is_stmt 0 view .LVU234
@@ -1558,7 +1558,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  908              		.cfi_offset 3, -8
  909              		.cfi_offset 14, -4
  365:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** 	if (is_not_safe_call(io_struct->io_delay))
-ARM GAS  /tmp/ccwLNTjC.s 			page 27
+ARM GAS  /tmp/ccS19chs.s 			page 27
 
 
  910              		.loc 1 365 2 is_stmt 1 view .LVU239
@@ -1618,7 +1618,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  366:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** 		return ILI9341_ERROR;
  950              		.loc 1 366 10 view .LVU253
  951 0018 FAE7     		b	.L62
-ARM GAS  /tmp/ccwLNTjC.s 			page 28
+ARM GAS  /tmp/ccS19chs.s 			page 28
 
 
  952              	.L67:
@@ -1678,7 +1678,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  998              		.loc 1 315 27 discriminator 2 view .LVU263
  999              	.LBE364:
  1000              	.LBE363:
-ARM GAS  /tmp/ccwLNTjC.s 			page 29
+ARM GAS  /tmp/ccS19chs.s 			page 29
 
 
  345:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** 	
@@ -1738,7 +1738,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  1047              		.loc 1 342 32 is_stmt 0 view .LVU273
  1048 0002 684B     		ldr	r3, .L122
  1049 0004 1B68     		ldr	r3, [r3]
-ARM GAS  /tmp/ccwLNTjC.s 			page 30
+ARM GAS  /tmp/ccS19chs.s 			page 30
 
 
  1050 0006 9A68     		ldr	r2, [r3, #8]
@@ -1798,7 +1798,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  315:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** }
  1090              		.loc 1 315 27 is_stmt 0 view .LVU288
  1091 0016 13B1     		cbz	r3, .L75
-ARM GAS  /tmp/ccwLNTjC.s 			page 31
+ARM GAS  /tmp/ccS19chs.s 			page 31
 
 
  315:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** }
@@ -1858,7 +1858,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  1131              		.loc 1 334 2 is_stmt 1 view .LVU303
  1132 0028 2C20     		movs	r0, #44
  1133 002a 9047     		blx	r2
-ARM GAS  /tmp/ccwLNTjC.s 			page 32
+ARM GAS  /tmp/ccS19chs.s 			page 32
 
 
  1134              	.LVL122:
@@ -1918,7 +1918,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  1173              		.loc 1 94 2 is_stmt 1 view .LVU318
  1174              	.LBB381:
  1175              	.LBI381:
-ARM GAS  /tmp/ccwLNTjC.s 			page 33
+ARM GAS  /tmp/ccS19chs.s 			page 33
 
 
  329:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** {
@@ -1978,7 +1978,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  1215 004c 5A68     		ldr	r2, [r3, #4]
  1216              	.LVL129:
  1217              	.LBB387:
-ARM GAS  /tmp/ccwLNTjC.s 			page 34
+ARM GAS  /tmp/ccS19chs.s 			page 34
 
 
  1218              	.LBI387:
@@ -2038,7 +2038,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  315:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** }
  1257              		.loc 1 315 27 discriminator 2 view .LVU349
  1258 005e 0AB1     		cbz	r2, .L80
-ARM GAS  /tmp/ccwLNTjC.s 			page 35
+ARM GAS  /tmp/ccS19chs.s 			page 35
 
 
  1259              	.LVL133:
@@ -2098,7 +2098,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  1299              	.LVL137:
  336:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** }
  1300              		.loc 1 336 2 view .LVU364
-ARM GAS  /tmp/ccwLNTjC.s 			page 36
+ARM GAS  /tmp/ccS19chs.s 			page 36
 
 
  1301              	.L81:
@@ -2158,7 +2158,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  329:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** {
  1341              		.loc 1 329 41 view .LVU379
  1342              	.LBB402:
-ARM GAS  /tmp/ccwLNTjC.s 			page 37
+ARM GAS  /tmp/ccS19chs.s 			page 37
 
 
  331:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** 		return ILI9341_ERROR;
@@ -2218,7 +2218,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  1383              	.LBI407:
  313:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** {
  1384              		.loc 1 313 20 is_stmt 1 view .LVU394
-ARM GAS  /tmp/ccwLNTjC.s 			page 38
+ARM GAS  /tmp/ccS19chs.s 			page 38
 
 
  1385              	.LBB408:
@@ -2278,7 +2278,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  1424              	.LVL148:
  315:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** }
  1425              		.loc 1 315 27 discriminator 2 view .LVU410
-ARM GAS  /tmp/ccwLNTjC.s 			page 39
+ARM GAS  /tmp/ccS19chs.s 			page 39
 
 
  1426              	.LBE412:
@@ -2338,7 +2338,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  1466              	.L86:
  336:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** }
  1467              		.loc 1 336 2 is_stmt 0 view .LVU425
-ARM GAS  /tmp/ccwLNTjC.s 			page 40
+ARM GAS  /tmp/ccS19chs.s 			page 40
 
 
  1468              	.LBE414:
@@ -2398,7 +2398,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  342:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** 		return ILI9341_ERROR;
  1508              		.loc 1 342 2 view .LVU440
  342:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** 		return ILI9341_ERROR;
-ARM GAS  /tmp/ccwLNTjC.s 			page 41
+ARM GAS  /tmp/ccS19chs.s 			page 41
 
 
  1509              		.loc 1 342 32 is_stmt 0 view .LVU441
@@ -2458,7 +2458,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  1550              	.LBB428:
  315:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** }
  1551              		.loc 1 315 2 view .LVU455
-ARM GAS  /tmp/ccwLNTjC.s 			page 42
+ARM GAS  /tmp/ccS19chs.s 			page 42
 
 
  315:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** }
@@ -2518,7 +2518,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  1591              	.LBE432:
  1592              	.LBE431:
  334:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** 	
-ARM GAS  /tmp/ccwLNTjC.s 			page 43
+ARM GAS  /tmp/ccS19chs.s 			page 43
 
 
  1593              		.loc 1 334 2 is_stmt 1 view .LVU471
@@ -2578,7 +2578,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  1633              	.LBE434:
  1634              	.LBE433:
  108:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** 	io_write_data(0x03);
-ARM GAS  /tmp/ccwLNTjC.s 			page 44
+ARM GAS  /tmp/ccS19chs.s 			page 44
 
 
  1635              		.loc 1 108 2 is_stmt 1 view .LVU486
@@ -2638,7 +2638,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  1674              		.loc 1 331 32 is_stmt 0 view .LVU501
  1675 010c 254B     		ldr	r3, .L122
  1676 010e 1B68     		ldr	r3, [r3]
-ARM GAS  /tmp/ccwLNTjC.s 			page 45
+ARM GAS  /tmp/ccS19chs.s 			page 45
 
 
  1677 0110 5A68     		ldr	r2, [r3, #4]
@@ -2698,7 +2698,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  315:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** }
  1717              		.loc 1 315 27 is_stmt 0 view .LVU516
  1718 0120 13B1     		cbz	r3, .L94
-ARM GAS  /tmp/ccwLNTjC.s 			page 46
+ARM GAS  /tmp/ccS19chs.s 			page 46
 
 
  315:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** }
@@ -2758,7 +2758,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  1758              		.loc 1 334 2 is_stmt 1 view .LVU531
  1759 0132 8120     		movs	r0, #129
  1760 0134 9047     		blx	r2
-ARM GAS  /tmp/ccwLNTjC.s 			page 47
+ARM GAS  /tmp/ccS19chs.s 			page 47
 
 
  1761              	.LVL179:
@@ -2818,7 +2818,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  1800              		.loc 1 113 2 is_stmt 1 view .LVU546
  1801              	.LBB457:
  1802              	.LBI457:
-ARM GAS  /tmp/ccwLNTjC.s 			page 48
+ARM GAS  /tmp/ccS19chs.s 			page 48
 
 
  329:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** {
@@ -2878,7 +2878,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  1842 0156 9A68     		ldr	r2, [r3, #8]
  1843              	.LVL186:
  1844              	.LBB463:
-ARM GAS  /tmp/ccwLNTjC.s 			page 49
+ARM GAS  /tmp/ccS19chs.s 			page 49
 
 
  1845              	.LBI463:
@@ -2938,7 +2938,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  315:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** }
  1884              		.loc 1 315 27 discriminator 2 view .LVU577
  1885 0168 0AB1     		cbz	r2, .L99
-ARM GAS  /tmp/ccwLNTjC.s 			page 50
+ARM GAS  /tmp/ccS19chs.s 			page 50
 
 
  1886              	.LVL190:
@@ -2998,7 +2998,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  1926              	.LVL194:
  347:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** }
  1927              		.loc 1 347 2 view .LVU592
-ARM GAS  /tmp/ccwLNTjC.s 			page 51
+ARM GAS  /tmp/ccS19chs.s 			page 51
 
 
  1928              	.L100:
@@ -3058,7 +3058,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  340:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** {
  1968              		.loc 1 340 41 view .LVU607
  1969              	.LBB478:
-ARM GAS  /tmp/ccwLNTjC.s 			page 52
+ARM GAS  /tmp/ccS19chs.s 			page 52
 
 
  342:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** 		return ILI9341_ERROR;
@@ -3118,7 +3118,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  2010              	.LBI483:
  313:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** {
  2011              		.loc 1 313 20 is_stmt 1 view .LVU622
-ARM GAS  /tmp/ccwLNTjC.s 			page 53
+ARM GAS  /tmp/ccS19chs.s 			page 53
 
 
  2012              	.LBB484:
@@ -3178,7 +3178,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  315:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** }
  2053              		.loc 1 315 27 is_stmt 0 view .LVU636
  2054 01b2 13B1     		cbz	r3, .L104
-ARM GAS  /tmp/ccwLNTjC.s 			page 54
+ARM GAS  /tmp/ccS19chs.s 			page 54
 
 
  315:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** }
@@ -3238,7 +3238,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  2094              		.loc 1 345 2 is_stmt 1 view .LVU651
  2095 01c4 C720     		movs	r0, #199
  2096 01c6 9047     		blx	r2
-ARM GAS  /tmp/ccwLNTjC.s 			page 55
+ARM GAS  /tmp/ccS19chs.s 			page 55
 
 
  2097              	.LVL209:
@@ -3298,7 +3298,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  2136              		.loc 1 123 2 is_stmt 1 view .LVU666
  2137              	.LBB497:
  2138              	.LBI497:
-ARM GAS  /tmp/ccwLNTjC.s 			page 56
+ARM GAS  /tmp/ccS19chs.s 			page 56
 
 
  340:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** {
@@ -3358,7 +3358,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  2178 01e8 5A68     		ldr	r2, [r3, #4]
  2179              	.LVL216:
  2180              	.LBB503:
-ARM GAS  /tmp/ccwLNTjC.s 			page 57
+ARM GAS  /tmp/ccS19chs.s 			page 57
 
 
  2181              	.LBI503:
@@ -3418,7 +3418,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  315:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** }
  2220              		.loc 1 315 27 discriminator 2 view .LVU697
  2221 01fa 0AB1     		cbz	r2, .L109
-ARM GAS  /tmp/ccwLNTjC.s 			page 58
+ARM GAS  /tmp/ccS19chs.s 			page 58
 
 
  2222              	.LVL220:
@@ -3478,7 +3478,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  2262              	.LVL224:
  336:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** }
  2263              		.loc 1 336 2 view .LVU712
-ARM GAS  /tmp/ccwLNTjC.s 			page 59
+ARM GAS  /tmp/ccS19chs.s 			page 59
 
 
  2264              	.L110:
@@ -3538,7 +3538,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  329:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** {
  2304              		.loc 1 329 41 view .LVU727
  2305              	.LBB518:
-ARM GAS  /tmp/ccwLNTjC.s 			page 60
+ARM GAS  /tmp/ccS19chs.s 			page 60
 
 
  331:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** 		return ILI9341_ERROR;
@@ -3598,7 +3598,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  2346              	.LBI523:
  313:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** {
  2347              		.loc 1 313 20 is_stmt 1 view .LVU742
-ARM GAS  /tmp/ccwLNTjC.s 			page 61
+ARM GAS  /tmp/ccS19chs.s 			page 61
 
 
  2348              	.LBB524:
@@ -3658,7 +3658,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  2387              	.LVL235:
  315:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** }
  2388              		.loc 1 315 27 discriminator 2 view .LVU758
-ARM GAS  /tmp/ccwLNTjC.s 			page 62
+ARM GAS  /tmp/ccS19chs.s 			page 62
 
 
  2389              	.LBE528:
@@ -3718,7 +3718,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  2429              	.L115:
  336:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** }
  2430              		.loc 1 336 2 is_stmt 0 view .LVU773
-ARM GAS  /tmp/ccwLNTjC.s 			page 63
+ARM GAS  /tmp/ccS19chs.s 			page 63
 
 
  2431              	.LBE530:
@@ -3778,7 +3778,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  331:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** 		return ILI9341_ERROR;
  2471              		.loc 1 331 2 view .LVU788
  331:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** 		return ILI9341_ERROR;
-ARM GAS  /tmp/ccwLNTjC.s 			page 64
+ARM GAS  /tmp/ccS19chs.s 			page 64
 
 
  2472              		.loc 1 331 32 is_stmt 0 view .LVU789
@@ -3838,7 +3838,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  2513              	.LBB544:
  315:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** }
  2514              		.loc 1 315 2 view .LVU803
-ARM GAS  /tmp/ccwLNTjC.s 			page 65
+ARM GAS  /tmp/ccS19chs.s 			page 65
 
 
  315:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** }
@@ -3898,7 +3898,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  2554              	.LBE548:
  2555              	.LBE547:
  334:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** 	
-ARM GAS  /tmp/ccwLNTjC.s 			page 66
+ARM GAS  /tmp/ccS19chs.s 			page 66
 
 
  2556              		.loc 1 334 2 is_stmt 1 view .LVU819
@@ -3958,7 +3958,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  2596              	.LBE550:
  2597              	.LBE549:
  138:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** }
-ARM GAS  /tmp/ccwLNTjC.s 			page 67
+ARM GAS  /tmp/ccS19chs.s 			page 67
 
 
  2598              		.loc 1 138 2 is_stmt 1 view .LVU834
@@ -4018,7 +4018,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  315:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** }
  2646              		.loc 1 315 27 discriminator 2 view .LVU843
  2647 000c 72B1     		cbz	r2, .L132
-ARM GAS  /tmp/ccwLNTjC.s 			page 68
+ARM GAS  /tmp/ccS19chs.s 			page 68
 
 
  2648              	.LBE554:
@@ -4078,7 +4078,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  2690              	.L132:
  376:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** 	
  2691              		.loc 1 376 10 view .LVU855
-ARM GAS  /tmp/ccwLNTjC.s 			page 69
+ARM GAS  /tmp/ccS19chs.s 			page 69
 
 
  2692 002c 0120     		movs	r0, #1
@@ -4138,7 +4138,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  2738              		.loc 1 315 27 discriminator 2 view .LVU865
  2739              	.LBE557:
  2740              	.LBE556:
-ARM GAS  /tmp/ccwLNTjC.s 			page 70
+ARM GAS  /tmp/ccS19chs.s 			page 70
 
 
  387:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** 		return ILI9341_ERROR;
@@ -4198,7 +4198,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  2785              		.loc 1 148 2 view .LVU875
  148:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** }
  2786              		.loc 1 148 12 is_stmt 0 view .LVU876
-ARM GAS  /tmp/ccwLNTjC.s 			page 71
+ARM GAS  /tmp/ccS19chs.s 			page 71
 
 
  2787 0000 014B     		ldr	r3, .L144
@@ -4258,7 +4258,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  2835              	.LBB560:
  2836              	.LBI560:
  313:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** {
-ARM GAS  /tmp/ccwLNTjC.s 			page 72
+ARM GAS  /tmp/ccS19chs.s 			page 72
 
 
  2837              		.loc 1 313 20 is_stmt 1 view .LVU885
@@ -4318,7 +4318,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  2876              		.loc 1 351 41 view .LVU900
  2877              	.LBB564:
  356:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** 		return ILI9341_ERROR;
-ARM GAS  /tmp/ccwLNTjC.s 			page 73
+ARM GAS  /tmp/ccS19chs.s 			page 73
 
 
  2878              		.loc 1 356 2 view .LVU901
@@ -4378,7 +4378,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  2917 0032 2B80     		strh	r3, [r5]	@ movhi
  161:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** 	*value |= result;
  2918              		.loc 1 161 2 is_stmt 1 view .LVU917
-ARM GAS  /tmp/ccwLNTjC.s 			page 74
+ARM GAS  /tmp/ccS19chs.s 			page 74
 
 
  2919              	.LVL290:
@@ -4438,7 +4438,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  2958              		.loc 1 162 2 is_stmt 1 view .LVU932
  2959 0044 2B88     		ldrh	r3, [r5]
  162:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** 	
-ARM GAS  /tmp/ccwLNTjC.s 			page 75
+ARM GAS  /tmp/ccS19chs.s 			page 75
 
 
  2960              		.loc 1 162 9 is_stmt 0 view .LVU933
@@ -4498,7 +4498,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  3004              		.loc 1 357 10 view .LVU943
  3005              	.LBE568:
  3006              	.LBE576:
-ARM GAS  /tmp/ccwLNTjC.s 			page 76
+ARM GAS  /tmp/ccS19chs.s 			page 76
 
 
  3007              	.LBB577:
@@ -4558,7 +4558,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  3055 000e FFF7FEFF 		bl	ili9341_tft_driver_get_id
  3056              	.LVL304:
   77:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** 		return ILI9341_ERROR;
-ARM GAS  /tmp/ccwLNTjC.s 			page 77
+ARM GAS  /tmp/ccS19chs.s 			page 77
 
 
  3057              		.loc 1 77 2 is_stmt 1 view .LVU952
@@ -4618,7 +4618,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  171:External/ili9341_tft_driver/Src/ili9341_tft_driver.c ****     return ILI9341_ERROR;
  3105              		.loc 1 171 6 is_stmt 0 view .LVU961
  3106 0004 FFF7FEFF 		bl	ili9341_is_not_valid_coordinates
-ARM GAS  /tmp/ccwLNTjC.s 			page 78
+ARM GAS  /tmp/ccS19chs.s 			page 78
 
 
  3107              	.LVL306:
@@ -4678,7 +4678,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  3152              		.cfi_startproc
  3153              		@ args = 0, pretend = 0, frame = 8
  3154              		@ frame_needed = 0, uses_anonymous_args = 0
-ARM GAS  /tmp/ccwLNTjC.s 			page 79
+ARM GAS  /tmp/ccS19chs.s 			page 79
 
 
  219:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** 	ili9341_draw_area area = (ili9341_draw_area) {
@@ -4738,7 +4738,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  315:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** }
  3197              		.loc 1 315 2 view .LVU985
  315:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** }
-ARM GAS  /tmp/ccwLNTjC.s 			page 80
+ARM GAS  /tmp/ccS19chs.s 			page 80
 
 
  3198              		.loc 1 315 27 is_stmt 0 view .LVU986
@@ -4798,7 +4798,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  315:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** }
  3239              		.loc 1 315 2 view .LVU1000
  315:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** }
-ARM GAS  /tmp/ccwLNTjC.s 			page 81
+ARM GAS  /tmp/ccS19chs.s 			page 81
 
 
  3240              		.loc 1 315 27 is_stmt 0 view .LVU1001
@@ -4858,7 +4858,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  3284              	.L174:
  343:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** 	
  3285              		.loc 1 343 10 view .LVU1012
-ARM GAS  /tmp/ccwLNTjC.s 			page 82
+ARM GAS  /tmp/ccS19chs.s 			page 82
 
 
  3286              	.LBE582:
@@ -4918,7 +4918,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  3336 000a 0646     		mov	r6, r0
  3337              	.LVL331:
  240:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** 	
-ARM GAS  /tmp/ccwLNTjC.s 			page 83
+ARM GAS  /tmp/ccS19chs.s 			page 83
 
 
  3338              		.loc 1 240 2 is_stmt 1 view .LVU1019
@@ -4978,7 +4978,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  3379              	.LBB596:
  3380              	.LBB597:
  336:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** }
-ARM GAS  /tmp/ccwLNTjC.s 			page 84
+ARM GAS  /tmp/ccS19chs.s 			page 84
 
 
  3381              		.loc 1 336 9 view .LVU1033
@@ -5038,7 +5038,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  3425              		.loc 1 244 3 view .LVU1043
  3426              	.LVL343:
  3427              	.LBB603:
-ARM GAS  /tmp/ccwLNTjC.s 			page 85
+ARM GAS  /tmp/ccS19chs.s 			page 85
 
 
  3428              	.LBI596:
@@ -5098,7 +5098,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  3469              	.LBE605:
  246:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** }
  3470              		.loc 1 246 2 is_stmt 1 view .LVU1057
-ARM GAS  /tmp/ccwLNTjC.s 			page 86
+ARM GAS  /tmp/ccS19chs.s 			page 86
 
 
  247:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** 
@@ -5158,7 +5158,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  3520              		.thumb_func
  3522              	ili9341_tft_driver_draw_image:
  3523              	.LVL352:
-ARM GAS  /tmp/ccwLNTjC.s 			page 87
+ARM GAS  /tmp/ccS19chs.s 			page 87
 
 
  3524              	.LFB14:
@@ -5218,7 +5218,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  313:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** {
  3567              		.loc 1 313 20 is_stmt 1 view .LVU1077
  3568              	.LBB609:
-ARM GAS  /tmp/ccwLNTjC.s 			page 88
+ARM GAS  /tmp/ccS19chs.s 			page 88
 
 
  315:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** }
@@ -5278,7 +5278,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  343:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** 	
  3612              		.loc 1 343 10 view .LVU1089
  3613              	.LBE610:
-ARM GAS  /tmp/ccwLNTjC.s 			page 89
+ARM GAS  /tmp/ccS19chs.s 			page 89
 
 
  3614              	.LBE622:
@@ -5338,7 +5338,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  281:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** 
  3654              		.loc 1 281 22 is_stmt 0 view .LVU1104
  3655 0044 02EBD122 		add	r2, r2, r1, lsr #11
-ARM GAS  /tmp/ccwLNTjC.s 			page 90
+ARM GAS  /tmp/ccS19chs.s 			page 90
 
 
  3656              	.LVL370:
@@ -5398,7 +5398,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  3696              		.loc 1 315 27 is_stmt 0 view .LVU1118
  3697 0068 002B     		cmp	r3, #0
  3698 006a E0D0     		beq	.L200
-ARM GAS  /tmp/ccwLNTjC.s 			page 91
+ARM GAS  /tmp/ccS19chs.s 			page 91
 
 
  315:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** }
@@ -5458,7 +5458,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  292:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** 	ili9341_draw_area max_area = ili9341_get_max_area();
  3745              		.loc 1 292 1 is_stmt 1 view -0
  3746              		.cfi_startproc
-ARM GAS  /tmp/ccwLNTjC.s 			page 92
+ARM GAS  /tmp/ccS19chs.s 			page 92
 
 
  3747              		@ args = 0, pretend = 0, frame = 8
@@ -5518,7 +5518,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  3792              		.align	1
  3793              		.global	ili9341_tft_driver_init
  3794              		.syntax unified
-ARM GAS  /tmp/ccwLNTjC.s 			page 93
+ARM GAS  /tmp/ccS19chs.s 			page 93
 
 
  3795              		.thumb
@@ -5578,7 +5578,7 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  3837              		.loc 1 58 11 is_stmt 0 view .LVU1152
  3838 0018 FFF7FEFF 		bl	ili9341_check_link
  3839              	.LVL393:
-ARM GAS  /tmp/ccwLNTjC.s 			page 94
+ARM GAS  /tmp/ccS19chs.s 			page 94
 
 
   59:External/ili9341_tft_driver/Src/ili9341_tft_driver.c **** 		return status;
@@ -5637,78 +5637,78 @@ ARM GAS  /tmp/ccwLNTjC.s 			page 1
  3887              		.file 2 "/usr/src/arm-gnu-toolchain-13.3/arm-none-eabi/include/machine/_default_types.h"
  3888              		.file 3 "/usr/src/arm-gnu-toolchain-13.3/arm-none-eabi/include/sys/_stdint.h"
  3889              		.file 4 "External/ili9341_tft_driver/Inc/ili9341_tft_driver_defs.h"
-ARM GAS  /tmp/ccwLNTjC.s 			page 95
+ARM GAS  /tmp/ccS19chs.s 			page 95
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 ili9341_tft_driver.c
-     /tmp/ccwLNTjC.s:21     .text.ili9341_display_on:00000000 $t
-     /tmp/ccwLNTjC.s:26     .text.ili9341_display_on:00000000 ili9341_display_on
-     /tmp/ccwLNTjC.s:76     .text.ili9341_display_on:00000014 $d
-     /tmp/ccwLNTjC.s:3875   .bss.io_struct:00000000 io_struct
-     /tmp/ccwLNTjC.s:81     .text.ili9341_is_not_valid_coordinates:00000000 $t
-     /tmp/ccwLNTjC.s:86     .text.ili9341_is_not_valid_coordinates:00000000 ili9341_is_not_valid_coordinates
-     /tmp/ccwLNTjC.s:152    .text.ili9341_write_x_coordinates:00000000 $t
-     /tmp/ccwLNTjC.s:157    .text.ili9341_write_x_coordinates:00000000 ili9341_write_x_coordinates
-     /tmp/ccwLNTjC.s:450    .text.ili9341_write_x_coordinates:00000088 $d
-     /tmp/ccwLNTjC.s:457    .text.ili9341_write_y_coordinates:00000000 $t
-     /tmp/ccwLNTjC.s:462    .text.ili9341_write_y_coordinates:00000000 ili9341_write_y_coordinates
-     /tmp/ccwLNTjC.s:755    .text.ili9341_write_y_coordinates:00000088 $d
-     /tmp/ccwLNTjC.s:762    .text.ili9341_calculate_pixels_amount:00000000 $t
-     /tmp/ccwLNTjC.s:767    .text.ili9341_calculate_pixels_amount:00000000 ili9341_calculate_pixels_amount
-     /tmp/ccwLNTjC.s:798    .text.ili9341_get_max_area:00000000 $t
-     /tmp/ccwLNTjC.s:803    .text.ili9341_get_max_area:00000000 ili9341_get_max_area
-     /tmp/ccwLNTjC.s:827    .text.ili9341_get_max_area:00000010 $d
-     /tmp/ccwLNTjC.s:832    .text.io_init:00000000 $t
-     /tmp/ccwLNTjC.s:837    .text.io_init:00000000 io_init
-     /tmp/ccwLNTjC.s:887    .text.io_init:0000001c $d
-     /tmp/ccwLNTjC.s:892    .text.io_delay:00000000 $t
-     /tmp/ccwLNTjC.s:897    .text.io_delay:00000000 io_delay
-     /tmp/ccwLNTjC.s:955    .text.io_delay:0000001c $d
-     /tmp/ccwLNTjC.s:960    .text.ili9341_soft_reset:00000000 $t
-     /tmp/ccwLNTjC.s:965    .text.ili9341_soft_reset:00000000 ili9341_soft_reset
-     /tmp/ccwLNTjC.s:1019   .text.ili9341_soft_reset:00000018 $d
-     /tmp/ccwLNTjC.s:1024   .text.ili9341_send_default_registers:00000000 $t
-     /tmp/ccwLNTjC.s:1029   .text.ili9341_send_default_registers:00000000 ili9341_send_default_registers
-     /tmp/ccwLNTjC.s:2022   .text.ili9341_send_default_registers:000001a4 $d
-     /tmp/ccwLNTjC.s:2029   .text.ili9341_send_default_registers:000001a8 $t
-     /tmp/ccwLNTjC.s:2607   .text.ili9341_send_default_registers:000002a4 $d
-     /tmp/ccwLNTjC.s:2612   .text.io_dummy_read:00000000 $t
-     /tmp/ccwLNTjC.s:2617   .text.io_dummy_read:00000000 io_dummy_read
-     /tmp/ccwLNTjC.s:2699   .text.io_dummy_read:00000030 $d
-     /tmp/ccwLNTjC.s:2704   .text.io_enable_backlight:00000000 $t
-     /tmp/ccwLNTjC.s:2709   .text.io_enable_backlight:00000000 io_enable_backlight
-     /tmp/ccwLNTjC.s:2767   .text.io_enable_backlight:0000001c $d
-     /tmp/ccwLNTjC.s:2772   .text.ili9341_tft_driver_destroy:00000000 $t
-     /tmp/ccwLNTjC.s:2778   .text.ili9341_tft_driver_destroy:00000000 ili9341_tft_driver_destroy
-     /tmp/ccwLNTjC.s:2795   .text.ili9341_tft_driver_destroy:00000008 $d
-     /tmp/ccwLNTjC.s:2800   .text.ili9341_tft_driver_get_id:00000000 $t
-     /tmp/ccwLNTjC.s:2806   .text.ili9341_tft_driver_get_id:00000000 ili9341_tft_driver_get_id
-     /tmp/ccwLNTjC.s:3023   .text.ili9341_tft_driver_get_id:0000006c $d
-     /tmp/ccwLNTjC.s:3030   .text.ili9341_check_link:00000000 $t
-     /tmp/ccwLNTjC.s:3035   .text.ili9341_check_link:00000000 ili9341_check_link
-     /tmp/ccwLNTjC.s:3082   .text.ili9341_tft_driver_set_area:00000000 $t
-     /tmp/ccwLNTjC.s:3088   .text.ili9341_tft_driver_set_area:00000000 ili9341_tft_driver_set_area
-     /tmp/ccwLNTjC.s:3142   .text.ili9341_tft_driver_set_pixel:00000000 $t
-     /tmp/ccwLNTjC.s:3148   .text.ili9341_tft_driver_set_pixel:00000000 ili9341_tft_driver_set_pixel
-     /tmp/ccwLNTjC.s:3299   .text.ili9341_tft_driver_set_pixel:00000058 $d
-     /tmp/ccwLNTjC.s:3306   .text.ili9341_tft_driver_fill_area:00000000 $t
-     /tmp/ccwLNTjC.s:3312   .text.ili9341_tft_driver_fill_area:00000000 ili9341_tft_driver_fill_area
-     /tmp/ccwLNTjC.s:3479   .text.ili9341_tft_driver_fill_area:00000054 $d
-     /tmp/ccwLNTjC.s:3484   .text.ili9341_tft_driver_get_color_from_rgb:00000000 $t
-     /tmp/ccwLNTjC.s:3490   .text.ili9341_tft_driver_get_color_from_rgb:00000000 ili9341_tft_driver_get_color_from_rgb
-ARM GAS  /tmp/ccwLNTjC.s 			page 96
+     /tmp/ccS19chs.s:21     .text.ili9341_display_on:00000000 $t
+     /tmp/ccS19chs.s:26     .text.ili9341_display_on:00000000 ili9341_display_on
+     /tmp/ccS19chs.s:76     .text.ili9341_display_on:00000014 $d
+     /tmp/ccS19chs.s:3875   .bss.io_struct:00000000 io_struct
+     /tmp/ccS19chs.s:81     .text.ili9341_is_not_valid_coordinates:00000000 $t
+     /tmp/ccS19chs.s:86     .text.ili9341_is_not_valid_coordinates:00000000 ili9341_is_not_valid_coordinates
+     /tmp/ccS19chs.s:152    .text.ili9341_write_x_coordinates:00000000 $t
+     /tmp/ccS19chs.s:157    .text.ili9341_write_x_coordinates:00000000 ili9341_write_x_coordinates
+     /tmp/ccS19chs.s:450    .text.ili9341_write_x_coordinates:00000088 $d
+     /tmp/ccS19chs.s:457    .text.ili9341_write_y_coordinates:00000000 $t
+     /tmp/ccS19chs.s:462    .text.ili9341_write_y_coordinates:00000000 ili9341_write_y_coordinates
+     /tmp/ccS19chs.s:755    .text.ili9341_write_y_coordinates:00000088 $d
+     /tmp/ccS19chs.s:762    .text.ili9341_calculate_pixels_amount:00000000 $t
+     /tmp/ccS19chs.s:767    .text.ili9341_calculate_pixels_amount:00000000 ili9341_calculate_pixels_amount
+     /tmp/ccS19chs.s:798    .text.ili9341_get_max_area:00000000 $t
+     /tmp/ccS19chs.s:803    .text.ili9341_get_max_area:00000000 ili9341_get_max_area
+     /tmp/ccS19chs.s:827    .text.ili9341_get_max_area:00000010 $d
+     /tmp/ccS19chs.s:832    .text.io_init:00000000 $t
+     /tmp/ccS19chs.s:837    .text.io_init:00000000 io_init
+     /tmp/ccS19chs.s:887    .text.io_init:0000001c $d
+     /tmp/ccS19chs.s:892    .text.io_delay:00000000 $t
+     /tmp/ccS19chs.s:897    .text.io_delay:00000000 io_delay
+     /tmp/ccS19chs.s:955    .text.io_delay:0000001c $d
+     /tmp/ccS19chs.s:960    .text.ili9341_soft_reset:00000000 $t
+     /tmp/ccS19chs.s:965    .text.ili9341_soft_reset:00000000 ili9341_soft_reset
+     /tmp/ccS19chs.s:1019   .text.ili9341_soft_reset:00000018 $d
+     /tmp/ccS19chs.s:1024   .text.ili9341_send_default_registers:00000000 $t
+     /tmp/ccS19chs.s:1029   .text.ili9341_send_default_registers:00000000 ili9341_send_default_registers
+     /tmp/ccS19chs.s:2022   .text.ili9341_send_default_registers:000001a4 $d
+     /tmp/ccS19chs.s:2029   .text.ili9341_send_default_registers:000001a8 $t
+     /tmp/ccS19chs.s:2607   .text.ili9341_send_default_registers:000002a4 $d
+     /tmp/ccS19chs.s:2612   .text.io_dummy_read:00000000 $t
+     /tmp/ccS19chs.s:2617   .text.io_dummy_read:00000000 io_dummy_read
+     /tmp/ccS19chs.s:2699   .text.io_dummy_read:00000030 $d
+     /tmp/ccS19chs.s:2704   .text.io_enable_backlight:00000000 $t
+     /tmp/ccS19chs.s:2709   .text.io_enable_backlight:00000000 io_enable_backlight
+     /tmp/ccS19chs.s:2767   .text.io_enable_backlight:0000001c $d
+     /tmp/ccS19chs.s:2772   .text.ili9341_tft_driver_destroy:00000000 $t
+     /tmp/ccS19chs.s:2778   .text.ili9341_tft_driver_destroy:00000000 ili9341_tft_driver_destroy
+     /tmp/ccS19chs.s:2795   .text.ili9341_tft_driver_destroy:00000008 $d
+     /tmp/ccS19chs.s:2800   .text.ili9341_tft_driver_get_id:00000000 $t
+     /tmp/ccS19chs.s:2806   .text.ili9341_tft_driver_get_id:00000000 ili9341_tft_driver_get_id
+     /tmp/ccS19chs.s:3023   .text.ili9341_tft_driver_get_id:0000006c $d
+     /tmp/ccS19chs.s:3030   .text.ili9341_check_link:00000000 $t
+     /tmp/ccS19chs.s:3035   .text.ili9341_check_link:00000000 ili9341_check_link
+     /tmp/ccS19chs.s:3082   .text.ili9341_tft_driver_set_area:00000000 $t
+     /tmp/ccS19chs.s:3088   .text.ili9341_tft_driver_set_area:00000000 ili9341_tft_driver_set_area
+     /tmp/ccS19chs.s:3142   .text.ili9341_tft_driver_set_pixel:00000000 $t
+     /tmp/ccS19chs.s:3148   .text.ili9341_tft_driver_set_pixel:00000000 ili9341_tft_driver_set_pixel
+     /tmp/ccS19chs.s:3299   .text.ili9341_tft_driver_set_pixel:00000058 $d
+     /tmp/ccS19chs.s:3306   .text.ili9341_tft_driver_fill_area:00000000 $t
+     /tmp/ccS19chs.s:3312   .text.ili9341_tft_driver_fill_area:00000000 ili9341_tft_driver_fill_area
+     /tmp/ccS19chs.s:3479   .text.ili9341_tft_driver_fill_area:00000054 $d
+     /tmp/ccS19chs.s:3484   .text.ili9341_tft_driver_get_color_from_rgb:00000000 $t
+     /tmp/ccS19chs.s:3490   .text.ili9341_tft_driver_get_color_from_rgb:00000000 ili9341_tft_driver_get_color_from_rgb
+ARM GAS  /tmp/ccS19chs.s 			page 96
 
 
-     /tmp/ccwLNTjC.s:3516   .text.ili9341_tft_driver_draw_image:00000000 $t
-     /tmp/ccwLNTjC.s:3522   .text.ili9341_tft_driver_draw_image:00000000 ili9341_tft_driver_draw_image
-     /tmp/ccwLNTjC.s:3732   .text.ili9341_tft_driver_draw_image:0000007c $d
-     /tmp/ccwLNTjC.s:3737   .text.ili9341_tft_driver_clear:00000000 $t
-     /tmp/ccwLNTjC.s:3743   .text.ili9341_tft_driver_clear:00000000 ili9341_tft_driver_clear
-     /tmp/ccwLNTjC.s:3792   .text.ili9341_tft_driver_init:00000000 $t
-     /tmp/ccwLNTjC.s:3798   .text.ili9341_tft_driver_init:00000000 ili9341_tft_driver_init
-     /tmp/ccwLNTjC.s:3867   .text.ili9341_tft_driver_init:0000003c $d
-     /tmp/ccwLNTjC.s:3872   .bss.io_struct:00000000 $d
-     /tmp/ccwLNTjC.s:3878   .rodata:00000000 $d
+     /tmp/ccS19chs.s:3516   .text.ili9341_tft_driver_draw_image:00000000 $t
+     /tmp/ccS19chs.s:3522   .text.ili9341_tft_driver_draw_image:00000000 ili9341_tft_driver_draw_image
+     /tmp/ccS19chs.s:3732   .text.ili9341_tft_driver_draw_image:0000007c $d
+     /tmp/ccS19chs.s:3737   .text.ili9341_tft_driver_clear:00000000 $t
+     /tmp/ccS19chs.s:3743   .text.ili9341_tft_driver_clear:00000000 ili9341_tft_driver_clear
+     /tmp/ccS19chs.s:3792   .text.ili9341_tft_driver_init:00000000 $t
+     /tmp/ccS19chs.s:3798   .text.ili9341_tft_driver_init:00000000 ili9341_tft_driver_init
+     /tmp/ccS19chs.s:3867   .text.ili9341_tft_driver_init:0000003c $d
+     /tmp/ccS19chs.s:3872   .bss.io_struct:00000000 $d
+     /tmp/ccS19chs.s:3878   .rodata:00000000 $d
 
 NO UNDEFINED SYMBOLS
