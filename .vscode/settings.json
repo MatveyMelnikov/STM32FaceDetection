@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "ov7670_defs.h": "c",
+        "stdbool.h": "c"
+    }
+}

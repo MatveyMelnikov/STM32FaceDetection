@@ -55,7 +55,7 @@ ENTRY(Reset_Handler)
 /* Highest address of the user mode stack */
 _estack = ORIGIN(RAM) + LENGTH(RAM);    /* end of RAM */
 /* Generate a link error if heap and stack don't fit into RAM */
-_Min_Heap_Size = 0x200;      /* required amount of heap  */
+_Min_Heap_Size = 0xD6D8;      /* 0x200 required amount of heap  */
 _Min_Stack_Size = 0x4000; /* required amount of stack */
 
 /* Specify the memory areas */
@@ -136,7 +136,7 @@ SECTIONS
   .classifiers :
   {
     . = ALIGN(4);
-    KEEP(*lbpcascade_frontalface_integer.o)
+    KEEP(*lbpcascade_frontalface_32_improved_integer.o)
     . = ALIGN(4);
   } >CCMRAM AT> FLASH
 

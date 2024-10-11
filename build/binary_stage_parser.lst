@@ -1,0 +1,121 @@
+ARM GAS  /tmp/ccR1okuI.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"binary_stage_parser.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "External/BinaryStageParser/Src/binary_stage_parser.c"
+  20              		.section	.text.binary_stage_parser_create,"ax",%progbits
+  21              		.align	1
+  22              		.global	binary_stage_parser_create
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	binary_stage_parser_create:
+  28              	.LVL0:
+  29              	.LFB0:
+   1:External/BinaryStageParser/Src/binary_stage_parser.c **** #include "binary_stage_parser.h"
+   2:External/BinaryStageParser/Src/binary_stage_parser.c **** #include "binary_stage_parser_defs.h"
+   3:External/BinaryStageParser/Src/binary_stage_parser.c **** #include <stddef.h>
+   4:External/BinaryStageParser/Src/binary_stage_parser.c **** 
+   5:External/BinaryStageParser/Src/binary_stage_parser.c **** // Static variables ----------------------------------------------------------
+   6:External/BinaryStageParser/Src/binary_stage_parser.c **** 
+   7:External/BinaryStageParser/Src/binary_stage_parser.c **** // Defines -------------------------------------------------------------------
+   8:External/BinaryStageParser/Src/binary_stage_parser.c **** 
+   9:External/BinaryStageParser/Src/binary_stage_parser.c **** #define GET_ABSOLUTE_ADDRESS(base_obj_ptr, obj_ptr) \
+  10:External/BinaryStageParser/Src/binary_stage_parser.c **** 	((ADDR_TYPE)(obj_ptr) + (ADDR_TYPE)(base_obj_ptr))
+  11:External/BinaryStageParser/Src/binary_stage_parser.c **** 
+  12:External/BinaryStageParser/Src/binary_stage_parser.c **** // Implementations -----------------------------------------------------------
+  13:External/BinaryStageParser/Src/binary_stage_parser.c **** 
+  14:External/BinaryStageParser/Src/binary_stage_parser.c **** stage *const binary_stage_parser_create(
+  15:External/BinaryStageParser/Src/binary_stage_parser.c ****   uint8_t *const source,
+  16:External/BinaryStageParser/Src/binary_stage_parser.c ****   uint8_t stages_amount
+  17:External/BinaryStageParser/Src/binary_stage_parser.c **** )
+  18:External/BinaryStageParser/Src/binary_stage_parser.c **** {
+  30              		.loc 1 18 1 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		@ link register save eliminated.
+  19:External/BinaryStageParser/Src/binary_stage_parser.c **** 	for (uint8_t i = 0; i < stages_amount; i++)
+  35              		.loc 1 19 2 view .LVU1
+  36              	.LBB2:
+  37              		.loc 1 19 7 view .LVU2
+  38              		.loc 1 19 15 is_stmt 0 view .LVU3
+  39 0000 0023     		movs	r3, #0
+ARM GAS  /tmp/ccR1okuI.s 			page 2
+
+
+  40              		.loc 1 19 2 view .LVU4
+  41 0002 06E0     		b	.L2
+  42              	.LVL1:
+  43              	.L3:
+  44              	.LBB3:
+  20:External/BinaryStageParser/Src/binary_stage_parser.c **** 	{
+  21:External/BinaryStageParser/Src/binary_stage_parser.c ****     stage* current_stage = (stage*)source + i;
+  45              		.loc 1 21 5 is_stmt 1 view .LVU5
+  22:External/BinaryStageParser/Src/binary_stage_parser.c **** 
+  23:External/BinaryStageParser/Src/binary_stage_parser.c **** 		current_stage->features = (lbp_feature*)GET_ABSOLUTE_ADDRESS(
+  46              		.loc 1 23 3 view .LVU6
+  47              		.loc 1 23 43 is_stmt 0 view .LVU7
+  48 0004 50F83320 		ldr	r2, [r0, r3, lsl #3]
+  49 0008 0244     		add	r2, r2, r0
+  50              		.loc 1 23 27 view .LVU8
+  51 000a 40F83320 		str	r2, [r0, r3, lsl #3]
+  52              	.LBE3:
+  19:External/BinaryStageParser/Src/binary_stage_parser.c **** 	{
+  53              		.loc 1 19 42 is_stmt 1 discriminator 3 view .LVU9
+  54 000e 0133     		adds	r3, r3, #1
+  55              	.LVL2:
+  19:External/BinaryStageParser/Src/binary_stage_parser.c **** 	{
+  56              		.loc 1 19 42 is_stmt 0 discriminator 3 view .LVU10
+  57 0010 DBB2     		uxtb	r3, r3
+  58              	.LVL3:
+  59              	.L2:
+  19:External/BinaryStageParser/Src/binary_stage_parser.c **** 	{
+  60              		.loc 1 19 24 is_stmt 1 discriminator 1 view .LVU11
+  61 0012 8B42     		cmp	r3, r1
+  62 0014 F6D3     		bcc	.L3
+  63              	.LBE2:
+  24:External/BinaryStageParser/Src/binary_stage_parser.c **** 			source,
+  25:External/BinaryStageParser/Src/binary_stage_parser.c **** 			current_stage->features
+  26:External/BinaryStageParser/Src/binary_stage_parser.c **** 		);
+  27:External/BinaryStageParser/Src/binary_stage_parser.c **** 	}
+  28:External/BinaryStageParser/Src/binary_stage_parser.c **** 
+  29:External/BinaryStageParser/Src/binary_stage_parser.c **** 	return (stage*)source;
+  64              		.loc 1 29 2 view .LVU12
+  30:External/BinaryStageParser/Src/binary_stage_parser.c **** }
+  65              		.loc 1 30 1 is_stmt 0 view .LVU13
+  66 0016 7047     		bx	lr
+  67              		.cfi_endproc
+  68              	.LFE0:
+  70              		.text
+  71              	.Letext0:
+  72              		.file 2 "/usr/src/arm-gnu-toolchain-13.3/arm-none-eabi/include/machine/_default_types.h"
+  73              		.file 3 "/usr/src/arm-gnu-toolchain-13.3/arm-none-eabi/include/sys/_stdint.h"
+  74              		.file 4 "External/LBPFeature/Inc/lbp_feature_defs.h"
+  75              		.file 5 "External/Stage/Inc/stage_defs.h"
+ARM GAS  /tmp/ccR1okuI.s 			page 3
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 binary_stage_parser.c
+     /tmp/ccR1okuI.s:21     .text.binary_stage_parser_create:00000000 $t
+     /tmp/ccR1okuI.s:27     .text.binary_stage_parser_create:00000000 binary_stage_parser_create
+
+NO UNDEFINED SYMBOLS

@@ -5,7 +5,8 @@
 #include <stdint.h>
 
 ili9341_tft_driver_status ili9341_tft_driver_init(
-	ili9341_tft_driver_io_struct *const io
+	ili9341_tft_driver_io_struct *const io,
+	void (*draw_faces_functor)(uint16_t *const image)
 );
 void ili9341_tft_driver_destroy(void);
 ili9341_tft_driver_status ili9341_tft_driver_get_id(uint16_t *const value);
@@ -28,7 +29,7 @@ uint16_t ili9341_tft_driver_get_color_from_rgb(
 );
 ili9341_tft_driver_status ili9341_tft_driver_draw_image(
 	ili9341_draw_area *const area,
-	const uint16_t *const data
+	uint16_t *const data
 );
 ili9341_tft_driver_status ili9341_tft_driver_clear(void);
 
