@@ -47,9 +47,9 @@
 #define FAST_DIVIDE_BY_3(n) \
 	((n) * 85 >> 8)
 #define SET_PIXEL_COLOR(pixel, r, g, b) \
-  *(pixel) = (r); \
-  *((pixel) + 1) = (g); \
-  *((pixel) + 2) = (b)
+  *(pixel) = ((r) >> 3) << 11; \
+  *(pixel) |= (g >> 2) << 6; \
+  *(pixel) |= (b >> 3)
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -78,7 +78,7 @@ static face_detector_arguments arguments = (face_detector_arguments) {
   .scale_increment = 1.1f,
   .image_size_x = OV7670_IMAGE_WIDTH,
   .image_size_y = OV7670_IMAGE_HEIGHT,
-  .min_neighbours = 1U
+  .min_neighbours = 0U
 };
 /* USER CODE END PV */
 
@@ -115,6 +115,12 @@ static uint16_t tft_read_data(uint8_t data_size);
 static void tft_enable_backlight(bool is_enabled);
 static void draw_faces(uint16_t *const image);
 static void draw_face(uint16_t *const image, area area_face);
+__attribute__((always_inline))
+static inline void draw_big_pixel(
+  uint16_t *const image,
+  uint8_t x,
+  uint8_t y
+);
 
 static void configure_display(void);
 static void configure_camera(void);
@@ -177,18 +183,6 @@ int main(void)
 
 	configure_display();
 	configure_camera();
-
-  // uint32_t value = ((uint32_t*)_start_classifiers_load)[0];
-  // HOLD_VARIABLE(value);
-
-  // value = ((uint32_t*)_start_classifiers_load)[1];
-  // HOLD_VARIABLE(value);
-
-  // value = (uint32_t)(
-  //   _binary_lbpcascade_frontalface_integer_bin_start -
-  //   _binary_lbpcascade_frontalface_integer_bin_end
-  // );
-  // HOLD_VARIABLE(value);
 
   /* USER CODE END 2 */
 
@@ -466,13 +460,13 @@ static void fill_integral_image(
 __attribute__((always_inline))
 static inline uint16_t decolorize(const uint16_t *pixel)
 {
-	uint8_t r = *pixel >> 11;
-	uint8_t g = (*pixel >> 6) & 0x1f; // to 5 digits
-	uint8_t b = *pixel & 0x1f;
+  uint8_t r = (*pixel >> 11) << 3; // / 31 * 255 ~= >> 5 << 8
+	uint8_t g = ((*pixel >> 6) & 0x1f) << 3; // to 5 digits
+	uint8_t b = (*pixel & 0x1f) << 3;
 	
 	uint8_t grayscale = FAST_DIVIDE_BY_3(r + g + b);
 
-	return ((uint16_t)grayscale << 11) | ((uint16_t)grayscale << 6) | grayscale;
+  return grayscale;
 }
 
 static uint16_t get_rectangle_summarize(
@@ -543,28 +537,53 @@ static void draw_faces(uint16_t *const image)
 
 static void draw_face(uint16_t *const image, area area_face)
 {
+  for (uint8_t x = 0; x < area_face.size; x += 2)
+  {
+    draw_big_pixel(image, area_face.x + x, area_face.y);
+    draw_big_pixel(image, area_face.x + x, area_face.y + area_face.size);
+  }
+
+  for (uint8_t y = 2; y < area_face.size; y += 2)
+  {
+    draw_big_pixel(image, area_face.x, area_face.y + y);
+    draw_big_pixel(image, area_face.x + area_face.size - 1, area_face.y + y);
+  }
+}
+
+__attribute__((always_inline))
+static inline void draw_big_pixel(
+  uint16_t *const image,
+  uint8_t x,
+  uint8_t y
+)
+{
+  if (x + 1 >= OV7670_IMAGE_WIDTH)
+    return;
+  if (y + 1 >= OV7670_IMAGE_HEIGHT)
+    return;
+
   uint16_t *up_left_pixel = GET_RGB_PIXEL(
     image,
-    area_face.x,
-    area_face.y,
+    x,
+    y,
     OV7670_IMAGE_WIDTH
   );
   uint16_t *up_right_pixel = GET_RGB_PIXEL(
     image,
-    area_face.x + area_face.size,
-    area_face.y,
+    x + 1,
+    y,
     OV7670_IMAGE_WIDTH
   );
   uint16_t *down_left_pixel = GET_RGB_PIXEL(
     image,
-    area_face.x,
-    area_face.y + area_face.size,
+    x,
+    y + 1,
     OV7670_IMAGE_WIDTH
   );
   uint16_t *down_right_pixel = GET_RGB_PIXEL(
     image,
-    area_face.x + area_face.size,
-    area_face.y + area_face.size,
+    x + 1,
+    y + 1,
     OV7670_IMAGE_WIDTH
   );
 

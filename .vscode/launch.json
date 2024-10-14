@@ -18,7 +18,8 @@
                 "/usr/share/openocd/scripts/target/stm32f4x.cfg"
             ],
             "gdbPath": "/usr/src/arm-gnu-toolchain-13.3/bin/arm-none-eabi-gdb",
-            "showDevDebugOutput": "raw"
+            "showDevDebugOutput": "raw",
+            
         }
     ]
 }

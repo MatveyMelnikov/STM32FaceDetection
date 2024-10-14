@@ -16,22 +16,6 @@ void stage_reset_feature_handler()
   feature_handler = (stage_feature_handler){ 0 };
 }
 
-void stage_calculate_scaled_features(
-  stage *const self,
-  const float *const scales,
-  const uint8_t scales_amount
-)
-{
-  for (uint8_t i = 0; i < self->features_amount; i++)
-  {
-    feature_handler.generate_scaled_rectangles(
-      &self->features[i],
-      scales,
-      scales_amount
-    );
-  }
-}
-
 void stage_destroy(stage *const self)
 {
   for (uint8_t i = 0; i < self->features_amount; i++)

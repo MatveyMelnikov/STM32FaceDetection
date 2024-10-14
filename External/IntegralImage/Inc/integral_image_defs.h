@@ -8,8 +8,6 @@
     const uint16_t *const, \
     const uint8_t \
   )
-
-// args: fill_line_functor, image_source, image_size (source)
 #define FILL_IMAGE_FUNCTOR void (*fill_integral_image_line)( \
     FILL_LINE_FUNCTOR, \
     const uint8_t *const, \

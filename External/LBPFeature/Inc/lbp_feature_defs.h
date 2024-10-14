@@ -29,7 +29,7 @@ typedef struct
 {
   uint8_t offset_x;
   uint8_t offset_y;
-  uint8_t scale_index;
+  float scale;
 } lbp_feature_arguments;
 
 typedef struct

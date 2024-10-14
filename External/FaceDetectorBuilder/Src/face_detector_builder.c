@@ -23,7 +23,6 @@ void face_detector_builder_create(
     (stage_feature_handler) {
       .calculate_vote = lbp_feature_calculate_vote,
       .destroy = lbp_feature_destroy,
-      .generate_scaled_rectangles = lbp_feature_generate_scaled_rectangles
     }
   );
 
@@ -32,7 +31,6 @@ void face_detector_builder_create(
     stages_amount,
     (face_detector_stage_handler) {
       .calculate_prediction = stage_calculate_prediction,
-      .calculate_scaled_features = stage_calculate_scaled_features,
       .create_stage_from_source = binary_stage_parser_create
     }
   );

@@ -33,12 +33,6 @@ typedef struct
 {
   // source, stages_amount
   stage *const (*create_stage_from_source)(uint8_t *const, uint8_t);
-  // self, scales, scales_amount
-  void (*calculate_scaled_features)(
-    stage *const,
-    const float *const,
-    const uint8_t
-  );
   // self, arguments
   bool (*calculate_prediction)(
     stage *const,
