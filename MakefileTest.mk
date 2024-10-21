@@ -9,7 +9,8 @@ C_INCLUDES += \
 -I$(UNITY_DIR)/extras/fixture/src \
 -I$(UNITY_DIR)/extras/memory/src \
 -I$(TESTS_DIR) \
--I$(TESTS_DIR)/Mocks/Inc
+-I$(TESTS_DIR)/Mocks/Inc \
+-I$(TESTS_DIR)/Fakes/Inc
 
 C_SOURCES += \
 $(UNITY_DIR)/src/unity.c \

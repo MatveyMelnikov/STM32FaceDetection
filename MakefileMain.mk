@@ -9,6 +9,7 @@ BINARY_STAGE_PARSER_DIR = $(MODULES_DIR)/BinaryStageParser
 FACE_DETECTOR_DIR = $(MODULES_DIR)/FaceDetector
 FACE_DETECTOR_BUILDER_DIR = $(MODULES_DIR)/FaceDetectorBuilder
 AREA_DIR = $(MODULES_DIR)/Area
+SIMD_INSTRUCTIONS = $(MODULES_DIR)/SIMD_Instructions
 
 TESTS = N
 
@@ -36,5 +37,9 @@ $(FACE_DETECTOR_BUILDER_DIR)/Src/face_detector_builder.c
 ifeq ($(TESTS), Y)
 include MakefileTest.mk
 else
+
+C_INCLUDES += \
+-I$(SIMD_INSTRUCTIONS)/Inc
+
 include MakefileTarget.mk                                       
 endif
