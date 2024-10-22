@@ -7,7 +7,9 @@
 
 // Static variables ----------------------------------------------------------
 
-static uint16_t *integral_image = NULL;
+// static uint16_t *integral_image = NULL;
+__attribute__((section(".ccmram")))
+static uint16_t integral_image[INTEGRAL_IMAGE_SIZE];
 static integral_image_size image_size = { 0 };
 static integral_image_size source_image_size = { 0 };
 static void (*fill_image)(
@@ -44,9 +46,6 @@ void integral_image_create(integral_image_size size, FILL_IMAGE_FUNCTOR)
   };
   source_image_size = size;
 
-  integral_image = (uint16_t*)malloc(
-    (image_size.width * image_size.height) * sizeof(uint16_t)
-  );
   fill_image = fill_integral_image_line;
 }
 
@@ -69,9 +68,6 @@ static void integral_image_fill_line(
 
 void integral_image_destroy(void)
 {
-  free(integral_image);
-  integral_image = NULL;
-
   image_size = (integral_image_size){ 0 };
 }
 
