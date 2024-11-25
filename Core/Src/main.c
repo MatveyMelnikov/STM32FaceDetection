@@ -122,6 +122,23 @@ static inline void draw_big_pixel(
   uint8_t y
 );
 
+static ov7670_status ov7670_receive(
+  const uint16_t dev_address,
+  uint8_t *const data,
+  const uint16_t data_size,
+  const uint16_t timeout
+);
+static ov7670_status ov7670_transmit(
+  const uint16_t dev_address,
+  const uint8_t *const data,
+  const uint16_t data_size,
+  const uint16_t timeout
+);
+static ov7670_status start_receiving_frames(
+  uint32_t data,
+  uint32_t data_size
+);
+
 static void configure_display(void);
 static void configure_camera(void);
 /* USER CODE END PFP */
@@ -196,7 +213,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-		ov7670_send_captured_frame(&hdcmi);
+		ov7670_send_captured_frame();
   }
   /* USER CODE END 3 */
 }
@@ -593,6 +610,51 @@ static inline void draw_big_pixel(
   SET_PIXEL_COLOR(down_right_pixel, 255, 0, 0);
 }
 
+static ov7670_status ov7670_receive(
+  const uint16_t dev_address,
+  uint8_t *const data,
+  const uint16_t data_size,
+  const uint16_t timeout
+)
+{
+  return (ov7670_status)HAL_I2C_Master_Receive(
+		&hi2c2,
+		dev_address,
+		data,
+		data_size,
+		timeout
+  );
+}
+
+static ov7670_status ov7670_transmit(
+  const uint16_t dev_address,
+  const uint8_t *const data,
+  const uint16_t data_size,
+  const uint16_t timeout
+)
+{
+  return (ov7670_status)HAL_I2C_Master_Transmit(
+    &hi2c2,
+    dev_address,
+    (uint8_t*)data,
+    data_size,
+    timeout
+  );
+}
+
+static ov7670_status start_receiving_frames(
+  uint32_t data,
+  uint32_t data_size
+)
+{
+	return (ov7670_status)HAL_DCMI_Start_DMA(
+		&hdcmi,
+		DCMI_MODE_CONTINUOUS,
+		data,
+		data_size
+	);
+}
+
 static void configure_display()
 {
 	tft_io = (ili9341_tft_driver_io_struct) {
@@ -616,7 +678,11 @@ static void configure_camera()
 	HAL_Delay(10);
 	
 	ov7670_create(
-		&hi2c2,
+		(ov7670_io_handler) {
+      .receive = ov7670_receive,
+      .transmit = ov7670_transmit,
+      .start_receiving_frames = start_receiving_frames
+    },
 		(ov7670_window_size) { .width = 172U, .height = 144U }
 	);
 
@@ -639,7 +705,7 @@ static void configure_camera()
 
 void HAL_DCMI_FrameEventCallback(DCMI_HandleTypeDef *hdcmi)
 {
-	ov7670_frame_received(hdcmi);
+	ov7670_frame_received();
 }
 
 void HAL_DCMI_LineEventCallback(DCMI_HandleTypeDef *hdcmi)

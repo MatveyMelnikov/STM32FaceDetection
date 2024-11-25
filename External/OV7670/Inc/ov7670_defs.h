@@ -1,7 +1,31 @@
 #ifndef OV7670_DEFS_H
 #define OV7670_DEFS_H
 
-#include "stm32f4xx_hal.h"
+typedef enum {
+  OV7670_OK = 0x00U,
+  OV7670_ERROR = 0x01U,
+  OV7670_BUSY = 0x02U,
+  OV7670_ERROR_TIMEOUT = 0x03U
+} ov7670_status;
+
+typedef struct {
+  // dev_address, data, data_size, timeout
+  ov7670_status (*receive)(
+    const uint16_t,
+    uint8_t *const,
+    const uint16_t,
+    const uint16_t
+  );
+  // dev_address, data, data_size, timeout
+  ov7670_status (*transmit)(
+    const uint16_t,
+    const uint8_t *const,
+    const uint16_t,
+    const uint16_t
+  );
+  // data, data_size
+  ov7670_status (*start_receiving_frames)(uint32_t, uint32_t);
+} ov7670_io_handler;
 
 typedef enum
 {
