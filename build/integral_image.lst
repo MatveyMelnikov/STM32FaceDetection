@@ -1,0 +1,903 @@
+ARM GAS  /tmp/ccG7IsiA.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"integral_image.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "External/IntegralImage/Src/integral_image.c"
+  20              		.section	.text.integral_image_calculate_top_line,"ax",%progbits
+  21              		.align	1
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	integral_image_calculate_top_line:
+  27              	.LFB6:
+   1:External/IntegralImage/Src/integral_image.c **** #include "integral_image.h"
+   2:External/IntegralImage/Src/integral_image.c **** #include <stddef.h>
+   3:External/IntegralImage/Src/integral_image.c **** #include <stdlib.h>
+   4:External/IntegralImage/Src/integral_image.c **** #include <math.h>
+   5:External/IntegralImage/Src/integral_image.c **** #include <string.h>
+   6:External/IntegralImage/Src/integral_image.c **** 
+   7:External/IntegralImage/Src/integral_image.c **** // Static variables ----------------------------------------------------------
+   8:External/IntegralImage/Src/integral_image.c **** 
+   9:External/IntegralImage/Src/integral_image.c **** static uint16_t *integral_image = NULL;
+  10:External/IntegralImage/Src/integral_image.c **** static void (*fill_line)(
+  11:External/IntegralImage/Src/integral_image.c **** 	FILL_LINE_FUNCTOR,
+  12:External/IntegralImage/Src/integral_image.c **** 	const uint8_t *const,
+  13:External/IntegralImage/Src/integral_image.c **** 	integral_image_size
+  14:External/IntegralImage/Src/integral_image.c **** );
+  15:External/IntegralImage/Src/integral_image.c **** static integral_image_size image_size = { 0 };
+  16:External/IntegralImage/Src/integral_image.c **** static integral_image_size source_image_size = { 0 };
+  17:External/IntegralImage/Src/integral_image.c **** 
+  18:External/IntegralImage/Src/integral_image.c **** // Defines -------------------------------------------------------------------
+  19:External/IntegralImage/Src/integral_image.c **** 
+  20:External/IntegralImage/Src/integral_image.c **** #define GET_PIXEL(arr, x, y) \
+  21:External/IntegralImage/Src/integral_image.c **** 	arr[(x) + (y) * image_size.width]
+  22:External/IntegralImage/Src/integral_image.c **** 
+  23:External/IntegralImage/Src/integral_image.c **** // Static prototypes ---------------------------------------------------------
+  24:External/IntegralImage/Src/integral_image.c **** 
+  25:External/IntegralImage/Src/integral_image.c **** static void integral_image_fill_line(
+  26:External/IntegralImage/Src/integral_image.c ****   const uint16_t *const image_data,
+  27:External/IntegralImage/Src/integral_image.c ****   const uint8_t line_index
+  28:External/IntegralImage/Src/integral_image.c **** );
+  29:External/IntegralImage/Src/integral_image.c **** static void integral_image_calculate_initial_column_and_line(void);
+  30:External/IntegralImage/Src/integral_image.c **** static void integral_image_calculate_top_line(void);
+  31:External/IntegralImage/Src/integral_image.c **** static void integral_image_calculate_start_column(void);
+ARM GAS  /tmp/ccG7IsiA.s 			page 2
+
+
+  32:External/IntegralImage/Src/integral_image.c **** static void integral_image_calculate_other_elements(void);
+  33:External/IntegralImage/Src/integral_image.c **** 
+  34:External/IntegralImage/Src/integral_image.c **** // Implementations -----------------------------------------------------------
+  35:External/IntegralImage/Src/integral_image.c **** 
+  36:External/IntegralImage/Src/integral_image.c **** void integral_image_create(integral_image_size size, FILL_IMAGE_FUNCTOR)
+  37:External/IntegralImage/Src/integral_image.c **** {
+  38:External/IntegralImage/Src/integral_image.c ****   image_size = (integral_image_size) {
+  39:External/IntegralImage/Src/integral_image.c ****     .height = size.height + 1,
+  40:External/IntegralImage/Src/integral_image.c ****     .width = size.width + 1
+  41:External/IntegralImage/Src/integral_image.c ****   };
+  42:External/IntegralImage/Src/integral_image.c ****   source_image_size = size;
+  43:External/IntegralImage/Src/integral_image.c **** 
+  44:External/IntegralImage/Src/integral_image.c ****   integral_image = (uint16_t*)malloc(
+  45:External/IntegralImage/Src/integral_image.c ****     (image_size.width * image_size.height) * sizeof(uint16_t)
+  46:External/IntegralImage/Src/integral_image.c ****   );
+  47:External/IntegralImage/Src/integral_image.c **** 	fill_line = fill_integral_image_line;
+  48:External/IntegralImage/Src/integral_image.c **** }
+  49:External/IntegralImage/Src/integral_image.c **** 
+  50:External/IntegralImage/Src/integral_image.c **** void integral_image_set(const uint8_t *const image_source)
+  51:External/IntegralImage/Src/integral_image.c **** {
+  52:External/IntegralImage/Src/integral_image.c ****   fill_line(integral_image_fill_line, image_source, source_image_size);
+  53:External/IntegralImage/Src/integral_image.c **** }
+  54:External/IntegralImage/Src/integral_image.c **** 
+  55:External/IntegralImage/Src/integral_image.c **** static void integral_image_fill_line(
+  56:External/IntegralImage/Src/integral_image.c ****   const uint16_t *const image_data,
+  57:External/IntegralImage/Src/integral_image.c ****   const uint8_t line_index
+  58:External/IntegralImage/Src/integral_image.c **** )
+  59:External/IntegralImage/Src/integral_image.c **** {
+  60:External/IntegralImage/Src/integral_image.c ****   memcpy(
+  61:External/IntegralImage/Src/integral_image.c ****     integral_image + 1 + ((line_index + 1) * image_size.width),
+  62:External/IntegralImage/Src/integral_image.c ****     image_data,
+  63:External/IntegralImage/Src/integral_image.c ****     source_image_size.width * sizeof(uint16_t)
+  64:External/IntegralImage/Src/integral_image.c ****   );
+  65:External/IntegralImage/Src/integral_image.c **** }
+  66:External/IntegralImage/Src/integral_image.c **** 
+  67:External/IntegralImage/Src/integral_image.c **** void integral_image_destroy(void)
+  68:External/IntegralImage/Src/integral_image.c **** {
+  69:External/IntegralImage/Src/integral_image.c ****   free(integral_image);
+  70:External/IntegralImage/Src/integral_image.c ****   integral_image = NULL;
+  71:External/IntegralImage/Src/integral_image.c **** 
+  72:External/IntegralImage/Src/integral_image.c ****   image_size = (integral_image_size){ 0 };
+  73:External/IntegralImage/Src/integral_image.c **** }
+  74:External/IntegralImage/Src/integral_image.c **** 
+  75:External/IntegralImage/Src/integral_image.c **** void integral_image_calculate(void)
+  76:External/IntegralImage/Src/integral_image.c **** {
+  77:External/IntegralImage/Src/integral_image.c **** 	integral_image_calculate_initial_column_and_line();
+  78:External/IntegralImage/Src/integral_image.c **** 	integral_image_calculate_other_elements();
+  79:External/IntegralImage/Src/integral_image.c **** }
+  80:External/IntegralImage/Src/integral_image.c **** 
+  81:External/IntegralImage/Src/integral_image.c **** static void integral_image_calculate_initial_column_and_line()
+  82:External/IntegralImage/Src/integral_image.c **** {
+  83:External/IntegralImage/Src/integral_image.c **** 	integral_image_calculate_top_line();
+  84:External/IntegralImage/Src/integral_image.c **** 	integral_image_calculate_start_column();
+  85:External/IntegralImage/Src/integral_image.c **** }
+  86:External/IntegralImage/Src/integral_image.c **** 
+  87:External/IntegralImage/Src/integral_image.c **** static void integral_image_calculate_top_line()
+  88:External/IntegralImage/Src/integral_image.c **** {
+ARM GAS  /tmp/ccG7IsiA.s 			page 3
+
+
+  28              		.loc 1 88 1 view -0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32              		@ link register save eliminated.
+  89:External/IntegralImage/Src/integral_image.c **** 	for (uint16_t x = 0; x < image_size.width; x++)
+  33              		.loc 1 89 2 view .LVU1
+  34              	.LBB2:
+  35              		.loc 1 89 7 view .LVU2
+  36              	.LVL0:
+  37              		.loc 1 89 16 is_stmt 0 view .LVU3
+  38 0000 0023     		movs	r3, #0
+  39              		.loc 1 89 2 view .LVU4
+  40 0002 06E0     		b	.L2
+  41              	.LVL1:
+  42              	.L3:
+  90:External/IntegralImage/Src/integral_image.c **** 	{
+  91:External/IntegralImage/Src/integral_image.c **** 		GET_PIXEL(integral_image, x, 0) = 0U;
+  43              		.loc 1 91 3 is_stmt 1 view .LVU5
+  44 0004 054A     		ldr	r2, .L4
+  45 0006 1268     		ldr	r2, [r2]
+  46              		.loc 1 91 35 is_stmt 0 view .LVU6
+  47 0008 0021     		movs	r1, #0
+  48 000a 22F81310 		strh	r1, [r2, r3, lsl #1]	@ movhi
+  89:External/IntegralImage/Src/integral_image.c **** 	for (uint16_t x = 0; x < image_size.width; x++)
+  49              		.loc 1 89 46 is_stmt 1 discriminator 3 view .LVU7
+  50 000e 0133     		adds	r3, r3, #1
+  51              	.LVL2:
+  89:External/IntegralImage/Src/integral_image.c **** 	for (uint16_t x = 0; x < image_size.width; x++)
+  52              		.loc 1 89 46 is_stmt 0 discriminator 3 view .LVU8
+  53 0010 9BB2     		uxth	r3, r3
+  54              	.LVL3:
+  55              	.L2:
+  89:External/IntegralImage/Src/integral_image.c **** 	for (uint16_t x = 0; x < image_size.width; x++)
+  56              		.loc 1 89 25 is_stmt 1 discriminator 1 view .LVU9
+  89:External/IntegralImage/Src/integral_image.c **** 	for (uint16_t x = 0; x < image_size.width; x++)
+  57              		.loc 1 89 37 is_stmt 0 discriminator 1 view .LVU10
+  58 0012 034A     		ldr	r2, .L4+4
+  59 0014 1278     		ldrb	r2, [r2]	@ zero_extendqisi2
+  89:External/IntegralImage/Src/integral_image.c **** 	for (uint16_t x = 0; x < image_size.width; x++)
+  60              		.loc 1 89 25 discriminator 1 view .LVU11
+  61 0016 9A42     		cmp	r2, r3
+  62 0018 F4D8     		bhi	.L3
+  63              	.LBE2:
+  92:External/IntegralImage/Src/integral_image.c **** 	}
+  93:External/IntegralImage/Src/integral_image.c **** }
+  64              		.loc 1 93 1 view .LVU12
+  65 001a 7047     		bx	lr
+  66              	.L5:
+  67              		.align	2
+  68              	.L4:
+  69 001c 00000000 		.word	integral_image
+  70 0020 00000000 		.word	image_size
+  71              		.cfi_endproc
+  72              	.LFE6:
+  74              		.section	.text.integral_image_calculate_start_column,"ax",%progbits
+  75              		.align	1
+ARM GAS  /tmp/ccG7IsiA.s 			page 4
+
+
+  76              		.syntax unified
+  77              		.thumb
+  78              		.thumb_func
+  80              	integral_image_calculate_start_column:
+  81              	.LFB7:
+  94:External/IntegralImage/Src/integral_image.c **** 
+  95:External/IntegralImage/Src/integral_image.c **** static void integral_image_calculate_start_column()
+  96:External/IntegralImage/Src/integral_image.c **** {
+  82              		.loc 1 96 1 is_stmt 1 view -0
+  83              		.cfi_startproc
+  84              		@ args = 0, pretend = 0, frame = 0
+  85              		@ frame_needed = 0, uses_anonymous_args = 0
+  86              		@ link register save eliminated.
+  97:External/IntegralImage/Src/integral_image.c **** 	for (uint16_t y = 1; y < image_size.height; y++)
+  87              		.loc 1 97 2 view .LVU14
+  88              	.LBB3:
+  89              		.loc 1 97 7 view .LVU15
+  90              	.LVL4:
+  91              		.loc 1 97 16 is_stmt 0 view .LVU16
+  92 0000 0123     		movs	r3, #1
+  93              		.loc 1 97 2 view .LVU17
+  94 0002 0AE0     		b	.L7
+  95              	.LVL5:
+  96              	.L8:
+  98:External/IntegralImage/Src/integral_image.c **** 	{
+  99:External/IntegralImage/Src/integral_image.c **** 		GET_PIXEL(integral_image, 0, y) = 0U;
+  97              		.loc 1 99 3 is_stmt 1 view .LVU18
+  98 0004 074A     		ldr	r2, .L9
+  99 0006 1278     		ldrb	r2, [r2]	@ zero_extendqisi2
+ 100 0008 03FB02F2 		mul	r2, r3, r2
+ 101 000c 0649     		ldr	r1, .L9+4
+ 102 000e 0968     		ldr	r1, [r1]
+ 103              		.loc 1 99 35 is_stmt 0 view .LVU19
+ 104 0010 0020     		movs	r0, #0
+ 105 0012 21F81200 		strh	r0, [r1, r2, lsl #1]	@ movhi
+  97:External/IntegralImage/Src/integral_image.c **** 	for (uint16_t y = 1; y < image_size.height; y++)
+ 106              		.loc 1 97 47 is_stmt 1 discriminator 3 view .LVU20
+ 107 0016 0133     		adds	r3, r3, #1
+ 108              	.LVL6:
+  97:External/IntegralImage/Src/integral_image.c **** 	for (uint16_t y = 1; y < image_size.height; y++)
+ 109              		.loc 1 97 47 is_stmt 0 discriminator 3 view .LVU21
+ 110 0018 9BB2     		uxth	r3, r3
+ 111              	.LVL7:
+ 112              	.L7:
+  97:External/IntegralImage/Src/integral_image.c **** 	for (uint16_t y = 1; y < image_size.height; y++)
+ 113              		.loc 1 97 25 is_stmt 1 discriminator 1 view .LVU22
+  97:External/IntegralImage/Src/integral_image.c **** 	for (uint16_t y = 1; y < image_size.height; y++)
+ 114              		.loc 1 97 37 is_stmt 0 discriminator 1 view .LVU23
+ 115 001a 024A     		ldr	r2, .L9
+ 116 001c 5278     		ldrb	r2, [r2, #1]	@ zero_extendqisi2
+  97:External/IntegralImage/Src/integral_image.c **** 	for (uint16_t y = 1; y < image_size.height; y++)
+ 117              		.loc 1 97 25 discriminator 1 view .LVU24
+ 118 001e 9A42     		cmp	r2, r3
+ 119 0020 F0D8     		bhi	.L8
+ 120              	.LBE3:
+ 100:External/IntegralImage/Src/integral_image.c **** 	}
+ 101:External/IntegralImage/Src/integral_image.c **** }
+ARM GAS  /tmp/ccG7IsiA.s 			page 5
+
+
+ 121              		.loc 1 101 1 view .LVU25
+ 122 0022 7047     		bx	lr
+ 123              	.L10:
+ 124              		.align	2
+ 125              	.L9:
+ 126 0024 00000000 		.word	image_size
+ 127 0028 00000000 		.word	integral_image
+ 128              		.cfi_endproc
+ 129              	.LFE7:
+ 131              		.section	.text.integral_image_calculate_initial_column_and_line,"ax",%progbits
+ 132              		.align	1
+ 133              		.syntax unified
+ 134              		.thumb
+ 135              		.thumb_func
+ 137              	integral_image_calculate_initial_column_and_line:
+ 138              	.LFB5:
+  82:External/IntegralImage/Src/integral_image.c **** 	integral_image_calculate_top_line();
+ 139              		.loc 1 82 1 is_stmt 1 view -0
+ 140              		.cfi_startproc
+ 141              		@ args = 0, pretend = 0, frame = 0
+ 142              		@ frame_needed = 0, uses_anonymous_args = 0
+ 143 0000 08B5     		push	{r3, lr}
+ 144              	.LCFI0:
+ 145              		.cfi_def_cfa_offset 8
+ 146              		.cfi_offset 3, -8
+ 147              		.cfi_offset 14, -4
+  83:External/IntegralImage/Src/integral_image.c **** 	integral_image_calculate_start_column();
+ 148              		.loc 1 83 2 view .LVU27
+ 149 0002 FFF7FEFF 		bl	integral_image_calculate_top_line
+ 150              	.LVL8:
+  84:External/IntegralImage/Src/integral_image.c **** }
+ 151              		.loc 1 84 2 view .LVU28
+ 152 0006 FFF7FEFF 		bl	integral_image_calculate_start_column
+ 153              	.LVL9:
+  85:External/IntegralImage/Src/integral_image.c **** 
+ 154              		.loc 1 85 1 is_stmt 0 view .LVU29
+ 155 000a 08BD     		pop	{r3, pc}
+ 156              		.cfi_endproc
+ 157              	.LFE5:
+ 159              		.section	.text.integral_image_calculate_other_elements,"ax",%progbits
+ 160              		.align	1
+ 161              		.syntax unified
+ 162              		.thumb
+ 163              		.thumb_func
+ 165              	integral_image_calculate_other_elements:
+ 166              	.LFB8:
+ 102:External/IntegralImage/Src/integral_image.c **** 
+ 103:External/IntegralImage/Src/integral_image.c **** static void integral_image_calculate_other_elements()
+ 104:External/IntegralImage/Src/integral_image.c **** {
+ 167              		.loc 1 104 1 is_stmt 1 view -0
+ 168              		.cfi_startproc
+ 169              		@ args = 0, pretend = 0, frame = 0
+ 170              		@ frame_needed = 0, uses_anonymous_args = 0
+ 171 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+ 172              	.LCFI1:
+ 173              		.cfi_def_cfa_offset 20
+ 174              		.cfi_offset 4, -20
+ARM GAS  /tmp/ccG7IsiA.s 			page 6
+
+
+ 175              		.cfi_offset 5, -16
+ 176              		.cfi_offset 6, -12
+ 177              		.cfi_offset 7, -8
+ 178              		.cfi_offset 14, -4
+ 105:External/IntegralImage/Src/integral_image.c **** 	for (uint16_t x = 1; x < image_size.width; x++)
+ 179              		.loc 1 105 2 view .LVU31
+ 180              	.LBB4:
+ 181              		.loc 1 105 7 view .LVU32
+ 182              	.LVL10:
+ 183              		.loc 1 105 16 is_stmt 0 view .LVU33
+ 184 0002 4FF0010E 		mov	lr, #1
+ 185              		.loc 1 105 2 view .LVU34
+ 186 0006 28E0     		b	.L14
+ 187              	.LVL11:
+ 188              	.L15:
+ 189              	.LBB5:
+ 106:External/IntegralImage/Src/integral_image.c **** 	{
+ 107:External/IntegralImage/Src/integral_image.c **** 		for (uint16_t y = 1; y < image_size.height; y++)
+ 108:External/IntegralImage/Src/integral_image.c **** 		{
+ 109:External/IntegralImage/Src/integral_image.c **** 			GET_PIXEL(integral_image, x, y) +=
+ 190              		.loc 1 109 4 is_stmt 1 view .LVU35
+ 191 0008 174B     		ldr	r3, .L20
+ 192 000a 1968     		ldr	r1, [r3]
+ 193 000c 05FB02F3 		mul	r3, r5, r2
+ 194 0010 0EEB0304 		add	r4, lr, r3
+ 195 0014 31F81460 		ldrh	r6, [r1, r4, lsl #1]
+ 110:External/IntegralImage/Src/integral_image.c ****         GET_PIXEL(integral_image, x - 1, y) +
+ 196              		.loc 1 110 9 is_stmt 0 view .LVU36
+ 197 0018 0EF1FF30 		add	r0, lr, #-1
+ 198 001c 0344     		add	r3, r3, r0
+ 199 001e 31F81330 		ldrh	r3, [r1, r3, lsl #1]
+ 111:External/IntegralImage/Src/integral_image.c ****         GET_PIXEL(integral_image, x, y - 1) -
+ 200              		.loc 1 111 9 view .LVU37
+ 201 0022 02F1FF3C 		add	ip, r2, #-1
+ 202 0026 0CFB05FC 		mul	ip, ip, r5
+ 203 002a 0EEB0C07 		add	r7, lr, ip
+ 204 002e 31F81770 		ldrh	r7, [r1, r7, lsl #1]
+ 110:External/IntegralImage/Src/integral_image.c ****         GET_PIXEL(integral_image, x - 1, y) +
+ 205              		.loc 1 110 45 view .LVU38
+ 206 0032 3B44     		add	r3, r3, r7
+ 207 0034 9BB2     		uxth	r3, r3
+ 112:External/IntegralImage/Src/integral_image.c **** 				GET_PIXEL(integral_image, x - 1, y - 1);
+ 208              		.loc 1 112 5 view .LVU39
+ 209 0036 6044     		add	r0, r0, ip
+ 210 0038 31F81000 		ldrh	r0, [r1, r0, lsl #1]
+ 111:External/IntegralImage/Src/integral_image.c ****         GET_PIXEL(integral_image, x, y - 1) -
+ 211              		.loc 1 111 45 view .LVU40
+ 212 003c 1B1A     		subs	r3, r3, r0
+ 109:External/IntegralImage/Src/integral_image.c ****         GET_PIXEL(integral_image, x - 1, y) +
+ 213              		.loc 1 109 36 view .LVU41
+ 214 003e 16FA83F3 		uxtah	r3, r6, r3
+ 215 0042 21F81430 		strh	r3, [r1, r4, lsl #1]	@ movhi
+ 107:External/IntegralImage/Src/integral_image.c **** 		{
+ 216              		.loc 1 107 48 is_stmt 1 discriminator 3 view .LVU42
+ 217 0046 0132     		adds	r2, r2, #1
+ 218              	.LVL12:
+ 107:External/IntegralImage/Src/integral_image.c **** 		{
+ARM GAS  /tmp/ccG7IsiA.s 			page 7
+
+
+ 219              		.loc 1 107 48 is_stmt 0 discriminator 3 view .LVU43
+ 220 0048 92B2     		uxth	r2, r2
+ 221              	.LVL13:
+ 222              	.L16:
+ 107:External/IntegralImage/Src/integral_image.c **** 		{
+ 223              		.loc 1 107 26 is_stmt 1 discriminator 1 view .LVU44
+ 107:External/IntegralImage/Src/integral_image.c **** 		{
+ 224              		.loc 1 107 38 is_stmt 0 discriminator 1 view .LVU45
+ 225 004a 084B     		ldr	r3, .L20+4
+ 226 004c 5B78     		ldrb	r3, [r3, #1]	@ zero_extendqisi2
+ 107:External/IntegralImage/Src/integral_image.c **** 		{
+ 227              		.loc 1 107 26 discriminator 1 view .LVU46
+ 228 004e 9342     		cmp	r3, r2
+ 229 0050 DAD8     		bhi	.L15
+ 230              	.LBE5:
+ 105:External/IntegralImage/Src/integral_image.c **** 	{
+ 231              		.loc 1 105 46 is_stmt 1 discriminator 2 view .LVU47
+ 232 0052 0EF1010E 		add	lr, lr, #1
+ 233              	.LVL14:
+ 105:External/IntegralImage/Src/integral_image.c **** 	{
+ 234              		.loc 1 105 46 is_stmt 0 discriminator 2 view .LVU48
+ 235 0056 1FFA8EFE 		uxth	lr, lr
+ 236              	.LVL15:
+ 237              	.L14:
+ 105:External/IntegralImage/Src/integral_image.c **** 	{
+ 238              		.loc 1 105 25 is_stmt 1 discriminator 1 view .LVU49
+ 105:External/IntegralImage/Src/integral_image.c **** 	{
+ 239              		.loc 1 105 37 is_stmt 0 discriminator 1 view .LVU50
+ 240 005a 044B     		ldr	r3, .L20+4
+ 241 005c 1D78     		ldrb	r5, [r3]	@ zero_extendqisi2
+ 105:External/IntegralImage/Src/integral_image.c **** 	{
+ 242              		.loc 1 105 25 discriminator 1 view .LVU51
+ 243 005e 7545     		cmp	r5, lr
+ 244 0060 01D9     		bls	.L19
+ 245              	.LBB6:
+ 107:External/IntegralImage/Src/integral_image.c **** 		{
+ 246              		.loc 1 107 17 view .LVU52
+ 247 0062 0122     		movs	r2, #1
+ 248 0064 F1E7     		b	.L16
+ 249              	.L19:
+ 250              	.LBE6:
+ 251              	.LBE4:
+ 113:External/IntegralImage/Src/integral_image.c **** 		}
+ 114:External/IntegralImage/Src/integral_image.c **** 	}
+ 115:External/IntegralImage/Src/integral_image.c **** }
+ 252              		.loc 1 115 1 view .LVU53
+ 253 0066 F0BD     		pop	{r4, r5, r6, r7, pc}
+ 254              	.L21:
+ 255              		.align	2
+ 256              	.L20:
+ 257 0068 00000000 		.word	integral_image
+ 258 006c 00000000 		.word	image_size
+ 259              		.cfi_endproc
+ 260              	.LFE8:
+ 262              		.section	.text.integral_image_fill_line,"ax",%progbits
+ 263              		.align	1
+ 264              		.syntax unified
+ARM GAS  /tmp/ccG7IsiA.s 			page 8
+
+
+ 265              		.thumb
+ 266              		.thumb_func
+ 268              	integral_image_fill_line:
+ 269              	.LVL16:
+ 270              	.LFB2:
+  59:External/IntegralImage/Src/integral_image.c ****   memcpy(
+ 271              		.loc 1 59 1 is_stmt 1 view -0
+ 272              		.cfi_startproc
+ 273              		@ args = 0, pretend = 0, frame = 0
+ 274              		@ frame_needed = 0, uses_anonymous_args = 0
+  59:External/IntegralImage/Src/integral_image.c ****   memcpy(
+ 275              		.loc 1 59 1 is_stmt 0 view .LVU55
+ 276 0000 10B5     		push	{r4, lr}
+ 277              	.LCFI2:
+ 278              		.cfi_def_cfa_offset 8
+ 279              		.cfi_offset 4, -8
+ 280              		.cfi_offset 14, -4
+  60:External/IntegralImage/Src/integral_image.c ****     integral_image + 1 + ((line_index + 1) * image_size.width),
+ 281              		.loc 1 60 3 is_stmt 1 view .LVU56
+ 282 0002 084B     		ldr	r3, .L24
+ 283 0004 1C68     		ldr	r4, [r3]
+  61:External/IntegralImage/Src/integral_image.c ****     image_data,
+ 284              		.loc 1 61 56 is_stmt 0 view .LVU57
+ 285 0006 084B     		ldr	r3, .L24+4
+ 286 0008 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+  61:External/IntegralImage/Src/integral_image.c ****     image_data,
+ 287              		.loc 1 61 44 view .LVU58
+ 288 000a 01FB0333 		mla	r3, r1, r3, r3
+  61:External/IntegralImage/Src/integral_image.c ****     image_data,
+ 289              		.loc 1 61 24 view .LVU59
+ 290 000e 0133     		adds	r3, r3, #1
+  63:External/IntegralImage/Src/integral_image.c ****   );
+ 291              		.loc 1 63 22 view .LVU60
+ 292 0010 064A     		ldr	r2, .L24+8
+ 293 0012 1278     		ldrb	r2, [r2]	@ zero_extendqisi2
+  60:External/IntegralImage/Src/integral_image.c ****     integral_image + 1 + ((line_index + 1) * image_size.width),
+ 294              		.loc 1 60 3 view .LVU61
+ 295 0014 5200     		lsls	r2, r2, #1
+ 296 0016 0146     		mov	r1, r0
+ 297              	.LVL17:
+  60:External/IntegralImage/Src/integral_image.c ****     integral_image + 1 + ((line_index + 1) * image_size.width),
+ 298              		.loc 1 60 3 view .LVU62
+ 299 0018 04EB4300 		add	r0, r4, r3, lsl #1
+ 300              	.LVL18:
+  60:External/IntegralImage/Src/integral_image.c ****     integral_image + 1 + ((line_index + 1) * image_size.width),
+ 301              		.loc 1 60 3 view .LVU63
+ 302 001c FFF7FEFF 		bl	memcpy
+ 303              	.LVL19:
+  65:External/IntegralImage/Src/integral_image.c **** 
+ 304              		.loc 1 65 1 view .LVU64
+ 305 0020 10BD     		pop	{r4, pc}
+ 306              	.L25:
+ 307 0022 00BF     		.align	2
+ 308              	.L24:
+ 309 0024 00000000 		.word	integral_image
+ 310 0028 00000000 		.word	image_size
+ 311 002c 00000000 		.word	source_image_size
+ARM GAS  /tmp/ccG7IsiA.s 			page 9
+
+
+ 312              		.cfi_endproc
+ 313              	.LFE2:
+ 315              		.section	.text.integral_image_create,"ax",%progbits
+ 316              		.align	1
+ 317              		.global	integral_image_create
+ 318              		.syntax unified
+ 319              		.thumb
+ 320              		.thumb_func
+ 322              	integral_image_create:
+ 323              	.LVL20:
+ 324              	.LFB0:
+  37:External/IntegralImage/Src/integral_image.c ****   image_size = (integral_image_size) {
+ 325              		.loc 1 37 1 is_stmt 1 view -0
+ 326              		.cfi_startproc
+ 327              		@ args = 0, pretend = 0, frame = 8
+ 328              		@ frame_needed = 0, uses_anonymous_args = 0
+  37:External/IntegralImage/Src/integral_image.c ****   image_size = (integral_image_size) {
+ 329              		.loc 1 37 1 is_stmt 0 view .LVU66
+ 330 0000 10B5     		push	{r4, lr}
+ 331              	.LCFI3:
+ 332              		.cfi_def_cfa_offset 8
+ 333              		.cfi_offset 4, -8
+ 334              		.cfi_offset 14, -4
+ 335 0002 82B0     		sub	sp, sp, #8
+ 336              	.LCFI4:
+ 337              		.cfi_def_cfa_offset 16
+ 338 0004 ADF80400 		strh	r0, [sp, #4]	@ movhi
+ 339 0008 0C46     		mov	r4, r1
+  38:External/IntegralImage/Src/integral_image.c ****     .height = size.height + 1,
+ 340              		.loc 1 38 3 is_stmt 1 view .LVU67
+  40:External/IntegralImage/Src/integral_image.c ****   };
+ 341              		.loc 1 40 18 is_stmt 0 view .LVU68
+ 342 000a 9DF80430 		ldrb	r3, [sp, #4]	@ zero_extendqisi2
+  40:External/IntegralImage/Src/integral_image.c ****   };
+ 343              		.loc 1 40 25 view .LVU69
+ 344 000e 0133     		adds	r3, r3, #1
+ 345 0010 DBB2     		uxtb	r3, r3
+  39:External/IntegralImage/Src/integral_image.c ****     .width = size.width + 1
+ 346              		.loc 1 39 19 view .LVU70
+ 347 0012 9DF80520 		ldrb	r2, [sp, #5]	@ zero_extendqisi2
+  39:External/IntegralImage/Src/integral_image.c ****     .width = size.width + 1
+ 348              		.loc 1 39 27 view .LVU71
+ 349 0016 0132     		adds	r2, r2, #1
+ 350 0018 D2B2     		uxtb	r2, r2
+  38:External/IntegralImage/Src/integral_image.c ****     .height = size.height + 1,
+ 351              		.loc 1 38 14 view .LVU72
+ 352 001a 0849     		ldr	r1, .L28
+ 353              	.LVL21:
+  38:External/IntegralImage/Src/integral_image.c ****     .height = size.height + 1,
+ 354              		.loc 1 38 14 view .LVU73
+ 355 001c 0B70     		strb	r3, [r1]
+ 356 001e 4A70     		strb	r2, [r1, #1]
+  42:External/IntegralImage/Src/integral_image.c **** 
+ 357              		.loc 1 42 3 is_stmt 1 view .LVU74
+  42:External/IntegralImage/Src/integral_image.c **** 
+ 358              		.loc 1 42 21 is_stmt 0 view .LVU75
+ 359 0020 0749     		ldr	r1, .L28+4
+ARM GAS  /tmp/ccG7IsiA.s 			page 10
+
+
+ 360 0022 0880     		strh	r0, [r1]	@ movhi
+  44:External/IntegralImage/Src/integral_image.c ****     (image_size.width * image_size.height) * sizeof(uint16_t)
+ 361              		.loc 1 44 3 is_stmt 1 view .LVU76
+  45:External/IntegralImage/Src/integral_image.c ****   );
+ 362              		.loc 1 45 23 is_stmt 0 view .LVU77
+ 363 0024 02FB03F0 		mul	r0, r2, r3
+  44:External/IntegralImage/Src/integral_image.c ****     (image_size.width * image_size.height) * sizeof(uint16_t)
+ 364              		.loc 1 44 31 view .LVU78
+ 365 0028 4000     		lsls	r0, r0, #1
+ 366 002a FFF7FEFF 		bl	malloc
+ 367              	.LVL22:
+  44:External/IntegralImage/Src/integral_image.c ****     (image_size.width * image_size.height) * sizeof(uint16_t)
+ 368              		.loc 1 44 18 discriminator 1 view .LVU79
+ 369 002e 054B     		ldr	r3, .L28+8
+ 370 0030 1860     		str	r0, [r3]
+  47:External/IntegralImage/Src/integral_image.c **** }
+ 371              		.loc 1 47 2 is_stmt 1 view .LVU80
+  47:External/IntegralImage/Src/integral_image.c **** }
+ 372              		.loc 1 47 12 is_stmt 0 view .LVU81
+ 373 0032 054B     		ldr	r3, .L28+12
+ 374 0034 1C60     		str	r4, [r3]
+  48:External/IntegralImage/Src/integral_image.c **** 
+ 375              		.loc 1 48 1 view .LVU82
+ 376 0036 02B0     		add	sp, sp, #8
+ 377              	.LCFI5:
+ 378              		.cfi_def_cfa_offset 8
+ 379              		@ sp needed
+ 380 0038 10BD     		pop	{r4, pc}
+ 381              	.LVL23:
+ 382              	.L29:
+  48:External/IntegralImage/Src/integral_image.c **** 
+ 383              		.loc 1 48 1 view .LVU83
+ 384 003a 00BF     		.align	2
+ 385              	.L28:
+ 386 003c 00000000 		.word	image_size
+ 387 0040 00000000 		.word	source_image_size
+ 388 0044 00000000 		.word	integral_image
+ 389 0048 00000000 		.word	fill_line
+ 390              		.cfi_endproc
+ 391              	.LFE0:
+ 393              		.section	.text.integral_image_set,"ax",%progbits
+ 394              		.align	1
+ 395              		.global	integral_image_set
+ 396              		.syntax unified
+ 397              		.thumb
+ 398              		.thumb_func
+ 400              	integral_image_set:
+ 401              	.LVL24:
+ 402              	.LFB1:
+  51:External/IntegralImage/Src/integral_image.c ****   fill_line(integral_image_fill_line, image_source, source_image_size);
+ 403              		.loc 1 51 1 is_stmt 1 view -0
+ 404              		.cfi_startproc
+ 405              		@ args = 0, pretend = 0, frame = 0
+ 406              		@ frame_needed = 0, uses_anonymous_args = 0
+  51:External/IntegralImage/Src/integral_image.c ****   fill_line(integral_image_fill_line, image_source, source_image_size);
+ 407              		.loc 1 51 1 is_stmt 0 view .LVU85
+ 408 0000 08B5     		push	{r3, lr}
+ARM GAS  /tmp/ccG7IsiA.s 			page 11
+
+
+ 409              	.LCFI6:
+ 410              		.cfi_def_cfa_offset 8
+ 411              		.cfi_offset 3, -8
+ 412              		.cfi_offset 14, -4
+ 413 0002 0146     		mov	r1, r0
+  52:External/IntegralImage/Src/integral_image.c **** }
+ 414              		.loc 1 52 3 is_stmt 1 view .LVU86
+ 415 0004 034B     		ldr	r3, .L32
+ 416 0006 1B68     		ldr	r3, [r3]
+ 417 0008 034A     		ldr	r2, .L32+4
+ 418 000a 1268     		ldr	r2, [r2]
+ 419 000c 0348     		ldr	r0, .L32+8
+ 420              	.LVL25:
+  52:External/IntegralImage/Src/integral_image.c **** }
+ 421              		.loc 1 52 3 is_stmt 0 view .LVU87
+ 422 000e 9847     		blx	r3
+ 423              	.LVL26:
+  53:External/IntegralImage/Src/integral_image.c **** 
+ 424              		.loc 1 53 1 view .LVU88
+ 425 0010 08BD     		pop	{r3, pc}
+ 426              	.L33:
+ 427 0012 00BF     		.align	2
+ 428              	.L32:
+ 429 0014 00000000 		.word	fill_line
+ 430 0018 00000000 		.word	source_image_size
+ 431 001c 00000000 		.word	integral_image_fill_line
+ 432              		.cfi_endproc
+ 433              	.LFE1:
+ 435              		.section	.text.integral_image_destroy,"ax",%progbits
+ 436              		.align	1
+ 437              		.global	integral_image_destroy
+ 438              		.syntax unified
+ 439              		.thumb
+ 440              		.thumb_func
+ 442              	integral_image_destroy:
+ 443              	.LFB3:
+  68:External/IntegralImage/Src/integral_image.c ****   free(integral_image);
+ 444              		.loc 1 68 1 is_stmt 1 view -0
+ 445              		.cfi_startproc
+ 446              		@ args = 0, pretend = 0, frame = 0
+ 447              		@ frame_needed = 0, uses_anonymous_args = 0
+ 448 0000 10B5     		push	{r4, lr}
+ 449              	.LCFI7:
+ 450              		.cfi_def_cfa_offset 8
+ 451              		.cfi_offset 4, -8
+ 452              		.cfi_offset 14, -4
+  69:External/IntegralImage/Src/integral_image.c ****   integral_image = NULL;
+ 453              		.loc 1 69 3 view .LVU90
+ 454 0002 044C     		ldr	r4, .L36
+ 455 0004 2068     		ldr	r0, [r4]
+ 456 0006 FFF7FEFF 		bl	free
+ 457              	.LVL27:
+  70:External/IntegralImage/Src/integral_image.c **** 
+ 458              		.loc 1 70 3 view .LVU91
+  70:External/IntegralImage/Src/integral_image.c **** 
+ 459              		.loc 1 70 18 is_stmt 0 view .LVU92
+ 460 000a 0023     		movs	r3, #0
+ARM GAS  /tmp/ccG7IsiA.s 			page 12
+
+
+ 461 000c 2360     		str	r3, [r4]
+  72:External/IntegralImage/Src/integral_image.c **** }
+ 462              		.loc 1 72 3 is_stmt 1 view .LVU93
+  72:External/IntegralImage/Src/integral_image.c **** }
+ 463              		.loc 1 72 14 is_stmt 0 view .LVU94
+ 464 000e 024A     		ldr	r2, .L36+4
+ 465 0010 1380     		strh	r3, [r2]	@ movhi
+  73:External/IntegralImage/Src/integral_image.c **** 
+ 466              		.loc 1 73 1 view .LVU95
+ 467 0012 10BD     		pop	{r4, pc}
+ 468              	.L37:
+ 469              		.align	2
+ 470              	.L36:
+ 471 0014 00000000 		.word	integral_image
+ 472 0018 00000000 		.word	image_size
+ 473              		.cfi_endproc
+ 474              	.LFE3:
+ 476              		.section	.text.integral_image_calculate,"ax",%progbits
+ 477              		.align	1
+ 478              		.global	integral_image_calculate
+ 479              		.syntax unified
+ 480              		.thumb
+ 481              		.thumb_func
+ 483              	integral_image_calculate:
+ 484              	.LFB4:
+  76:External/IntegralImage/Src/integral_image.c **** 	integral_image_calculate_initial_column_and_line();
+ 485              		.loc 1 76 1 is_stmt 1 view -0
+ 486              		.cfi_startproc
+ 487              		@ args = 0, pretend = 0, frame = 0
+ 488              		@ frame_needed = 0, uses_anonymous_args = 0
+ 489 0000 08B5     		push	{r3, lr}
+ 490              	.LCFI8:
+ 491              		.cfi_def_cfa_offset 8
+ 492              		.cfi_offset 3, -8
+ 493              		.cfi_offset 14, -4
+  77:External/IntegralImage/Src/integral_image.c **** 	integral_image_calculate_other_elements();
+ 494              		.loc 1 77 2 view .LVU97
+ 495 0002 FFF7FEFF 		bl	integral_image_calculate_initial_column_and_line
+ 496              	.LVL28:
+  78:External/IntegralImage/Src/integral_image.c **** }
+ 497              		.loc 1 78 2 view .LVU98
+ 498 0006 FFF7FEFF 		bl	integral_image_calculate_other_elements
+ 499              	.LVL29:
+  79:External/IntegralImage/Src/integral_image.c **** 
+ 500              		.loc 1 79 1 is_stmt 0 view .LVU99
+ 501 000a 08BD     		pop	{r3, pc}
+ 502              		.cfi_endproc
+ 503              	.LFE4:
+ 505              		.section	.text.integral_image_get_rectangle,"ax",%progbits
+ 506              		.align	1
+ 507              		.global	integral_image_get_rectangle
+ 508              		.syntax unified
+ 509              		.thumb
+ 510              		.thumb_func
+ 512              	integral_image_get_rectangle:
+ 513              	.LVL30:
+ 514              	.LFB9:
+ARM GAS  /tmp/ccG7IsiA.s 			page 13
+
+
+ 116:External/IntegralImage/Src/integral_image.c **** 
+ 117:External/IntegralImage/Src/integral_image.c **** const uint16_t integral_image_get_rectangle(
+ 118:External/IntegralImage/Src/integral_image.c **** 	integral_image_rectangle_position* const rectangle
+ 119:External/IntegralImage/Src/integral_image.c **** )
+ 120:External/IntegralImage/Src/integral_image.c **** {
+ 515              		.loc 1 120 1 is_stmt 1 view -0
+ 516              		.cfi_startproc
+ 517              		@ args = 0, pretend = 0, frame = 0
+ 518              		@ frame_needed = 0, uses_anonymous_args = 0
+ 519              		.loc 1 120 1 is_stmt 0 view .LVU101
+ 520 0000 10B5     		push	{r4, lr}
+ 521              	.LCFI9:
+ 522              		.cfi_def_cfa_offset 8
+ 523              		.cfi_offset 4, -8
+ 524              		.cfi_offset 14, -4
+ 121:External/IntegralImage/Src/integral_image.c **** 	uint16_t top_left_corner = GET_PIXEL(
+ 525              		.loc 1 121 2 is_stmt 1 view .LVU102
+ 526              		.loc 1 121 29 is_stmt 0 view .LVU103
+ 527 0002 124B     		ldr	r3, .L42
+ 528 0004 1C68     		ldr	r4, [r3]
+ 529 0006 90F800C0 		ldrb	ip, [r0]	@ zero_extendqisi2
+ 530 000a 4278     		ldrb	r2, [r0, #1]	@ zero_extendqisi2
+ 531 000c 104B     		ldr	r3, .L42+4
+ 532 000e 1978     		ldrb	r1, [r3]	@ zero_extendqisi2
+ 533 0010 01FB02F2 		mul	r2, r1, r2
+ 534 0014 0CEB0203 		add	r3, ip, r2
+ 535              		.loc 1 121 11 view .LVU104
+ 536 0018 34F81330 		ldrh	r3, [r4, r3, lsl #1]
+ 537              	.LVL31:
+ 122:External/IntegralImage/Src/integral_image.c **** 		integral_image,
+ 123:External/IntegralImage/Src/integral_image.c **** 		rectangle->top_left_corner.x,
+ 124:External/IntegralImage/Src/integral_image.c **** 		rectangle->top_left_corner.y
+ 125:External/IntegralImage/Src/integral_image.c **** 	);
+ 126:External/IntegralImage/Src/integral_image.c **** 	uint16_t bottom_right_corner = GET_PIXEL(
+ 538              		.loc 1 126 2 is_stmt 1 view .LVU105
+ 539              		.loc 1 126 33 is_stmt 0 view .LVU106
+ 540 001c 90F802E0 		ldrb	lr, [r0, #2]	@ zero_extendqisi2
+ 541 0020 C078     		ldrb	r0, [r0, #3]	@ zero_extendqisi2
+ 542              	.LVL32:
+ 543              		.loc 1 126 33 view .LVU107
+ 544 0022 00FB01F1 		mul	r1, r0, r1
+ 545 0026 0EEB0100 		add	r0, lr, r1
+ 546              		.loc 1 126 11 view .LVU108
+ 547 002a 34F81000 		ldrh	r0, [r4, r0, lsl #1]
+ 548              	.LVL33:
+ 127:External/IntegralImage/Src/integral_image.c **** 		integral_image,
+ 128:External/IntegralImage/Src/integral_image.c **** 		rectangle->bottom_right_corner.x,
+ 129:External/IntegralImage/Src/integral_image.c **** 		rectangle->bottom_right_corner.y
+ 130:External/IntegralImage/Src/integral_image.c **** 	);
+ 131:External/IntegralImage/Src/integral_image.c **** 	uint16_t top_right_corner = GET_PIXEL(
+ 549              		.loc 1 131 2 is_stmt 1 view .LVU109
+ 550              		.loc 1 131 30 is_stmt 0 view .LVU110
+ 551 002e 7244     		add	r2, r2, lr
+ 552              	.LVL34:
+ 553              		.loc 1 131 11 view .LVU111
+ 554 0030 34F812E0 		ldrh	lr, [r4, r2, lsl #1]
+ 555              	.LVL35:
+ARM GAS  /tmp/ccG7IsiA.s 			page 14
+
+
+ 132:External/IntegralImage/Src/integral_image.c **** 		integral_image,
+ 133:External/IntegralImage/Src/integral_image.c **** 		rectangle->bottom_right_corner.x,
+ 134:External/IntegralImage/Src/integral_image.c **** 		rectangle->top_left_corner.y
+ 135:External/IntegralImage/Src/integral_image.c **** 	);
+ 136:External/IntegralImage/Src/integral_image.c **** 	uint16_t bottom_left_corner = GET_PIXEL(
+ 556              		.loc 1 136 2 is_stmt 1 view .LVU112
+ 557              		.loc 1 136 32 is_stmt 0 view .LVU113
+ 558 0034 8C44     		add	ip, ip, r1
+ 559              	.LVL36:
+ 560              		.loc 1 136 11 view .LVU114
+ 561 0036 34F81C20 		ldrh	r2, [r4, ip, lsl #1]
+ 562              	.LVL37:
+ 137:External/IntegralImage/Src/integral_image.c **** 		integral_image,
+ 138:External/IntegralImage/Src/integral_image.c **** 		rectangle->top_left_corner.x,
+ 139:External/IntegralImage/Src/integral_image.c **** 		rectangle->bottom_right_corner.y
+ 140:External/IntegralImage/Src/integral_image.c **** 	);
+ 141:External/IntegralImage/Src/integral_image.c **** 
+ 142:External/IntegralImage/Src/integral_image.c ****   uint16_t res = bottom_right_corner + top_left_corner -
+ 563              		.loc 1 142 3 is_stmt 1 view .LVU115
+ 564              		.loc 1 142 38 is_stmt 0 view .LVU116
+ 565 003a 1844     		add	r0, r0, r3
+ 566 003c 80B2     		uxth	r0, r0
+ 567              		.loc 1 142 56 view .LVU117
+ 568 003e A0EB0E00 		sub	r0, r0, lr
+ 569 0042 80B2     		uxth	r0, r0
+ 570              		.loc 1 142 12 view .LVU118
+ 571 0044 801A     		subs	r0, r0, r2
+ 572              	.LVL38:
+ 143:External/IntegralImage/Src/integral_image.c **** 		top_right_corner - bottom_left_corner;
+ 144:External/IntegralImage/Src/integral_image.c **** 
+ 145:External/IntegralImage/Src/integral_image.c **** 	return res;
+ 573              		.loc 1 145 2 is_stmt 1 view .LVU119
+ 146:External/IntegralImage/Src/integral_image.c **** }
+ 574              		.loc 1 146 1 is_stmt 0 view .LVU120
+ 575 0046 80B2     		uxth	r0, r0
+ 576              		.loc 1 146 1 view .LVU121
+ 577 0048 10BD     		pop	{r4, pc}
+ 578              	.LVL39:
+ 579              	.L43:
+ 580              		.loc 1 146 1 view .LVU122
+ 581 004a 00BF     		.align	2
+ 582              	.L42:
+ 583 004c 00000000 		.word	integral_image
+ 584 0050 00000000 		.word	image_size
+ 585              		.cfi_endproc
+ 586              	.LFE9:
+ 588              		.section	.bss.source_image_size,"aw",%nobits
+ 589              		.align	2
+ 592              	source_image_size:
+ 593 0000 0000     		.space	2
+ 594              		.section	.bss.image_size,"aw",%nobits
+ 595              		.align	2
+ 598              	image_size:
+ 599 0000 0000     		.space	2
+ 600              		.section	.bss.fill_line,"aw",%nobits
+ 601              		.align	2
+ 604              	fill_line:
+ARM GAS  /tmp/ccG7IsiA.s 			page 15
+
+
+ 605 0000 00000000 		.space	4
+ 606              		.section	.bss.integral_image,"aw",%nobits
+ 607              		.align	2
+ 610              	integral_image:
+ 611 0000 00000000 		.space	4
+ 612              		.text
+ 613              	.Letext0:
+ 614              		.file 2 "/usr/src/arm-gnu-toolchain-13.3/arm-none-eabi/include/machine/_default_types.h"
+ 615              		.file 3 "/usr/src/arm-gnu-toolchain-13.3/arm-none-eabi/include/sys/_stdint.h"
+ 616              		.file 4 "External/IntegralImage/Inc/integral_image_defs.h"
+ 617              		.file 5 "/usr/src/arm-gnu-toolchain-13.3/lib/gcc/arm-none-eabi/13.3.1/include/stddef.h"
+ 618              		.file 6 "/usr/src/arm-gnu-toolchain-13.3/arm-none-eabi/include/string.h"
+ 619              		.file 7 "/usr/src/arm-gnu-toolchain-13.3/arm-none-eabi/include/stdlib.h"
+ 620              		.file 8 "<built-in>"
+ARM GAS  /tmp/ccG7IsiA.s 			page 16
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 integral_image.c
+     /tmp/ccG7IsiA.s:21     .text.integral_image_calculate_top_line:00000000 $t
+     /tmp/ccG7IsiA.s:26     .text.integral_image_calculate_top_line:00000000 integral_image_calculate_top_line
+     /tmp/ccG7IsiA.s:69     .text.integral_image_calculate_top_line:0000001c $d
+     /tmp/ccG7IsiA.s:610    .bss.integral_image:00000000 integral_image
+     /tmp/ccG7IsiA.s:598    .bss.image_size:00000000 image_size
+     /tmp/ccG7IsiA.s:75     .text.integral_image_calculate_start_column:00000000 $t
+     /tmp/ccG7IsiA.s:80     .text.integral_image_calculate_start_column:00000000 integral_image_calculate_start_column
+     /tmp/ccG7IsiA.s:126    .text.integral_image_calculate_start_column:00000024 $d
+     /tmp/ccG7IsiA.s:132    .text.integral_image_calculate_initial_column_and_line:00000000 $t
+     /tmp/ccG7IsiA.s:137    .text.integral_image_calculate_initial_column_and_line:00000000 integral_image_calculate_initial_column_and_line
+     /tmp/ccG7IsiA.s:160    .text.integral_image_calculate_other_elements:00000000 $t
+     /tmp/ccG7IsiA.s:165    .text.integral_image_calculate_other_elements:00000000 integral_image_calculate_other_elements
+     /tmp/ccG7IsiA.s:257    .text.integral_image_calculate_other_elements:00000068 $d
+     /tmp/ccG7IsiA.s:263    .text.integral_image_fill_line:00000000 $t
+     /tmp/ccG7IsiA.s:268    .text.integral_image_fill_line:00000000 integral_image_fill_line
+     /tmp/ccG7IsiA.s:309    .text.integral_image_fill_line:00000024 $d
+     /tmp/ccG7IsiA.s:592    .bss.source_image_size:00000000 source_image_size
+     /tmp/ccG7IsiA.s:316    .text.integral_image_create:00000000 $t
+     /tmp/ccG7IsiA.s:322    .text.integral_image_create:00000000 integral_image_create
+     /tmp/ccG7IsiA.s:386    .text.integral_image_create:0000003c $d
+     /tmp/ccG7IsiA.s:604    .bss.fill_line:00000000 fill_line
+     /tmp/ccG7IsiA.s:394    .text.integral_image_set:00000000 $t
+     /tmp/ccG7IsiA.s:400    .text.integral_image_set:00000000 integral_image_set
+     /tmp/ccG7IsiA.s:429    .text.integral_image_set:00000014 $d
+     /tmp/ccG7IsiA.s:436    .text.integral_image_destroy:00000000 $t
+     /tmp/ccG7IsiA.s:442    .text.integral_image_destroy:00000000 integral_image_destroy
+     /tmp/ccG7IsiA.s:471    .text.integral_image_destroy:00000014 $d
+     /tmp/ccG7IsiA.s:477    .text.integral_image_calculate:00000000 $t
+     /tmp/ccG7IsiA.s:483    .text.integral_image_calculate:00000000 integral_image_calculate
+     /tmp/ccG7IsiA.s:506    .text.integral_image_get_rectangle:00000000 $t
+     /tmp/ccG7IsiA.s:512    .text.integral_image_get_rectangle:00000000 integral_image_get_rectangle
+     /tmp/ccG7IsiA.s:583    .text.integral_image_get_rectangle:0000004c $d
+     /tmp/ccG7IsiA.s:589    .bss.source_image_size:00000000 $d
+     /tmp/ccG7IsiA.s:595    .bss.image_size:00000000 $d
+     /tmp/ccG7IsiA.s:601    .bss.fill_line:00000000 $d
+     /tmp/ccG7IsiA.s:607    .bss.integral_image:00000000 $d
+
+UNDEFINED SYMBOLS
+memcpy
+malloc
+free

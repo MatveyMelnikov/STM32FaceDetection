@@ -23,6 +23,11 @@
 /* USER CODE BEGIN Includes */
 #include "ili9341_tft_driver.h"
 #include "ov7670.h"
+#include "ov7670_defs.h"
+#include "face_detector_builder.h"
+#include "integral_image.h"
+#include "binary_stage_parser_defs.h"
+#include "face_detector.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -32,6 +37,19 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+// RGB565
+#define GET_RGB_PIXEL(image, x, y, w) \
+  ({ \
+    ((image) + ((x) + (y) * (w))); \
+  })
+#define APPLY_ROUNDING(n) \
+  (uint8_t)(n) >> 5
+#define FAST_DIVIDE_BY_3(n) \
+	((n) * 85 >> 8)
+#define SET_PIXEL_COLOR(pixel, r, g, b) \
+  *(pixel) = (r); \
+  *((pixel) + 1) = (g); \
+  *((pixel) + 2) = (b)
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -51,8 +69,17 @@ SRAM_HandleTypeDef hsram1;
 /* USER CODE BEGIN PV */
 static ili9341_tft_driver_io_struct tft_io;
 extern uint32_t _start_classifiers_load;
-extern uint32_t _binary_lbpcascade_frontalface_integer_bin_start;
-extern uint32_t _binary_lbpcascade_frontalface_integer_bin_end;
+extern uint32_t _binary_lbpcascade_frontalface_32_improved_integer_bin_start;
+extern uint32_t _binary_lbpcascade_frontalface_32_improved_integer_bin_end;
+static uint16_t convertion_buffer[OV7670_IMAGE_WIDTH];
+static face_detector_arguments arguments = (face_detector_arguments) {
+  .base_scale = 1.f,
+  .position_increment = 0.1f,
+  .scale_increment = 1.1f,
+  .image_size_x = OV7670_IMAGE_WIDTH,
+  .image_size_y = OV7670_IMAGE_HEIGHT,
+  .min_neighbours = 1U
+};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -69,14 +96,28 @@ static inline void __initialize_ccm(
   uint32_t *ccm_begin,
   uint32_t *ccm_end
 );
-void tft_init(void);
-void tft_write_data(uint16_t value);
-void tft_write_reg(uint16_t reg_value);
-uint16_t tft_read_data(uint8_t data_size);
-void tft_enable_backlight(bool is_enabled);
 
-void configure_display(void);
-void configure_camera(void);
+__attribute__((always_inline))
+static inline uint16_t decolorize(const uint16_t *pixel);
+static void fill_integral_image(
+  FILL_LINE_FUNCTOR,
+  const uint8_t *const image_source,
+  integral_image_size image_size
+);
+static uint16_t get_rectangle_summarize(
+  const lbp_feature_rectangle *const feature_rectangle
+);
+
+static void tft_init(void);
+static void tft_write_data(uint16_t value);
+static void tft_write_reg(uint16_t reg_value);
+static uint16_t tft_read_data(uint8_t data_size);
+static void tft_enable_backlight(bool is_enabled);
+static void draw_faces(uint16_t *const image);
+static void draw_face(uint16_t *const image, area area_face);
+
+static void configure_display(void);
+static void configure_camera(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -92,8 +133,8 @@ int main(void)
   /* USER CODE BEGIN 1 */
   __initialize_ccm(
     &_start_classifiers_load,
-    &_binary_lbpcascade_frontalface_integer_bin_start,
-    &_binary_lbpcascade_frontalface_integer_bin_end
+    &_binary_lbpcascade_frontalface_32_improved_integer_bin_start,
+    &_binary_lbpcascade_frontalface_32_improved_integer_bin_end
   );
   /* USER CODE END 1 */
 
@@ -120,13 +161,27 @@ int main(void)
   MX_DCMI_Init();
   /* USER CODE BEGIN 2 */
 
+  // qcif
+  integral_image_create(
+    (integral_image_size) {
+      .width = OV7670_IMAGE_WIDTH,
+      .height = OV7670_IMAGE_HEIGHT
+    },
+    fill_integral_image
+  );
+  face_detector_builder_create(
+    (uint8_t*)&_binary_lbpcascade_frontalface_32_improved_integer_bin_start,
+    IMPROVED_BINARY_DATA_STAGES_AMOUNT,
+    get_rectangle_summarize
+  );
+
 	configure_display();
 	configure_camera();
 
-  // uint32_t value = _start_classifiers_load[0];
+  // uint32_t value = ((uint32_t*)_start_classifiers_load)[0];
   // HOLD_VARIABLE(value);
 
-  // value = _start_classifiers_load[1];
+  // value = ((uint32_t*)_start_classifiers_load)[1];
   // HOLD_VARIABLE(value);
 
   // value = (uint32_t)(
@@ -387,22 +442,73 @@ static inline void __initialize_ccm(
     *ccm_ptr++ = *load_addr++;
 }
 
-void tft_init(void)
+static void fill_integral_image(
+  FILL_LINE_FUNCTOR,
+  const uint8_t *const image_source,
+  integral_image_size image_size
+)
+{
+  uint16_t *image = (uint16_t*)image_source;
+
+  for (uint8_t y = 0; y < image_size.height; y++)
+  {
+    for (uint8_t x = 0; x < image_size.width; x++)
+    {
+      convertion_buffer[x] = APPLY_ROUNDING(
+        decolorize(GET_RGB_PIXEL(image, x, y, image_size.width))
+      );
+    }
+
+    fill_line(convertion_buffer, y);
+  }
+}
+
+__attribute__((always_inline))
+static inline uint16_t decolorize(const uint16_t *pixel)
+{
+	uint8_t r = *pixel >> 11;
+	uint8_t g = (*pixel >> 6) & 0x1f; // to 5 digits
+	uint8_t b = *pixel & 0x1f;
+	
+	uint8_t grayscale = FAST_DIVIDE_BY_3(r + g + b);
+
+	return ((uint16_t)grayscale << 11) | ((uint16_t)grayscale << 6) | grayscale;
+}
+
+static uint16_t get_rectangle_summarize(
+  const lbp_feature_rectangle *const feature_rectangle
+)
+{
+  integral_image_rectangle_position integral_position = {
+    .top_left_corner = {
+      .x = feature_rectangle->x,
+      .y = feature_rectangle->y
+    },
+    .bottom_right_corner = {
+      .x = feature_rectangle->x + feature_rectangle->width,
+      .y = feature_rectangle->y + feature_rectangle->height
+    }
+  };
+
+  return integral_image_get_rectangle(&integral_position);
+}
+
+static void tft_init(void)
 {
 	HAL_Delay(20);
 }
 
-void tft_write_data(uint16_t value)
+static void tft_write_data(uint16_t value)
 {
 	*FMC_BANK1_DATA = value;
 }
 
-void tft_write_reg(uint16_t reg_value)
+static void tft_write_reg(uint16_t reg_value)
 {
 	*FMC_BANK1_CMD = reg_value;
 }
 
-uint16_t tft_read_data(uint8_t data_size)
+static uint16_t tft_read_data(uint8_t data_size)
 {
 	if (data_size > 2)
 		return 0;
@@ -412,7 +518,7 @@ uint16_t tft_read_data(uint8_t data_size)
 	return *(FMC_BANK1_DATA) & mask;
 }
 
-void tft_enable_backlight(bool is_enabled)
+static void tft_enable_backlight(bool is_enabled)
 {
 	HAL_GPIO_WritePin(
 		LCD_BC_GPIO_Port,
@@ -421,7 +527,54 @@ void tft_enable_backlight(bool is_enabled)
 	);
 }
 
-void configure_display()
+static void draw_faces(uint16_t *const image)
+{
+  integral_image_set((uint8_t*)image);
+  integral_image_calculate();
+
+  face_detector_detect(&arguments);
+  face_detector_result result = face_detector_get_result();
+
+  for (uint8_t i = 0; i < result.faces_amount; i++)
+  {
+    draw_face(image, result.faces[i]);
+  }
+}
+
+static void draw_face(uint16_t *const image, area area_face)
+{
+  uint16_t *up_left_pixel = GET_RGB_PIXEL(
+    image,
+    area_face.x,
+    area_face.y,
+    OV7670_IMAGE_WIDTH
+  );
+  uint16_t *up_right_pixel = GET_RGB_PIXEL(
+    image,
+    area_face.x + area_face.size,
+    area_face.y,
+    OV7670_IMAGE_WIDTH
+  );
+  uint16_t *down_left_pixel = GET_RGB_PIXEL(
+    image,
+    area_face.x,
+    area_face.y + area_face.size,
+    OV7670_IMAGE_WIDTH
+  );
+  uint16_t *down_right_pixel = GET_RGB_PIXEL(
+    image,
+    area_face.x + area_face.size,
+    area_face.y + area_face.size,
+    OV7670_IMAGE_WIDTH
+  );
+
+  SET_PIXEL_COLOR(up_left_pixel, 255, 0, 0);
+  SET_PIXEL_COLOR(up_right_pixel, 255, 0, 0);
+  SET_PIXEL_COLOR(down_left_pixel, 255, 0, 0);
+  SET_PIXEL_COLOR(down_right_pixel, 255, 0, 0);
+}
+
+static void configure_display()
 {
 	tft_io = (ili9341_tft_driver_io_struct) {
 		.io_init = tft_init,
@@ -431,12 +584,15 @@ void configure_display()
 		.io_enable_backlight = tft_enable_backlight
 	};
 
-	ili9341_tft_driver_status status = ili9341_tft_driver_init(&tft_io);
+	ili9341_tft_driver_status status = ili9341_tft_driver_init(
+    &tft_io,
+    draw_faces
+  );
 	if (status)
 		Error_Handler();
 }
 
-void configure_camera()
+static void configure_camera()
 {
 	HAL_Delay(10);
 	

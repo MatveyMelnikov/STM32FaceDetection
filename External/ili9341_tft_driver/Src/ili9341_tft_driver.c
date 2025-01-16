@@ -11,6 +11,7 @@
 // Static variables ----------------------------------------------------------
 
 static ili9341_tft_driver_io_struct *io_struct = NULL;
+static void (*draw_faces)(uint16_t *const image);
 
 // Static functions prototypes -----------------------------------------------
 
@@ -21,8 +22,8 @@ static void ili9341_display_on(void);
 static bool ili9341_is_not_valid_coordinates(ili9341_draw_area *const area);
 static ili9341_tft_driver_status ili9341_write_x_coordinates(uint16_t x0, uint16_t x1);
 static ili9341_tft_driver_status ili9341_write_y_coordinates(uint16_t y0, uint16_t y1);
-__attribute__((always_inline))
-static inline uint16_t decolorize(const uint16_t *pixel);
+// __attribute__((always_inline))
+// static inline uint16_t decolorize(const uint16_t *pixel);
 static uint32_t ili9341_calculate_pixels_amount(ili9341_draw_area *const area);
 static ili9341_draw_area ili9341_get_max_area(void);
 __attribute__((always_inline))
@@ -44,7 +45,8 @@ static ili9341_tft_driver_status io_enable_backlight(bool is_enabled);
 // Implementations -----------------------------------------------------------
 
 ili9341_tft_driver_status ili9341_tft_driver_init(
-	ili9341_tft_driver_io_struct *const io
+	ili9341_tft_driver_io_struct *const io,
+	void (*draw_faces_functor)(uint16_t *const image)
 )
 {
 	io_struct = io;
@@ -65,6 +67,8 @@ ili9341_tft_driver_status ili9341_tft_driver_init(
 	ili9341_display_on();
 	ili9341_tft_driver_clear();
 	io_enable_backlight(true);
+
+	draw_faces = draw_faces_functor;
 	
 	return ILI9341_OK;
 }
@@ -257,31 +261,32 @@ uint16_t ili9341_tft_driver_get_color_from_rgb(
 
 ili9341_tft_driver_status ili9341_tft_driver_draw_image(
 	ili9341_draw_area *const area,
-	const uint16_t *const data
+	uint16_t *const data
 )
 {
 	uint32_t pixels_amount = ili9341_calculate_pixels_amount(area);
 	ili9341_tft_driver_set_area(area);
+
+	draw_faces(data);
 	
 	ili9341_tft_driver_status status = io_write_reg(ILI9341_CMD_WRAM);
 	for (uint32_t i = 0; i < pixels_amount; i++)
-		status |= io_write_data(decolorize(data + i));
-		//status |= io_write_data(data[i]);
+		status |= io_write_data(data[i]);
 	
 	return status;
 }
 
-__attribute__((always_inline))
-static inline uint16_t decolorize(const uint16_t *pixel)
-{
-	uint8_t r = *pixel >> 11;
-	uint8_t g = (*pixel >> 6) & 0x1f; // to 5 digits
-	uint8_t b = *pixel & 0x1f;
+// __attribute__((always_inline))
+// static inline uint16_t decolorize(const uint16_t *pixel)
+// {
+// 	uint8_t r = *pixel >> 11;
+// 	uint8_t g = (*pixel >> 6) & 0x1f; // to 5 digits
+// 	uint8_t b = *pixel & 0x1f;
 	
-	uint8_t grayscale = FAST_DIVIDE_BY_3(r + g + b);
+// 	uint8_t grayscale = FAST_DIVIDE_BY_3(r + g + b);
 
-	return ((uint16_t)grayscale << 11) | ((uint16_t)grayscale << 6) | grayscale;
-}
+// 	return ((uint16_t)grayscale << 11) | ((uint16_t)grayscale << 6) | grayscale;
+// }
 
 static uint32_t ili9341_calculate_pixels_amount(ili9341_draw_area *const area)
 {

@@ -30,7 +30,15 @@ build/main.o: Core/Src/main.c Core/Inc/main.h \
  Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
  External/ili9341_tft_driver/Inc/ili9341_tft_driver.h \
  External/ili9341_tft_driver/Inc/ili9341_tft_driver_defs.h \
- External/ov7670/Inc/ov7670.h
+ External/ov7670/Inc/ov7670.h External/ov7670/Inc/ov7670_defs.h \
+ External/FaceDetectorBuilder/Inc/face_detector_builder.h \
+ External/LBPFeature/Inc/lbp_feature_defs.h \
+ External/IntegralImage/Inc/integral_image.h \
+ External/IntegralImage/Inc/integral_image_defs.h \
+ External/BinaryStageParser/Inc/binary_stage_parser_defs.h \
+ External/FaceDetector/Inc/face_detector.h \
+ External/FaceDetector/Inc/face_detector_defs.h External/Area/Inc/area.h \
+ External/Stage/Inc/stage_defs.h
 Core/Inc/main.h:
 Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h:
 Core/Inc/stm32f4xx_hal_conf.h:
@@ -66,3 +74,13 @@ Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h:
 External/ili9341_tft_driver/Inc/ili9341_tft_driver.h:
 External/ili9341_tft_driver/Inc/ili9341_tft_driver_defs.h:
 External/ov7670/Inc/ov7670.h:
+External/ov7670/Inc/ov7670_defs.h:
+External/FaceDetectorBuilder/Inc/face_detector_builder.h:
+External/LBPFeature/Inc/lbp_feature_defs.h:
+External/IntegralImage/Inc/integral_image.h:
+External/IntegralImage/Inc/integral_image_defs.h:
+External/BinaryStageParser/Inc/binary_stage_parser_defs.h:
+External/FaceDetector/Inc/face_detector.h:
+External/FaceDetector/Inc/face_detector_defs.h:
+External/Area/Inc/area.h:
+External/Stage/Inc/stage_defs.h:

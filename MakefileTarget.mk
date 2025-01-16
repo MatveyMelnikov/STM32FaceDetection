@@ -70,6 +70,8 @@ startup_stm32f407xx.s
 # ASM sources
 ASMM_SOURCES = 
 
+ADDITIONAL_OBJECTS = Data/lbpcascade_frontalface_32_improved_integer.o
+
 
 #######################################
 # binaries
@@ -179,7 +181,7 @@ $(BUILD_DIR)/%.o: %.S Makefile | $(BUILD_DIR)
 	$(AS) -c $(CFLAGS) $< -o $@
 
 $(BUILD_DIR)/$(TARGET).elf: $(OBJECTS) Makefile
-	$(CC) $(OBJECTS) Data/lbpcascade_frontalface_integer.o $(LDFLAGS) -o $@
+	$(CC) $(OBJECTS) $(ADDITIONAL_OBJECTS) $(LDFLAGS) -o $@
 	$(SZ) $@
 
 $(BUILD_DIR)/%.hex: $(BUILD_DIR)/%.elf | $(BUILD_DIR)

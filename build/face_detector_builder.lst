@@ -1,0 +1,179 @@
+ARM GAS  /tmp/ccZ6a9tF.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"face_detector_builder.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "External/FaceDetectorBuilder/Src/face_detector_builder.c"
+  20              		.section	.text.face_detector_builder_create,"ax",%progbits
+  21              		.align	1
+  22              		.global	face_detector_builder_create
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	face_detector_builder_create:
+  28              	.LVL0:
+  29              	.LFB1:
+   1:External/FaceDetectorBuilder/Src/face_detector_builder.c **** #include "face_detector_builder.h"
+   2:External/FaceDetectorBuilder/Src/face_detector_builder.c **** #include "face_detector.h"
+   3:External/FaceDetectorBuilder/Src/face_detector_builder.c **** #include "stage.h"
+   4:External/FaceDetectorBuilder/Src/face_detector_builder.c **** #include "binary_stage_parser.h"
+   5:External/FaceDetectorBuilder/Src/face_detector_builder.c **** #include "lbp_feature.h"
+   6:External/FaceDetectorBuilder/Src/face_detector_builder.c **** #include "integral_image.h"
+   7:External/FaceDetectorBuilder/Src/face_detector_builder.c **** 
+   8:External/FaceDetectorBuilder/Src/face_detector_builder.c **** void face_detector_builder_create(
+   9:External/FaceDetectorBuilder/Src/face_detector_builder.c ****   uint8_t *const binary_classifiers_source,
+  10:External/FaceDetectorBuilder/Src/face_detector_builder.c ****   const uint8_t stages_amount,
+  11:External/FaceDetectorBuilder/Src/face_detector_builder.c ****   uint16_t (*get_rectangle_summarize)(
+  12:External/FaceDetectorBuilder/Src/face_detector_builder.c ****     const lbp_feature_rectangle *const feature_rectangle
+  13:External/FaceDetectorBuilder/Src/face_detector_builder.c ****   )
+  14:External/FaceDetectorBuilder/Src/face_detector_builder.c **** )
+  15:External/FaceDetectorBuilder/Src/face_detector_builder.c **** {
+  30              		.loc 1 15 1 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 24
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		.loc 1 15 1 is_stmt 0 view .LVU1
+  35 0000 70B5     		push	{r4, r5, r6, lr}
+  36              	.LCFI0:
+  37              		.cfi_def_cfa_offset 16
+  38              		.cfi_offset 4, -16
+  39              		.cfi_offset 5, -12
+  40              		.cfi_offset 6, -8
+  41              		.cfi_offset 14, -4
+  42 0002 88B0     		sub	sp, sp, #32
+  43              	.LCFI1:
+ARM GAS  /tmp/ccZ6a9tF.s 			page 2
+
+
+  44              		.cfi_def_cfa_offset 48
+  45 0004 0546     		mov	r5, r0
+  46 0006 0E46     		mov	r6, r1
+  16:External/FaceDetectorBuilder/Src/face_detector_builder.c ****   lbp_feature_set_integral_image_handler(
+  47              		.loc 1 16 3 is_stmt 1 view .LVU2
+  48 0008 1046     		mov	r0, r2
+  49              	.LVL1:
+  50              		.loc 1 16 3 is_stmt 0 view .LVU3
+  51 000a FFF7FEFF 		bl	lbp_feature_set_integral_image_handler
+  52              	.LVL2:
+  17:External/FaceDetectorBuilder/Src/face_detector_builder.c ****     (lbp_feature_integral_image_handler) {
+  18:External/FaceDetectorBuilder/Src/face_detector_builder.c ****       .get_rectangle_summarize = get_rectangle_summarize
+  19:External/FaceDetectorBuilder/Src/face_detector_builder.c ****     }
+  20:External/FaceDetectorBuilder/Src/face_detector_builder.c ****   );
+  21:External/FaceDetectorBuilder/Src/face_detector_builder.c **** 
+  22:External/FaceDetectorBuilder/Src/face_detector_builder.c ****   stage_set_feature_handler(
+  53              		.loc 1 22 3 is_stmt 1 view .LVU4
+  23:External/FaceDetectorBuilder/Src/face_detector_builder.c ****     (stage_feature_handler) {
+  54              		.loc 1 23 29 is_stmt 0 view .LVU5
+  55 000e 0B4C     		ldr	r4, .L3
+  56 0010 02AB     		add	r3, sp, #8
+  57 0012 94E80700 		ldm	r4, {r0, r1, r2}
+  58 0016 83E80700 		stm	r3, {r0, r1, r2}
+  22:External/FaceDetectorBuilder/Src/face_detector_builder.c ****     (stage_feature_handler) {
+  59              		.loc 1 22 3 view .LVU6
+  60 001a FFF7FEFF 		bl	stage_set_feature_handler
+  61              	.LVL3:
+  24:External/FaceDetectorBuilder/Src/face_detector_builder.c ****       .calculate_vote = lbp_feature_calculate_vote,
+  25:External/FaceDetectorBuilder/Src/face_detector_builder.c ****       .destroy = lbp_feature_destroy,
+  26:External/FaceDetectorBuilder/Src/face_detector_builder.c ****       .generate_scaled_rectangles = lbp_feature_generate_scaled_rectangles
+  27:External/FaceDetectorBuilder/Src/face_detector_builder.c ****     }
+  28:External/FaceDetectorBuilder/Src/face_detector_builder.c ****   );
+  29:External/FaceDetectorBuilder/Src/face_detector_builder.c **** 
+  30:External/FaceDetectorBuilder/Src/face_detector_builder.c ****   face_detector_create(
+  62              		.loc 1 30 3 is_stmt 1 view .LVU7
+  31:External/FaceDetectorBuilder/Src/face_detector_builder.c ****     binary_classifiers_source,
+  32:External/FaceDetectorBuilder/Src/face_detector_builder.c ****     stages_amount,
+  33:External/FaceDetectorBuilder/Src/face_detector_builder.c ****     (face_detector_stage_handler) {
+  63              		.loc 1 33 35 is_stmt 0 view .LVU8
+  64 001e 05AB     		add	r3, sp, #20
+  65 0020 0C34     		adds	r4, r4, #12
+  66 0022 94E80700 		ldm	r4, {r0, r1, r2}
+  67 0026 83E80700 		stm	r3, {r0, r1, r2}
+  30:External/FaceDetectorBuilder/Src/face_detector_builder.c ****     binary_classifiers_source,
+  68              		.loc 1 30 3 view .LVU9
+  69 002a 0092     		str	r2, [sp]
+  70 002c 0CCB     		ldm	r3, {r2, r3}
+  71 002e 3146     		mov	r1, r6
+  72 0030 2846     		mov	r0, r5
+  73 0032 FFF7FEFF 		bl	face_detector_create
+  74              	.LVL4:
+  34:External/FaceDetectorBuilder/Src/face_detector_builder.c ****       .calculate_prediction = stage_calculate_prediction,
+  35:External/FaceDetectorBuilder/Src/face_detector_builder.c ****       .calculate_scaled_features = stage_calculate_scaled_features,
+  36:External/FaceDetectorBuilder/Src/face_detector_builder.c ****       .create_stage_from_source = binary_stage_parser_create
+  37:External/FaceDetectorBuilder/Src/face_detector_builder.c ****     }
+  38:External/FaceDetectorBuilder/Src/face_detector_builder.c ****   );
+  39:External/FaceDetectorBuilder/Src/face_detector_builder.c **** }...
+ARM GAS  /tmp/ccZ6a9tF.s 			page 3
+
+
+  75              		.loc 1 39 1 view .LVU10
+  76 0036 08B0     		add	sp, sp, #32
+  77              	.LCFI2:
+  78              		.cfi_def_cfa_offset 16
+  79              		@ sp needed
+  80 0038 70BD     		pop	{r4, r5, r6, pc}
+  81              	.LVL5:
+  82              	.L4:
+  83              		.loc 1 39 1 view .LVU11
+  84 003a 00BF     		.align	2
+  85              	.L3:
+  86 003c 00000000 		.word	.LANCHOR0
+  87              		.cfi_endproc
+  88              	.LFE1:
+  90              		.section	.rodata
+  91              		.align	2
+  92              		.set	.LANCHOR0,. + 0
+  93              	.LC0:
+  94 0000 00000000 		.word	lbp_feature_generate_scaled_rectangles
+  95 0004 00000000 		.word	lbp_feature_destroy
+  96 0008 00000000 		.word	lbp_feature_calculate_vote
+  97              	.LC1:
+  98 000c 00000000 		.word	binary_stage_parser_create
+  99 0010 00000000 		.word	stage_calculate_scaled_features
+ 100 0014 00000000 		.word	stage_calculate_prediction
+ 101              		.text
+ 102              	.Letext0:
+ 103              		.file 2 "/usr/src/arm-gnu-toolchain-13.3/arm-none-eabi/include/machine/_default_types.h"
+ 104              		.file 3 "/usr/src/arm-gnu-toolchain-13.3/arm-none-eabi/include/sys/_stdint.h"
+ 105              		.file 4 "External/LBPFeature/Inc/lbp_feature_defs.h"
+ 106              		.file 5 "External/Stage/Inc/stage_defs.h"
+ 107              		.file 6 "External/FaceDetector/Inc/face_detector_defs.h"
+ 108              		.file 7 "External/LBPFeature/Inc/lbp_feature.h"
+ 109              		.file 8 "External/Stage/Inc/stage.h"
+ 110              		.file 9 "External/BinaryStageParser/Inc/binary_stage_parser.h"
+ 111              		.file 10 "External/FaceDetector/Inc/face_detector.h"
+ARM GAS  /tmp/ccZ6a9tF.s 			page 4
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 face_detector_builder.c
+     /tmp/ccZ6a9tF.s:21     .text.face_detector_builder_create:00000000 $t
+     /tmp/ccZ6a9tF.s:27     .text.face_detector_builder_create:00000000 face_detector_builder_create
+     /tmp/ccZ6a9tF.s:86     .text.face_detector_builder_create:0000003c $d
+     /tmp/ccZ6a9tF.s:91     .rodata:00000000 $d
+
+UNDEFINED SYMBOLS
+lbp_feature_set_integral_image_handler
+stage_set_feature_handler
+face_detector_create
+lbp_feature_generate_scaled_rectangles
+lbp_feature_destroy
+lbp_feature_calculate_vote
+binary_stage_parser_create
+stage_calculate_scaled_features
+stage_calculate_prediction
