@@ -1,7 +1,11 @@
 #ifndef BINARY_STAGE_PARSER_DEFS_H
 #define BINARY_STAGE_PARSER_DEFS_H
 
+#ifdef IS_32_ADDR
 #define ADDR_TYPE uint32_t
+#else
+#define ADDR_TYPE uint64_t
+#endif
 
 enum {
 	DEFAULT_BINARY_DATA_SIZE = 12552U,
