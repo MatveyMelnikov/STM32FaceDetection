@@ -3,6 +3,10 @@
 
 #include <stdint.h>
 
+enum {
+  INTEGRAL_IMAGE_SIZE = 25085U
+};
+
 // args: image data line (grayscale pixels), line index
 #define FILL_LINE_FUNCTOR void (*fill_line)( \
     const uint16_t *const, \
