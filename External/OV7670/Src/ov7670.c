@@ -7,7 +7,8 @@
 
 // Static variables ----------------------------------------------------------
 
-static I2C_HandleTypeDef *i2c_io;
+//static I2C_HandleTypeDef *i2c_io;
+static ov7670_io_handler module_handler;
 static uint16_t pixel_buffer[PIXEL_BUFFER_SIZE];
 extern DCMI_HandleTypeDef hdcmi;
 static volatile bool is_frame_captured = false;
@@ -15,31 +16,27 @@ static ili9341_draw_area area;
 
 // Static functions prototypes -----------------------------------------------
 
-static HAL_StatusTypeDef ov7670_set_fast_auto_exposure_and_gain_control(void);
-static HAL_StatusTypeDef ov7670_set_edge_enhancement_factor(void);
-static HAL_StatusTypeDef ov7670_set_uv_auto_adjustment(void);
-static HAL_StatusTypeDef ov7670_enable_color_image(void);
+static ov7670_status ov7670_set_fast_auto_exposure_and_gain_control(void);
+static ov7670_status ov7670_set_edge_enhancement_factor(void);
+static ov7670_status ov7670_set_uv_auto_adjustment(void);
+static ov7670_status ov7670_enable_color_image(void);
 __attribute__((always_inline))
 static inline 
-HAL_StatusTypeDef ov7670_add_byte(
-	I2C_HandleTypeDef *i2c,
+ov7670_status ov7670_add_byte(
 	const uint8_t sub_addr,
 	const uint8_t data
 );
 __attribute__((always_inline))
-static inline HAL_StatusTypeDef ov7670_read_byte(
-	I2C_HandleTypeDef *i2c,
+static inline ov7670_status ov7670_read_byte(
 	const uint8_t sub_addr,
 	uint8_t *const data
 );
 __attribute__((always_inline))
-static inline HAL_StatusTypeDef ov7670_write_addr(
-	I2C_HandleTypeDef *i2c,
+static inline ov7670_status ov7670_write_addr(
 	const uint8_t sub_addr
 );
 __attribute__((always_inline))
-static inline HAL_StatusTypeDef ov7670_write_byte(
-	I2C_HandleTypeDef *i2c,
+static inline ov7670_status ov7670_write_byte(
 	const uint8_t sub_addr,
 	const uint8_t data
 );
@@ -47,64 +44,61 @@ static inline HAL_StatusTypeDef ov7670_write_byte(
 // Functions implementations -------------------------------------------------
 
 void ov7670_create(
-	I2C_HandleTypeDef *const i2c,
-	const ov7670_window_size window
+  ov7670_io_handler handler,
+  const ov7670_window_size window
 )
 {
-	i2c_io = i2c;
-	area = (ili9341_draw_area) {
-		.start = 0,
-		.end = window.width - 1,
-		.top = 0,
-		.bottom = window.height - 1
-	};
+  module_handler = handler;
+  area = (ili9341_draw_area) {
+    .start = 0,
+    .end = window.width - 1,
+    .top = 0,
+    .bottom = window.height - 1
+  };
 }
 
 void ov7670_destroy(void)
 {
-	i2c_io = NULL;
+	module_handler = (ov7670_io_handler){ 0 };
 }
 
-HAL_StatusTypeDef ov7670_check_link()
+ov7670_status ov7670_check_link()
 {
 	uint8_t received_data = 0x0;
 
-	HAL_StatusTypeDef status = ov7670_read_byte(i2c_io, PID, &received_data);
+	ov7670_status status = ov7670_read_byte(PID, &received_data);
 	status |= (received_data == 0x76) ? HAL_OK : HAL_ERROR;
 	
 	return status;
 }
 
-HAL_StatusTypeDef ov7670_reset()
+ov7670_status ov7670_reset()
 {
 	// 7 bit - reset
-	HAL_StatusTypeDef status = ov7670_write_byte(i2c_io, COM_7, 0x80);
+	ov7670_status status = ov7670_write_byte(COM_7, 0x80);
 	HAL_Delay(1); // Datasheet pg. 6
 	
 	return status;
 }
 
-HAL_StatusTypeDef ov7670_start_capture()
+ov7670_status ov7670_start_capture()
 {
 	is_frame_captured = false;
 	
-	// The size is specified in uint32_t
-	HAL_DCMI_Start_DMA(
-		&hdcmi,
-		DCMI_MODE_CONTINUOUS,
-		(uint32_t)pixel_buffer,
-		PIXEL_BUFFER_SIZE / 2U
-	);
+  module_handler.start_receiving_frames(
+    (uint32_t)pixel_buffer,
+    PIXEL_BUFFER_SIZE / 2U
+  );
 	
-	return HAL_OK;
+	return OV7670_OK;
 }
 
-void ov7670_frame_received(DCMI_HandleTypeDef *hdcmi)
+void ov7670_frame_received(void)
 {
 	is_frame_captured = true;
 }
 
-void ov7670_send_captured_frame(DCMI_HandleTypeDef *hdcmi)
+void ov7670_send_captured_frame(void)
 {
 	if (!is_frame_captured)
 		return;
@@ -116,26 +110,26 @@ void ov7670_send_captured_frame(DCMI_HandleTypeDef *hdcmi)
 
 // Enable 8-bar color bar
 // TEST PATTERN - datasheet pg. 21
-HAL_StatusTypeDef ov7670_set_test_pattern()
+ov7670_status ov7670_set_test_pattern()
 {
-	HAL_StatusTypeDef status = ov7670_add_byte(i2c_io, SCALING_YSC, 0x80);
+	ov7670_status status = ov7670_add_byte(SCALING_YSC, 0x80);
 	
 	return status;
 }
 
 // VGA processed bayer rgb mode (565)
 // Implementation Guide pg. 8
-HAL_StatusTypeDef ov7670_set_rgb_format()
+ov7670_status ov7670_set_rgb_format()
 {
-	HAL_StatusTypeDef status = ov7670_add_byte(i2c_io, COM_7, 0x4);
-	status |= ov7670_add_byte(i2c_io, COM_15, 0x10);
+	ov7670_status status = ov7670_add_byte(COM_7, 0x4);
+	status |= ov7670_add_byte(COM_15, 0x10);
 	
 	return status;
 }
 
-HAL_StatusTypeDef ov7670_send_default_registers()
+ov7670_status ov7670_send_default_registers()
 {
-	HAL_StatusTypeDef status = ov7670_set_fast_auto_exposure_and_gain_control();
+	ov7670_status status = ov7670_set_fast_auto_exposure_and_gain_control();
 	status |= ov7670_set_edge_enhancement_factor();
 	status |= ov7670_set_uv_auto_adjustment();
 	status |= ov7670_enable_color_image();
@@ -143,24 +137,24 @@ HAL_StatusTypeDef ov7670_send_default_registers()
 	return status;
 }
 
-static HAL_StatusTypeDef ov7670_set_fast_auto_exposure_and_gain_control()
+static ov7670_status ov7670_set_fast_auto_exposure_and_gain_control()
 {
-	return ov7670_write_byte(i2c_io, COM_8, 0x81);
+	return ov7670_write_byte(COM_8, 0x81);
 }
 
-static HAL_StatusTypeDef ov7670_set_edge_enhancement_factor()
+static ov7670_status ov7670_set_edge_enhancement_factor()
 {
-	return ov7670_write_byte(i2c_io, EDGE, 0x01);
+	return ov7670_write_byte(EDGE, 0x01);
 }
 
-static HAL_StatusTypeDef ov7670_set_uv_auto_adjustment()
+static ov7670_status ov7670_set_uv_auto_adjustment()
 {
-	return ov7670_write_byte(i2c_io, COM_13, 0xd9); 
+	return ov7670_write_byte(COM_13, 0xd9); 
 }
 
-static HAL_StatusTypeDef ov7670_enable_color_image()
+static ov7670_status ov7670_enable_color_image()
 {
-	return ov7670_write_byte(i2c_io, 0xb0, 0x84); // Undocumented register
+	return ov7670_write_byte(0xb0, 0x84); // Undocumented register
 }
 
 uint32_t *ov7670_get_captured_data()
@@ -168,83 +162,76 @@ uint32_t *ov7670_get_captured_data()
 	return (uint32_t*)pixel_buffer;
 }
 
-HAL_StatusTypeDef ov7670_set_plck_prescalar(uint8_t pre_scalar)
+ov7670_status ov7670_set_plck_prescalar(uint8_t pre_scalar)
 {
-	return ov7670_write_byte(i2c_io, CLKRC, pre_scalar & 0x1f);
+	return ov7670_write_byte(CLKRC, pre_scalar & 0x1f);
 }
 
-HAL_StatusTypeDef ov7670_set_qcif()
+ov7670_status ov7670_set_qcif()
 {
-	HAL_StatusTypeDef status = ov7670_write_byte(i2c_io, COM_3, 0x8);
-	status |= ov7670_write_byte(i2c_io, COM_7, 0x8);
+	ov7670_status status = ov7670_write_byte(COM_3, 0x8);
+	status |= ov7670_write_byte(COM_7, 0x8);
 	
 	return status;
 }
 
 __attribute__((always_inline))
 static inline 
-HAL_StatusTypeDef ov7670_add_byte(
-	I2C_HandleTypeDef *i2c,
+ov7670_status ov7670_add_byte(
 	const uint8_t sub_addr,
 	const uint8_t data
 )
 {
 	uint8_t received_data = 0;
-	HAL_StatusTypeDef status = ov7670_read_byte(i2c, sub_addr, &received_data);
+	ov7670_status status = ov7670_read_byte(sub_addr, &received_data);
 	if (status)
 		return status;
 	
-	return ov7670_write_byte(i2c, sub_addr, received_data | data);
+	return ov7670_write_byte(sub_addr, received_data | data);
 }
 
 __attribute__((always_inline))
-static inline HAL_StatusTypeDef ov7670_read_byte(
-	I2C_HandleTypeDef *i2c,
+static inline ov7670_status ov7670_read_byte(
 	const uint8_t sub_addr,
 	uint8_t *const data
 )
 {
-	HAL_StatusTypeDef status = ov7670_write_addr(i2c, sub_addr);
-	status |= HAL_I2C_Master_Receive(
-		i2c,
-		READ_ADDR,
-		data,
-		sizeof(data),
-		OV7670_TIMEOUT
-	);
-		
-	return status;
+  ov7670_status status = ov7670_write_addr(sub_addr);
+	status |= module_handler.receive(
+    READ_ADDR,
+    data,
+    sizeof(data),
+    OV7670_TIMEOUT
+  );
+
+  return status;
 }
 
 __attribute__((always_inline))
-static inline HAL_StatusTypeDef ov7670_write_addr(
-	I2C_HandleTypeDef *i2c,
+static inline ov7670_status ov7670_write_addr(
 	const uint8_t sub_addr
 )
 {
-	return HAL_I2C_Master_Transmit(
-		i2c,
-		WRITE_ADDR,
-		(uint8_t*)&sub_addr,
-		sizeof(sub_addr),
-		OV7670_TIMEOUT
-	);
+  return module_handler.transmit(
+    WRITE_ADDR,
+    (uint8_t*)&sub_addr,
+    sizeof(sub_addr),
+    OV7670_TIMEOUT
+  );
 }
 
 __attribute__((always_inline))
-static inline HAL_StatusTypeDef ov7670_write_byte(
-	I2C_HandleTypeDef *i2c,
+static inline ov7670_status ov7670_write_byte(
 	const uint8_t sub_addr,
 	const uint8_t data
 )
 {
 	uint8_t sent_data[] = { sub_addr, data };
-	
-	return HAL_I2C_Master_Transmit(
-		i2c,
-		WRITE_ADDR,
-		sent_data,
-		sizeof(uint8_t) * 2,
-		OV7670_TIMEOUT
-	);
+
+  return module_handler.transmit(
+    WRITE_ADDR,
+    sent_data,
+    sizeof(uint8_t) * 2,
+    OV7670_TIMEOUT
+  );
 }

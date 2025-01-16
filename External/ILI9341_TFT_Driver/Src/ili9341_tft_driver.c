@@ -276,32 +276,6 @@ ili9341_tft_driver_status ili9341_tft_driver_draw_image(
 	return status;
 }
 
-// __attribute__((always_inline))
-// static inline uint16_t decolorize(const uint16_t *pixel)
-// {
-// 	uint8_t r = *pixel >> 11;
-// 	uint8_t g = (*pixel >> 6) & 0x1f; // to 5 digits
-// 	uint8_t b = *pixel & 0x1f;
-	
-// 	uint8_t grayscale = FAST_DIVIDE_BY_3(r + g + b);
-
-// 	return ((uint16_t)grayscale << 11) | ((uint16_t)grayscale << 6) | grayscale;
-// }
-
-// __attribute__((always_inline))
-// static inline uint16_t decolorize(const uint16_t *pixel)
-// {
-// 	uint8_t r = *pixel >> 11;
-// 	uint8_t g = (*pixel >> 6) & 0x1f; // to 5 digits
-// 	uint8_t b = *pixel & 0x1f;
-	
-// 	//uint8_t grayscale = FAST_DIVIDE_BY_3(r + g + b);
-
-// 	uint8_t grayscale = (float)(0.3f * r + 0.59f * g + 0.11f * b);
-
-// 	return ((uint16_t)grayscale << 11) | ((uint16_t)grayscale << 6) | grayscale;
-// }
-
 static uint32_t ili9341_calculate_pixels_amount(ili9341_draw_area *const area)
 {
 	return (area->end - area->start + 1) * (area->bottom - area->top + 1);
