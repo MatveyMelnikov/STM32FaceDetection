@@ -1,6 +1,6 @@
 MODULES_DIR = External
 
-ILI9341_TFT_DRIVER_DIR = $(MODULES_DIR)/ili9341_tft_driver
+ILI9341_TFT_DRIVER_DIR = $(MODULES_DIR)/ILI9341_TFT_Driver
 OV7670_DIR = $(MODULES_DIR)/OV7670
 INTEGRAL_IMAGE_DIR = $(MODULES_DIR)/IntegralImage
 LBP_FEATURE_DIR = $(MODULES_DIR)/LBPFeature
@@ -14,8 +14,6 @@ SIMD_INSTRUCTIONS = $(MODULES_DIR)/SIMD_Instructions
 TESTS = N
 
 C_INCLUDES = \
--I$(ILI9341_TFT_DRIVER_DIR)/Inc \
--I$(OV7670_DIR)/Inc \
 -I$(INTEGRAL_IMAGE_DIR)/Inc \
 -I$(LBP_FEATURE_DIR)/Inc \
 -I$(STAGE_DIR)/Inc \
@@ -25,8 +23,6 @@ C_INCLUDES = \
 -I$(AREA_DIR)/Inc
 
 C_SOURCES = \
-$(ILI9341_TFT_DRIVER_DIR)/Src/ili9341_tft_driver.c \
-$(OV7670_DIR)/Src/ov7670.c \
 $(INTEGRAL_IMAGE_DIR)/Src/integral_image.c \
 $(LBP_FEATURE_DIR)/Src/lbp_feature.c \
 $(STAGE_DIR)/Src/stage.c \
@@ -37,9 +33,6 @@ $(FACE_DETECTOR_BUILDER_DIR)/Src/face_detector_builder.c
 ifeq ($(TESTS), Y)
 include MakefileTest.mk
 else
-
-C_INCLUDES += \
--I$(SIMD_INSTRUCTIONS)/Inc
 
 include MakefileTarget.mk                                       
 endif
