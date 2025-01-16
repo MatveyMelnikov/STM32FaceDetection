@@ -1,4 +1,5 @@
 #include "integral_image.h"
+#include "simd_instructions.h"
 #include <stddef.h>
 #include <stdlib.h>
 #include <math.h>
@@ -30,6 +31,8 @@ static void integral_image_calculate_initial_column_and_line(void);
 static void integral_image_calculate_top_line(void);
 static void integral_image_calculate_start_column(void);
 static void integral_image_calculate_other_elements(void);
+__attribute__((always_inline))
+static inline void integral_image_calculate_group(uint16_t x);
 
 // Implementations -----------------------------------------------------------
 
@@ -102,15 +105,31 @@ static void integral_image_calculate_start_column()
 
 static void integral_image_calculate_other_elements()
 {
-	for (uint16_t x = 1; x < image_size.width; x++)
+	for (uint16_t x = 1; x < image_size.width; x += 2)
 	{
-		for (uint16_t y = 1; y < image_size.height; y++)
-		{
-			GET_PIXEL(integral_image, x, y) +=
-				GET_PIXEL(integral_image, x - 1, y) +
-				GET_PIXEL(integral_image, x, y - 1) -
-				GET_PIXEL(integral_image, x - 1, y - 1);
-		}
+		integral_image_calculate_group(x);
+	}
+}
+
+__attribute__((always_inline))
+static inline void integral_image_calculate_group(uint16_t x)
+{
+	union {
+		uint16_t parts[2];
+		uint32_t full;
+	} row_sum = { 0 };
+
+	for (uint16_t y = 1; y < image_size.height; y++)
+	{
+		row_sum.full = UQADD16(
+			row_sum.full,
+			*(uint32_t*)(integral_image + x + y * image_size.width)
+		);
+
+		GET_PIXEL(integral_image, x, y) = GET_PIXEL(integral_image, x - 1, y) +
+			row_sum.parts[0];
+		GET_PIXEL(integral_image, x + 1, y) = GET_PIXEL(integral_image, x, y) +
+			row_sum.parts[1];
 	}
 }
 
