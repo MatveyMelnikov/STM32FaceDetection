@@ -50,6 +50,9 @@ SRAM_HandleTypeDef hsram1;
 
 /* USER CODE BEGIN PV */
 static ili9341_tft_driver_io_struct tft_io;
+extern uint32_t _start_classifiers_load;
+extern uint32_t _binary_lbpcascade_frontalface_integer_bin_start;
+extern uint32_t _binary_lbpcascade_frontalface_integer_bin_end;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -60,6 +63,12 @@ static void MX_FSMC_Init(void);
 static void MX_I2C2_Init(void);
 static void MX_DCMI_Init(void);
 /* USER CODE BEGIN PFP */
+__attribute__((always_inline))
+static inline void __initialize_ccm(
+  uint32_t *load_addr,
+  uint32_t *ccm_begin,
+  uint32_t *ccm_end
+);
 void tft_init(void);
 void tft_write_data(uint16_t value);
 void tft_write_reg(uint16_t reg_value);
@@ -81,7 +90,11 @@ void configure_camera(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
+  __initialize_ccm(
+    &_start_classifiers_load,
+    &_binary_lbpcascade_frontalface_integer_bin_start,
+    &_binary_lbpcascade_frontalface_integer_bin_end
+  );
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -109,6 +122,18 @@ int main(void)
 
 	configure_display();
 	configure_camera();
+
+  // uint32_t value = _start_classifiers_load[0];
+  // HOLD_VARIABLE(value);
+
+  // value = _start_classifiers_load[1];
+  // HOLD_VARIABLE(value);
+
+  // value = (uint32_t)(
+  //   _binary_lbpcascade_frontalface_integer_bin_start -
+  //   _binary_lbpcascade_frontalface_integer_bin_end
+  // );
+  // HOLD_VARIABLE(value);
 
   /* USER CODE END 2 */
 
@@ -349,6 +374,19 @@ static void MX_FSMC_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+
+__attribute__((always_inline))
+static inline void __initialize_ccm(
+  uint32_t *load_addr,
+  uint32_t *ccm_begin,
+  uint32_t *ccm_end
+)
+{
+  uint32_t *ccm_ptr = ccm_begin;
+  while (ccm_ptr < ccm_end)
+    *ccm_ptr++ = *load_addr++;
+}
+
 void tft_init(void)
 {
 	HAL_Delay(20);
