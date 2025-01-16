@@ -34,7 +34,6 @@ static float *face_detector_calculate_scales(
   const uint8_t image_size_x,
   const uint8_t image_size_y
 );
-// static void face_detector_calculate_scaled_features(void);
 static void face_detector_detect_faces(
   const face_detector_arguments *const arguments
 );
@@ -101,7 +100,6 @@ void face_detector_detect(
   face_detector_merge_faces_areas(arguments->min_neighbours);
 
   scales_amount = 0;
-  //integral_image_destroy();
 }
 
 static void face_detector_reset_faces_arrays()

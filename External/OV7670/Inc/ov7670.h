@@ -1,21 +1,20 @@
 #ifndef OV7670_H
 #define OV7670_H
 
-#include <stdint.h>
 #include "ov7670_defs.h"
 
 typedef struct
 {
-	uint16_t width;
-	uint16_t height;
+  uint16_t width;
+  uint16_t height;
 } ov7670_window_size;
 
 typedef struct
 {
-	uint8_t cb;
-	uint8_t y0;
-	uint8_t cr;
-	uint8_t y1;
+  uint8_t cb;
+  uint8_t y0;
+  uint8_t cr;
+  uint8_t y1;
 } ov7670_two_pixels;
 
 void ov7670_create(

@@ -31,6 +31,7 @@ OPT = -Og
 # Build path
 BUILD_DIR = build
 OPENOCD_DIR = /usr/share/openocd
+GCC_PATH = /usr/local/src/arm-gnu-toolchain-13.2/bin/
 
 ######################################
 # source
@@ -61,7 +62,9 @@ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c_ex.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c \
-Core/Src/system_stm32f4xx.c
+Core/Src/system_stm32f4xx.c \
+$(ILI9341_TFT_DRIVER_DIR)/Src/ili9341_tft_driver.c \
+$(OV7670_DIR)/Src/ov7670.c
 
 # ASM sources
 ASM_SOURCES = \
@@ -76,7 +79,6 @@ ADDITIONAL_OBJECTS = Data/lbpcascade_frontalface_32_improved_integer.o
 #######################################
 # binaries
 #######################################
-GCC_PATH = /usr/src/arm-gnu-toolchain-13.3/bin
 PREFIX = arm-none-eabi-
 # The gcc compiler bin path can be either defined in make command via GCC_PATH variable (> make GCC_PATH=xxx)
 # either it can be added to the PATH environment variable.
@@ -116,8 +118,8 @@ AS_DEFS =
 # C defines
 C_DEFS =  \
 -DUSE_HAL_DRIVER \
--DSTM32F407xx
-
+-DSTM32F407xx \
+-DIS_32_ADDR
 
 # AS includes
 AS_INCLUDES = 
@@ -128,7 +130,10 @@ C_INCLUDES +=  \
 -IDrivers/STM32F4xx_HAL_Driver/Inc \
 -IDrivers/STM32F4xx_HAL_Driver/Inc/Legacy \
 -IDrivers/CMSIS/Device/ST/STM32F4xx/Include \
--IDrivers/CMSIS/Include
+-IDrivers/CMSIS/Include \
+-I$(ILI9341_TFT_DRIVER_DIR)/Inc \
+-I$(OV7670_DIR)/Inc \
+-I$(SIMD_INSTRUCTIONS)/Inc
 
 
 # compile gcc flags
