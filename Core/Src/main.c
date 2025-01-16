@@ -45,7 +45,7 @@
 #define APPLY_ROUNDING(n) \
   (uint8_t)(n) >> 5
 #define FAST_DIVIDE_BY_3(n) \
-	((n) * 85 >> 8)
+  ((n) * 85 >> 8)
 #define SET_PIXEL_COLOR(pixel, r, g, b) \
   *(pixel) = ((r) >> 3) << 11; \
   *(pixel) |= (g >> 2) << 6; \
@@ -55,7 +55,7 @@
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
 #define HOLD_VARIABLE(var) \
-	if ((var) == 0) __asm("nop")
+  if ((var) == 0) __asm("nop")
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -198,22 +198,22 @@ int main(void)
     get_rectangle_summarize
   );
 
-	configure_display();
-	configure_camera();
+  configure_display();
+  configure_camera();
 
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-	
-	ov7670_start_capture();
+  
+  ov7670_start_capture();
 
   while (1)
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-		ov7670_send_captured_frame();
+    ov7670_send_captured_frame();
   }
   /* USER CODE END 3 */
 }
@@ -478,10 +478,10 @@ __attribute__((always_inline))
 static inline uint16_t decolorize(const uint16_t *pixel)
 {
   uint8_t r = (*pixel >> 11) << 3; // / 31 * 255 ~= >> 5 << 8
-	uint8_t g = ((*pixel >> 6) & 0x1f) << 3; // to 5 digits
-	uint8_t b = (*pixel & 0x1f) << 3;
-	
-	uint8_t grayscale = FAST_DIVIDE_BY_3(r + g + b);
+  uint8_t g = ((*pixel >> 6) & 0x1f) << 3; // to 5 digits
+  uint8_t b = (*pixel & 0x1f) << 3;
+  
+  uint8_t grayscale = FAST_DIVIDE_BY_3(r + g + b);
 
   return grayscale;
 }
@@ -506,36 +506,36 @@ static uint16_t get_rectangle_summarize(
 
 static void tft_init(void)
 {
-	HAL_Delay(20);
+  HAL_Delay(20);
 }
 
 static void tft_write_data(uint16_t value)
 {
-	*FMC_BANK1_DATA = value;
+  *FMC_BANK1_DATA = value;
 }
 
 static void tft_write_reg(uint16_t reg_value)
 {
-	*FMC_BANK1_CMD = reg_value;
+  *FMC_BANK1_CMD = reg_value;
 }
 
 static uint16_t tft_read_data(uint8_t data_size)
 {
-	if (data_size > 2)
-		return 0;
-	
-	uint16_t mask = 0xffff >> ((2 - data_size) * 8);
-	
-	return *(FMC_BANK1_DATA) & mask;
+  if (data_size > 2)
+    return 0;
+  
+  uint16_t mask = 0xffff >> ((2 - data_size) * 8);
+  
+  return *(FMC_BANK1_DATA) & mask;
 }
 
 static void tft_enable_backlight(bool is_enabled)
 {
-	HAL_GPIO_WritePin(
-		LCD_BC_GPIO_Port,
-		LCD_BC_Pin,
-		is_enabled ? GPIO_PIN_SET : GPIO_PIN_RESET
-	);
+  HAL_GPIO_WritePin(
+    LCD_BC_GPIO_Port,
+    LCD_BC_Pin,
+    is_enabled ? GPIO_PIN_SET : GPIO_PIN_RESET
+  );
 }
 
 static void draw_faces(uint16_t *const image)
@@ -618,11 +618,11 @@ static ov7670_status ov7670_receive(
 )
 {
   return (ov7670_status)HAL_I2C_Master_Receive(
-		&hi2c2,
-		dev_address,
-		data,
-		data_size,
-		timeout
+    &hi2c2,
+    dev_address,
+    data,
+    data_size,
+    timeout
   );
 }
 
@@ -647,80 +647,80 @@ static ov7670_status start_receiving_frames(
   uint32_t data_size
 )
 {
-	return (ov7670_status)HAL_DCMI_Start_DMA(
-		&hdcmi,
-		DCMI_MODE_CONTINUOUS,
-		data,
-		data_size
-	);
+  return (ov7670_status)HAL_DCMI_Start_DMA(
+    &hdcmi,
+    DCMI_MODE_CONTINUOUS,
+    data,
+    data_size
+  );
 }
 
 static void configure_display()
 {
-	tft_io = (ili9341_tft_driver_io_struct) {
-		.io_init = tft_init,
-		.io_write_data = tft_write_data,
-		.io_write_reg = tft_write_reg,
-		.io_read_data = tft_read_data,
-		.io_enable_backlight = tft_enable_backlight
-	};
+  tft_io = (ili9341_tft_driver_io_struct) {
+    .io_init = tft_init,
+    .io_write_data = tft_write_data,
+    .io_write_reg = tft_write_reg,
+    .io_read_data = tft_read_data,
+    .io_enable_backlight = tft_enable_backlight
+  };
 
-	ili9341_tft_driver_status status = ili9341_tft_driver_init(
+  ili9341_tft_driver_status status = ili9341_tft_driver_init(
     &tft_io,
     draw_faces
   );
-	if (status)
-		Error_Handler();
+  if (status)
+    Error_Handler();
 }
 
 static void configure_camera()
 {
-	HAL_Delay(10);
-	
-	ov7670_create(
-		(ov7670_io_handler) {
+  HAL_Delay(10);
+  
+  ov7670_create(
+    (ov7670_io_handler) {
       .receive = ov7670_receive,
       .transmit = ov7670_transmit,
       .start_receiving_frames = start_receiving_frames
     },
-		(ov7670_window_size) { .width = 172U, .height = 144U }
-	);
+    (ov7670_window_size) { .width = 172U, .height = 144U }
+  );
 
-	HAL_StatusTypeDef status = ov7670_check_link();
-	if (status)
-		Error_Handler();
-	
-	status |= ov7670_reset();
-	status |= ov7670_send_default_registers();
-	status |= ov7670_set_qcif();
-	status |= ov7670_set_plck_prescalar(1);
-	status |= ov7670_set_rgb_format();
-	//status |= ov7670_set_test_pattern();
-	
-	HAL_Delay(10);
-	
-	if (status)
-		Error_Handler();
+  HAL_StatusTypeDef status = ov7670_check_link();
+  if (status)
+    Error_Handler();
+  
+  status |= ov7670_reset();
+  status |= ov7670_send_default_registers();
+  status |= ov7670_set_qcif();
+  status |= ov7670_set_plck_prescalar(1);
+  status |= ov7670_set_rgb_format();
+  //status |= ov7670_set_test_pattern();
+  
+  HAL_Delay(10);
+  
+  if (status)
+    Error_Handler();
 }
 
 void HAL_DCMI_FrameEventCallback(DCMI_HandleTypeDef *hdcmi)
 {
-	ov7670_frame_received();
+  ov7670_frame_received();
 }
 
 void HAL_DCMI_LineEventCallback(DCMI_HandleTypeDef *hdcmi)
 {
-	(void)hdcmi;
+  UNUSED(hdcmi);
 }
 
 void HAL_DCMI_VsyncEventCallback(DCMI_HandleTypeDef *hdcmi)
 {
-	(void)hdcmi;
+  UNUSED(hdcmi);
 }
 
 void HAL_DCMI_ErrorCallback(DCMI_HandleTypeDef *hdcmi)
 {
-	(void)hdcmi;
+  UNUSED(hdcmi);
 }
 
 /* USER CODE END 4 */

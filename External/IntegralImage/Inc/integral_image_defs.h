@@ -7,7 +7,7 @@ enum {
   INTEGRAL_IMAGE_SIZE = 25085U
 };
 
-// args: image data line (grayscale pixels), line index
+// image data line (grayscale pixels), line index
 #define FILL_LINE_FUNCTOR void (*fill_line)( \
     const uint16_t *const, \
     const uint8_t \
@@ -20,20 +20,20 @@ enum {
 
 typedef struct
 {
-	uint8_t width;
-	uint8_t height;
+  uint8_t width;
+  uint8_t height;
 } integral_image_size;
 
 typedef struct
 {
-	uint8_t x;
-	uint8_t y;
+  uint8_t x;
+  uint8_t y;
 } integral_image_position;
 
 typedef struct
 {
-	integral_image_position top_left_corner;
-	integral_image_position bottom_right_corner;
+  integral_image_position top_left_corner;
+  integral_image_position bottom_right_corner;
 } integral_image_rectangle_position;
 
 #endif

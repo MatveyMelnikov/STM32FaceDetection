@@ -11,7 +11,7 @@ void mock_integral_image_expect_read_then_return(
 );
 void mock_integral_image_verify_complete(void);
 uint16_t mock_integral_image_get_rectangle(
-	integral_image_rectangle_position *const rectangle
+  integral_image_rectangle_position *const rectangle
 );
 
 

@@ -10,9 +10,9 @@ enum {
 
 typedef struct
 {
-	lbp_feature *features;
-	uint8_t features_amount;
-	int16_t threshold;
+  lbp_feature *features;
+  uint8_t features_amount;
+  int16_t threshold;
 } stage;
 
 typedef struct

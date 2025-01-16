@@ -19,10 +19,10 @@ enum {
 
 typedef struct
 {
-	uint8_t x;
-	uint8_t y;
-	uint8_t width;
-	uint8_t height;
+  uint8_t x;
+  uint8_t y;
+  uint8_t width;
+  uint8_t height;
 } lbp_feature_rectangle;
 
 typedef struct
@@ -34,14 +34,12 @@ typedef struct
 
 typedef struct
 {
-	lbp_feature_rectangle rectangles[LBP_FEATURE_RECTANGLES_AMOUNT];
-  // There should just be a pointer - a dynamic array, since we
-  // generate them at runtime and don't know the size
-	lbp_feature_rectangle **scaled_rectangles;
+  lbp_feature_rectangle rectangles[LBP_FEATURE_RECTANGLES_AMOUNT];
+  lbp_feature_rectangle **scaled_rectangles;
   uint8_t scaled_rectangles_amount;
-	int32_t masks[LBP_FEATURE_MASKS_AMOUNT];
-	int16_t left_value;
-	int16_t right_value;
+  int32_t masks[LBP_FEATURE_MASKS_AMOUNT];
+  int16_t left_value;
+  int16_t right_value;
 } lbp_feature;
 
 typedef struct
