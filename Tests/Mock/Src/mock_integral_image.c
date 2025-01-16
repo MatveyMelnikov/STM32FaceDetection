@@ -33,7 +33,7 @@ void mock_integral_image_verify_complete()
 }
 
 uint16_t mock_integral_image_get_rectangle(
-	integral_image_rectangle_position *const rectangle
+  integral_image_rectangle_position *const rectangle
 )
 {
   (void)rectangle;

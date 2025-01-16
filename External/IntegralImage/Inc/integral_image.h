@@ -10,7 +10,7 @@ void integral_image_set(const uint8_t *const image);
 void integral_image_destroy(void);
 void integral_image_calculate(void);
 const uint16_t integral_image_get_rectangle(
-	integral_image_rectangle_position *const rectangle
+  integral_image_rectangle_position *const rectangle
 );
 
 #endif

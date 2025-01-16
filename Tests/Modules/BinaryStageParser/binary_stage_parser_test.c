@@ -12,20 +12,20 @@ enum {
 };
 
 #define GET_ARRAY_LEN(arr) \
-	sizeof(arr) / sizeof(arr[0])
+  sizeof(arr) / sizeof(arr[0])
 #define GET_RELATIVE_ADDRESS(base_obj_ptr, obj_ptr) \
-	((ADDR_TYPE)(obj_ptr) - (ADDR_TYPE)(base_obj_ptr))
+  ((ADDR_TYPE)(obj_ptr) - (ADDR_TYPE)(base_obj_ptr))
 
 // Static variables ----------------------------------------------------------
 
-	// lbp_feature_rectangle rectangles[LBP_FEATURE_RECTANGLES_AMOUNT];
+  // lbp_feature_rectangle rectangles[LBP_FEATURE_RECTANGLES_AMOUNT];
   // // There should just be a pointer - a dynamic array, since we
   // // generate them at runtime and don't know the size
-	// lbp_feature_rectangle **scaled_rectangles;
+  // lbp_feature_rectangle **scaled_rectangles;
   // uint8_t scaled_rectangles_amount;
-	// int32_t masks[LBP_FEATURE_MASKS_AMOUNT];
-	// int16_t left_value;
-	// int16_t right_value;
+  // int32_t masks[LBP_FEATURE_MASKS_AMOUNT];
+  // int16_t left_value;
+  // int16_t right_value;
 
 static lbp_feature data_features[] = {
   {
@@ -104,26 +104,26 @@ TEST_SETUP(binary_stage_parser)
 {
   // First come the stages, then the features
   uint64_t features_offset = sizeof(data_stages);
-	uint64_t result_binary_data_size = sizeof(data_stages) +
+  uint64_t result_binary_data_size = sizeof(data_stages) +
     sizeof(data_features);
-	binary_data = malloc(result_binary_data_size);
+  binary_data = malloc(result_binary_data_size);
 
-	stage* current_stage_in_data = (stage*)binary_data;
-	for (uint8_t i = 0; i < GET_ARRAY_LEN(data_stages); i++)
-	{
-		current_stage_in_data[i] = (stage) {
-			.threshold = data_stages[i].threshold,
-			.features_amount = data_stages[i].features_amount,
-			.features = (lbp_feature*)(
+  stage* current_stage_in_data = (stage*)binary_data;
+  for (uint8_t i = 0; i < GET_ARRAY_LEN(data_stages); i++)
+  {
+    current_stage_in_data[i] = (stage) {
+      .threshold = data_stages[i].threshold,
+      .features_amount = data_stages[i].features_amount,
+      .features = (lbp_feature*)(
         GET_RELATIVE_ADDRESS(
           data_features,
           data_stages[i].features
         ) + features_offset
       ),
-		};
-	}
+    };
+  }
 
-	memcpy(
+  memcpy(
     binary_data + features_offset,
     (uint8_t*)&data_features,
     sizeof(data_features)
