@@ -1,4 +1,4 @@
-ARM GAS  /tmp/ccR1okuI.s 			page 1
+ARM GAS  /tmp/ccZ5coe0.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -58,7 +58,7 @@ ARM GAS  /tmp/ccR1okuI.s 			page 1
   37              		.loc 1 19 7 view .LVU2
   38              		.loc 1 19 15 is_stmt 0 view .LVU3
   39 0000 0023     		movs	r3, #0
-ARM GAS  /tmp/ccR1okuI.s 			page 2
+ARM GAS  /tmp/ccZ5coe0.s 			page 2
 
 
   40              		.loc 1 19 2 view .LVU4
@@ -110,12 +110,12 @@ ARM GAS  /tmp/ccR1okuI.s 			page 1
   73              		.file 3 "/usr/src/arm-gnu-toolchain-13.3/arm-none-eabi/include/sys/_stdint.h"
   74              		.file 4 "External/LBPFeature/Inc/lbp_feature_defs.h"
   75              		.file 5 "External/Stage/Inc/stage_defs.h"
-ARM GAS  /tmp/ccR1okuI.s 			page 3
+ARM GAS  /tmp/ccZ5coe0.s 			page 3
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 binary_stage_parser.c
-     /tmp/ccR1okuI.s:21     .text.binary_stage_parser_create:00000000 $t
-     /tmp/ccR1okuI.s:27     .text.binary_stage_parser_create:00000000 binary_stage_parser_create
+     /tmp/ccZ5coe0.s:21     .text.binary_stage_parser_create:00000000 $t
+     /tmp/ccZ5coe0.s:27     .text.binary_stage_parser_create:00000000 binary_stage_parser_create
 
 NO UNDEFINED SYMBOLS

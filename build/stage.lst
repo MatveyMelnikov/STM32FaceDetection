@@ -1,4 +1,4 @@
-ARM GAS  /tmp/ccHjEN20.s 			page 1
+ARM GAS  /tmp/ccHLYG8v.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -40,430 +40,315 @@ ARM GAS  /tmp/ccHjEN20.s 			page 1
   10:External/Stage/Src/stage.c **** {
   29              		.loc 1 10 1 view -0
   30              		.cfi_startproc
-  31              		@ args = 0, pretend = 0, frame = 16
+  31              		@ args = 0, pretend = 0, frame = 8
   32              		@ frame_needed = 0, uses_anonymous_args = 0
   33              		@ link register save eliminated.
-  34 0000 10B4     		push	{r4}
+  34 0000 82B0     		sub	sp, sp, #8
   35              	.LCFI0:
-  36              		.cfi_def_cfa_offset 4
-  37              		.cfi_offset 4, -4
-  38 0002 85B0     		sub	sp, sp, #20
-  39              	.LCFI1:
-  40              		.cfi_def_cfa_offset 24
-  41 0004 01AB     		add	r3, sp, #4
-  42 0006 83E80700 		stm	r3, {r0, r1, r2}
+  36              		.cfi_def_cfa_offset 8
+  37 0002 6B46     		mov	r3, sp
+  38 0004 83E80300 		stm	r3, {r0, r1}
   11:External/Stage/Src/stage.c ****   feature_handler = handler;
-  43              		.loc 1 11 3 view .LVU1
-  44              		.loc 1 11 19 is_stmt 0 view .LVU2
-  45 000a 044C     		ldr	r4, .L3
-  46 000c 93E80700 		ldm	r3, {r0, r1, r2}
-  47 0010 84E80700 		stm	r4, {r0, r1, r2}
-ARM GAS  /tmp/ccHjEN20.s 			page 2
-
-
+  39              		.loc 1 11 3 view .LVU1
+  40              		.loc 1 11 19 is_stmt 0 view .LVU2
+  41 0008 034A     		ldr	r2, .L3
+  42 000a 93E80300 		ldm	r3, {r0, r1}
+  43 000e 82E80300 		stm	r2, {r0, r1}
   12:External/Stage/Src/stage.c **** }
-  48              		.loc 1 12 1 view .LVU3
-  49 0014 05B0     		add	sp, sp, #20
-  50              	.LCFI2:
-  51              		.cfi_def_cfa_offset 4
-  52              		@ sp needed
-  53 0016 5DF8044B 		ldr	r4, [sp], #4
-  54              	.LCFI3:
-  55              		.cfi_restore 4
-  56              		.cfi_def_cfa_offset 0
-  57 001a 7047     		bx	lr
-  58              	.L4:
-  59              		.align	2
-  60              	.L3:
-  61 001c 00000000 		.word	feature_handler
-  62              		.cfi_endproc
-  63              	.LFE0:
-  65              		.section	.text.stage_reset_feature_handler,"ax",%progbits
-  66              		.align	1
-  67              		.global	stage_reset_feature_handler
-  68              		.syntax unified
-  69              		.thumb
-  70              		.thumb_func
-  72              	stage_reset_feature_handler:
-  73              	.LFB1:
+  44              		.loc 1 12 1 view .LVU3
+  45 0012 02B0     		add	sp, sp, #8
+  46              	.LCFI1:
+ARM GAS  /tmp/ccHLYG8v.s 			page 2
+
+
+  47              		.cfi_def_cfa_offset 0
+  48              		@ sp needed
+  49 0014 7047     		bx	lr
+  50              	.L4:
+  51 0016 00BF     		.align	2
+  52              	.L3:
+  53 0018 00000000 		.word	feature_handler
+  54              		.cfi_endproc
+  55              	.LFE0:
+  57              		.section	.text.stage_reset_feature_handler,"ax",%progbits
+  58              		.align	1
+  59              		.global	stage_reset_feature_handler
+  60              		.syntax unified
+  61              		.thumb
+  62              		.thumb_func
+  64              	stage_reset_feature_handler:
+  65              	.LFB1:
   13:External/Stage/Src/stage.c **** 
   14:External/Stage/Src/stage.c **** void stage_reset_feature_handler()
   15:External/Stage/Src/stage.c **** {
-  74              		.loc 1 15 1 is_stmt 1 view -0
-  75              		.cfi_startproc
-  76              		@ args = 0, pretend = 0, frame = 0
-  77              		@ frame_needed = 0, uses_anonymous_args = 0
-  78              		@ link register save eliminated.
+  66              		.loc 1 15 1 is_stmt 1 view -0
+  67              		.cfi_startproc
+  68              		@ args = 0, pretend = 0, frame = 0
+  69              		@ frame_needed = 0, uses_anonymous_args = 0
+  70              		@ link register save eliminated.
   16:External/Stage/Src/stage.c ****   feature_handler = (stage_feature_handler){ 0 };
-  79              		.loc 1 16 3 view .LVU5
-  80              		.loc 1 16 19 is_stmt 0 view .LVU6
-  81 0000 024B     		ldr	r3, .L6
-  82 0002 0022     		movs	r2, #0
-  83 0004 1A60     		str	r2, [r3]
-  84 0006 5A60     		str	r2, [r3, #4]
-  85 0008 9A60     		str	r2, [r3, #8]
+  71              		.loc 1 16 3 view .LVU5
+  72              		.loc 1 16 19 is_stmt 0 view .LVU6
+  73 0000 024B     		ldr	r3, .L6
+  74 0002 0022     		movs	r2, #0
+  75 0004 1A60     		str	r2, [r3]
+  76 0006 5A60     		str	r2, [r3, #4]
   17:External/Stage/Src/stage.c **** }
-  86              		.loc 1 17 1 view .LVU7
-  87 000a 7047     		bx	lr
-  88              	.L7:
-  89              		.align	2
-  90              	.L6:
-  91 000c 00000000 		.word	feature_handler
-  92              		.cfi_endproc
-  93              	.LFE1:
-  95              		.section	.text.stage_calculate_scaled_features,"ax",%progbits
-  96              		.align	1
-  97              		.global	stage_calculate_scaled_features
-  98              		.syntax unified
-  99              		.thumb
- 100              		.thumb_func
- 102              	stage_calculate_scaled_features:
-ARM GAS  /tmp/ccHjEN20.s 			page 3
-
-
- 103              	.LVL0:
- 104              	.LFB2:
+  77              		.loc 1 17 1 view .LVU7
+  78 0008 7047     		bx	lr
+  79              	.L7:
+  80 000a 00BF     		.align	2
+  81              	.L6:
+  82 000c 00000000 		.word	feature_handler
+  83              		.cfi_endproc
+  84              	.LFE1:
+  86              		.section	.text.stage_destroy,"ax",%progbits
+  87              		.align	1
+  88              		.global	stage_destroy
+  89              		.syntax unified
+  90              		.thumb
+  91              		.thumb_func
+  93              	stage_destroy:
+  94              	.LVL0:
+  95              	.LFB2:
   18:External/Stage/Src/stage.c **** 
-  19:External/Stage/Src/stage.c **** void stage_calculate_scaled_features(
-  20:External/Stage/Src/stage.c ****   stage *const self,
-  21:External/Stage/Src/stage.c ****   const float *const scales,
-  22:External/Stage/Src/stage.c ****   const uint8_t scales_amount
-  23:External/Stage/Src/stage.c **** )
-  24:External/Stage/Src/stage.c **** {
- 105              		.loc 1 24 1 is_stmt 1 view -0
- 106              		.cfi_startproc
- 107              		@ args = 0, pretend = 0, frame = 0
- 108              		@ frame_needed = 0, uses_anonymous_args = 0
- 109              		.loc 1 24 1 is_stmt 0 view .LVU9
- 110 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
- 111              	.LCFI4:
- 112              		.cfi_def_cfa_offset 24
- 113              		.cfi_offset 3, -24
- 114              		.cfi_offset 4, -20
- 115              		.cfi_offset 5, -16
- 116              		.cfi_offset 6, -12
- 117              		.cfi_offset 7, -8
- 118              		.cfi_offset 14, -4
- 119 0002 0546     		mov	r5, r0
- 120 0004 0F46     		mov	r7, r1
- 121 0006 1646     		mov	r6, r2
-  25:External/Stage/Src/stage.c ****   for (uint8_t i = 0; i < self->features_amount; i++)
- 122              		.loc 1 25 3 is_stmt 1 view .LVU10
- 123              	.LBB2:
- 124              		.loc 1 25 8 view .LVU11
- 125              	.LVL1:
- 126              		.loc 1 25 16 is_stmt 0 view .LVU12
- 127 0008 0024     		movs	r4, #0
- 128              		.loc 1 25 3 view .LVU13
- 129 000a 0BE0     		b	.L9
- 130              	.LVL2:
- 131              	.L10:
-  26:External/Stage/Src/stage.c ****   {
-  27:External/Stage/Src/stage.c ****     feature_handler.generate_scaled_rectangles(
- 132              		.loc 1 27 5 is_stmt 1 view .LVU14
- 133              		.loc 1 27 20 is_stmt 0 view .LVU15
- 134 000c 074B     		ldr	r3, .L12
- 135 000e 1B68     		ldr	r3, [r3]
-  28:External/Stage/Src/stage.c ****       &self->features[i],
- 136              		.loc 1 28 12 view .LVU16
- 137 0010 2868     		ldr	r0, [r5]
- 138              		.loc 1 28 22 view .LVU17
- 139 0012 04EB840C 		add	ip, r4, r4, lsl #2
-  27:External/Stage/Src/stage.c ****       &self->features[i],
- 140              		.loc 1 27 5 view .LVU18
- 141 0016 3246     		mov	r2, r6
- 142 0018 3946     		mov	r1, r7
- 143 001a 00EB0C10 		add	r0, r0, ip, lsl #4
- 144 001e 9847     		blx	r3
- 145              	.LVL3:
-  25:External/Stage/Src/stage.c ****   {
- 146              		.loc 1 25 51 is_stmt 1 discriminator 3 view .LVU19
-ARM GAS  /tmp/ccHjEN20.s 			page 4
+  19:External/Stage/Src/stage.c **** void stage_destroy(stage *const self)
+  20:External/Stage/Src/stage.c **** {
+  96              		.loc 1 20 1 is_stmt 1 view -0
+  97              		.cfi_startproc
+  98              		@ args = 0, pretend = 0, frame = 0
+  99              		@ frame_needed = 0, uses_anonymous_args = 0
+ARM GAS  /tmp/ccHLYG8v.s 			page 3
 
 
- 147 0020 0134     		adds	r4, r4, #1
- 148              	.LVL4:
-  25:External/Stage/Src/stage.c ****   {
- 149              		.loc 1 25 51 is_stmt 0 discriminator 3 view .LVU20
- 150 0022 E4B2     		uxtb	r4, r4
- 151              	.LVL5:
- 152              	.L9:
-  25:External/Stage/Src/stage.c ****   {
- 153              		.loc 1 25 25 is_stmt 1 discriminator 1 view .LVU21
-  25:External/Stage/Src/stage.c ****   {
- 154              		.loc 1 25 31 is_stmt 0 discriminator 1 view .LVU22
- 155 0024 2B79     		ldrb	r3, [r5, #4]	@ zero_extendqisi2
-  25:External/Stage/Src/stage.c ****   {
- 156              		.loc 1 25 25 discriminator 1 view .LVU23
- 157 0026 A342     		cmp	r3, r4
- 158 0028 F0D8     		bhi	.L10
- 159              	.LBE2:
-  29:External/Stage/Src/stage.c ****       scales,
-  30:External/Stage/Src/stage.c ****       scales_amount
-  31:External/Stage/Src/stage.c ****     );
-  32:External/Stage/Src/stage.c ****   }
-  33:External/Stage/Src/stage.c **** }
- 160              		.loc 1 33 1 view .LVU24
- 161 002a F8BD     		pop	{r3, r4, r5, r6, r7, pc}
- 162              	.LVL6:
- 163              	.L13:
- 164              		.loc 1 33 1 view .LVU25
- 165              		.align	2
- 166              	.L12:
- 167 002c 00000000 		.word	feature_handler
- 168              		.cfi_endproc
- 169              	.LFE2:
- 171              		.section	.text.stage_destroy,"ax",%progbits
- 172              		.align	1
- 173              		.global	stage_destroy
- 174              		.syntax unified
- 175              		.thumb
- 176              		.thumb_func
- 178              	stage_destroy:
- 179              	.LVL7:
- 180              	.LFB3:
-  34:External/Stage/Src/stage.c **** 
-  35:External/Stage/Src/stage.c **** void stage_destroy(stage *const self)
-  36:External/Stage/Src/stage.c **** {
- 181              		.loc 1 36 1 is_stmt 1 view -0
- 182              		.cfi_startproc
- 183              		@ args = 0, pretend = 0, frame = 0
- 184              		@ frame_needed = 0, uses_anonymous_args = 0
- 185              		.loc 1 36 1 is_stmt 0 view .LVU27
- 186 0000 38B5     		push	{r3, r4, r5, lr}
- 187              	.LCFI5:
- 188              		.cfi_def_cfa_offset 16
- 189              		.cfi_offset 3, -16
- 190              		.cfi_offset 4, -12
- 191              		.cfi_offset 5, -8
- 192              		.cfi_offset 14, -4
- 193 0002 0546     		mov	r5, r0
-ARM GAS  /tmp/ccHjEN20.s 			page 5
+ 100              		.loc 1 20 1 is_stmt 0 view .LVU9
+ 101 0000 38B5     		push	{r3, r4, r5, lr}
+ 102              	.LCFI2:
+ 103              		.cfi_def_cfa_offset 16
+ 104              		.cfi_offset 3, -16
+ 105              		.cfi_offset 4, -12
+ 106              		.cfi_offset 5, -8
+ 107              		.cfi_offset 14, -4
+ 108 0002 0546     		mov	r5, r0
+  21:External/Stage/Src/stage.c ****   for (uint8_t i = 0; i < self->features_amount; i++)
+ 109              		.loc 1 21 3 is_stmt 1 view .LVU10
+ 110              	.LBB2:
+ 111              		.loc 1 21 8 view .LVU11
+ 112              	.LVL1:
+ 113              		.loc 1 21 16 is_stmt 0 view .LVU12
+ 114 0004 0024     		movs	r4, #0
+ 115              		.loc 1 21 3 view .LVU13
+ 116 0006 09E0     		b	.L9
+ 117              	.LVL2:
+ 118              	.L10:
+  22:External/Stage/Src/stage.c ****   {
+  23:External/Stage/Src/stage.c ****     feature_handler.destroy(&self->features[i]);
+ 119              		.loc 1 23 5 is_stmt 1 view .LVU14
+ 120              		.loc 1 23 20 is_stmt 0 view .LVU15
+ 121 0008 064B     		ldr	r3, .L12
+ 122 000a 1B68     		ldr	r3, [r3]
+ 123              		.loc 1 23 34 view .LVU16
+ 124 000c 2A68     		ldr	r2, [r5]
+ 125              		.loc 1 23 44 view .LVU17
+ 126 000e 04EB8400 		add	r0, r4, r4, lsl #2
+ 127              		.loc 1 23 5 view .LVU18
+ 128 0012 02EB0010 		add	r0, r2, r0, lsl #4
+ 129 0016 9847     		blx	r3
+ 130              	.LVL3:
+  21:External/Stage/Src/stage.c ****   for (uint8_t i = 0; i < self->features_amount; i++)
+ 131              		.loc 1 21 51 is_stmt 1 discriminator 3 view .LVU19
+ 132 0018 0134     		adds	r4, r4, #1
+ 133              	.LVL4:
+  21:External/Stage/Src/stage.c ****   for (uint8_t i = 0; i < self->features_amount; i++)
+ 134              		.loc 1 21 51 is_stmt 0 discriminator 3 view .LVU20
+ 135 001a E4B2     		uxtb	r4, r4
+ 136              	.LVL5:
+ 137              	.L9:
+  21:External/Stage/Src/stage.c ****   for (uint8_t i = 0; i < self->features_amount; i++)
+ 138              		.loc 1 21 25 is_stmt 1 discriminator 1 view .LVU21
+  21:External/Stage/Src/stage.c ****   for (uint8_t i = 0; i < self->features_amount; i++)
+ 139              		.loc 1 21 31 is_stmt 0 discriminator 1 view .LVU22
+ 140 001c 2B79     		ldrb	r3, [r5, #4]	@ zero_extendqisi2
+  21:External/Stage/Src/stage.c ****   for (uint8_t i = 0; i < self->features_amount; i++)
+ 141              		.loc 1 21 25 discriminator 1 view .LVU23
+ 142 001e A342     		cmp	r3, r4
+ 143 0020 F2D8     		bhi	.L10
+ 144              	.LBE2:
+  24:External/Stage/Src/stage.c ****   }
+  25:External/Stage/Src/stage.c **** }
+ 145              		.loc 1 25 1 view .LVU24
+ 146 0022 38BD     		pop	{r3, r4, r5, pc}
+ARM GAS  /tmp/ccHLYG8v.s 			page 4
 
 
-  37:External/Stage/Src/stage.c ****   for (uint8_t i = 0; i < self->features_amount; i++)
- 194              		.loc 1 37 3 is_stmt 1 view .LVU28
- 195              	.LBB3:
- 196              		.loc 1 37 8 view .LVU29
- 197              	.LVL8:
- 198              		.loc 1 37 16 is_stmt 0 view .LVU30
- 199 0004 0024     		movs	r4, #0
- 200              		.loc 1 37 3 view .LVU31
- 201 0006 09E0     		b	.L15
- 202              	.LVL9:
- 203              	.L16:
-  38:External/Stage/Src/stage.c ****   {
-  39:External/Stage/Src/stage.c ****     feature_handler.destroy(&self->features[i]);
- 204              		.loc 1 39 5 is_stmt 1 view .LVU32
- 205              		.loc 1 39 20 is_stmt 0 view .LVU33
- 206 0008 064B     		ldr	r3, .L18
- 207 000a 5B68     		ldr	r3, [r3, #4]
- 208              		.loc 1 39 34 view .LVU34
- 209 000c 2A68     		ldr	r2, [r5]
- 210              		.loc 1 39 44 view .LVU35
- 211 000e 04EB8400 		add	r0, r4, r4, lsl #2
- 212              		.loc 1 39 5 view .LVU36
- 213 0012 02EB0010 		add	r0, r2, r0, lsl #4
- 214 0016 9847     		blx	r3
- 215              	.LVL10:
-  37:External/Stage/Src/stage.c ****   for (uint8_t i = 0; i < self->features_amount; i++)
- 216              		.loc 1 37 51 is_stmt 1 discriminator 3 view .LVU37
- 217 0018 0134     		adds	r4, r4, #1
- 218              	.LVL11:
-  37:External/Stage/Src/stage.c ****   for (uint8_t i = 0; i < self->features_amount; i++)
- 219              		.loc 1 37 51 is_stmt 0 discriminator 3 view .LVU38
- 220 001a E4B2     		uxtb	r4, r4
- 221              	.LVL12:
+ 147              	.LVL6:
+ 148              	.L13:
+ 149              		.loc 1 25 1 view .LVU25
+ 150              		.align	2
+ 151              	.L12:
+ 152 0024 00000000 		.word	feature_handler
+ 153              		.cfi_endproc
+ 154              	.LFE2:
+ 156              		.section	.text.stage_calculate_prediction,"ax",%progbits
+ 157              		.align	1
+ 158              		.global	stage_calculate_prediction
+ 159              		.syntax unified
+ 160              		.thumb
+ 161              		.thumb_func
+ 163              	stage_calculate_prediction:
+ 164              	.LVL7:
+ 165              	.LFB3:
+  26:External/Stage/Src/stage.c **** 
+  27:External/Stage/Src/stage.c **** bool stage_calculate_prediction(
+  28:External/Stage/Src/stage.c ****   stage *const self,
+  29:External/Stage/Src/stage.c ****   const lbp_feature_arguments *const arguments
+  30:External/Stage/Src/stage.c **** )
+  31:External/Stage/Src/stage.c **** {
+ 166              		.loc 1 31 1 is_stmt 1 view -0
+ 167              		.cfi_startproc
+ 168              		@ args = 0, pretend = 0, frame = 0
+ 169              		@ frame_needed = 0, uses_anonymous_args = 0
+ 170              		.loc 1 31 1 is_stmt 0 view .LVU27
+ 171 0000 70B5     		push	{r4, r5, r6, lr}
+ 172              	.LCFI3:
+ 173              		.cfi_def_cfa_offset 16
+ 174              		.cfi_offset 4, -16
+ 175              		.cfi_offset 5, -12
+ 176              		.cfi_offset 6, -8
+ 177              		.cfi_offset 14, -4
+ 178 0002 2DED028B 		vpush.64	{d8}
+ 179              	.LCFI4:
+ 180              		.cfi_def_cfa_offset 24
+ 181              		.cfi_offset 80, -24
+ 182              		.cfi_offset 81, -20
+ 183 0006 0546     		mov	r5, r0
+ 184 0008 0E46     		mov	r6, r1
+  32:External/Stage/Src/stage.c ****   float score = 0.f;
+ 185              		.loc 1 32 3 is_stmt 1 view .LVU28
+ 186              	.LVL8:
+  33:External/Stage/Src/stage.c **** 
+  34:External/Stage/Src/stage.c ****   for (uint8_t i = 0; i < self->features_amount; i++)
+ 187              		.loc 1 34 3 view .LVU29
+ 188              	.LBB3:
+ 189              		.loc 1 34 8 view .LVU30
+ 190              		.loc 1 34 16 is_stmt 0 view .LVU31
+ 191 000a 0024     		movs	r4, #0
+ 192              	.LBE3:
+  32:External/Stage/Src/stage.c ****   float score = 0.f;
+ 193              		.loc 1 32 9 view .LVU32
+ 194 000c 9FED118A 		vldr.32	s16, .L18
+ 195              	.LBB4:
+ARM GAS  /tmp/ccHLYG8v.s 			page 5
+
+
+ 196              		.loc 1 34 3 view .LVU33
+ 197 0010 0CE0     		b	.L15
+ 198              	.LVL9:
+ 199              	.L16:
+  35:External/Stage/Src/stage.c ****   {
+  36:External/Stage/Src/stage.c ****     score += feature_handler.calculate_vote(&self->features[i], arguments);
+ 200              		.loc 1 36 5 is_stmt 1 view .LVU34
+ 201              		.loc 1 36 29 is_stmt 0 view .LVU35
+ 202 0012 114B     		ldr	r3, .L18+4
+ 203 0014 5B68     		ldr	r3, [r3, #4]
+ 204              		.loc 1 36 50 view .LVU36
+ 205 0016 2A68     		ldr	r2, [r5]
+ 206              		.loc 1 36 60 view .LVU37
+ 207 0018 04EB8400 		add	r0, r4, r4, lsl #2
+ 208              		.loc 1 36 14 view .LVU38
+ 209 001c 3146     		mov	r1, r6
+ 210 001e 02EB0010 		add	r0, r2, r0, lsl #4
+ 211 0022 9847     		blx	r3
+ 212              	.LVL10:
+ 213              		.loc 1 36 11 discriminator 1 view .LVU39
+ 214 0024 38EE008A 		vadd.f32	s16, s16, s0
+ 215              	.LVL11:
+  34:External/Stage/Src/stage.c ****   {
+ 216              		.loc 1 34 51 is_stmt 1 discriminator 3 view .LVU40
+ 217 0028 0134     		adds	r4, r4, #1
+ 218              	.LVL12:
+  34:External/Stage/Src/stage.c ****   {
+ 219              		.loc 1 34 51 is_stmt 0 discriminator 3 view .LVU41
+ 220 002a E4B2     		uxtb	r4, r4
+ 221              	.LVL13:
  222              	.L15:
-  37:External/Stage/Src/stage.c ****   for (uint8_t i = 0; i < self->features_amount; i++)
- 223              		.loc 1 37 25 is_stmt 1 discriminator 1 view .LVU39
-  37:External/Stage/Src/stage.c ****   for (uint8_t i = 0; i < self->features_amount; i++)
- 224              		.loc 1 37 31 is_stmt 0 discriminator 1 view .LVU40
- 225 001c 2B79     		ldrb	r3, [r5, #4]	@ zero_extendqisi2
-  37:External/Stage/Src/stage.c ****   for (uint8_t i = 0; i < self->features_amount; i++)
- 226              		.loc 1 37 25 discriminator 1 view .LVU41
- 227 001e A342     		cmp	r3, r4
- 228 0020 F2D8     		bhi	.L16
- 229              	.LBE3:
-  40:External/Stage/Src/stage.c ****   }
-  41:External/Stage/Src/stage.c **** }
- 230              		.loc 1 41 1 view .LVU42
- 231 0022 38BD     		pop	{r3, r4, r5, pc}
- 232              	.LVL13:
- 233              	.L19:
- 234              		.loc 1 41 1 view .LVU43
- 235              		.align	2
- 236              	.L18:
- 237 0024 00000000 		.word	feature_handler
- 238              		.cfi_endproc
- 239              	.LFE3:
- 241              		.section	.text.stage_calculate_prediction,"ax",%progbits
-ARM GAS  /tmp/ccHjEN20.s 			page 6
+  34:External/Stage/Src/stage.c ****   {
+ 223              		.loc 1 34 25 is_stmt 1 discriminator 1 view .LVU42
+  34:External/Stage/Src/stage.c ****   {
+ 224              		.loc 1 34 31 is_stmt 0 discriminator 1 view .LVU43
+ 225 002c 2B79     		ldrb	r3, [r5, #4]	@ zero_extendqisi2
+  34:External/Stage/Src/stage.c ****   {
+ 226              		.loc 1 34 25 discriminator 1 view .LVU44
+ 227 002e A342     		cmp	r3, r4
+ 228 0030 EFD8     		bhi	.L16
+ 229              	.LBE4:
+  37:External/Stage/Src/stage.c ****   }
+  38:External/Stage/Src/stage.c **** 
+  39:External/Stage/Src/stage.c ****   return (score >= (self->threshold - STAGE_EPSILON)) ? true : false;
+ 230              		.loc 1 39 3 is_stmt 1 view .LVU45
+ 231              		.loc 1 39 25 is_stmt 0 view .LVU46
+ 232 0032 B5F90630 		ldrsh	r3, [r5, #6]
+ 233              		.loc 1 39 37 view .LVU47
+ 234 0036 013B     		subs	r3, r3, #1
+ 235              		.loc 1 39 62 view .LVU48
+ 236 0038 07EE903A 		vmov	s15, r3	@ int
+ 237 003c F8EEE77A 		vcvt.f32.s32	s15, s15
+ 238 0040 F4EEC87A 		vcmpe.f32	s15, s16
+ 239 0044 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+  40:External/Stage/Src/stage.c **** }
+ 240              		.loc 1 40 1 view .LVU49
+ 241 0048 94BF     		ite	ls
+ARM GAS  /tmp/ccHLYG8v.s 			page 6
 
 
- 242              		.align	1
- 243              		.global	stage_calculate_prediction
- 244              		.syntax unified
- 245              		.thumb
- 246              		.thumb_func
- 248              	stage_calculate_prediction:
+ 242 004a 0120     		movls	r0, #1
+ 243 004c 0020     		movhi	r0, #0
+ 244 004e BDEC028B 		vldm	sp!, {d8}
+ 245              	.LCFI5:
+ 246              		.cfi_restore 80
+ 247              		.cfi_restore 81
+ 248              		.cfi_def_cfa_offset 16
  249              	.LVL14:
- 250              	.LFB4:
-  42:External/Stage/Src/stage.c **** 
-  43:External/Stage/Src/stage.c **** bool stage_calculate_prediction(
-  44:External/Stage/Src/stage.c ****   stage *const self,
-  45:External/Stage/Src/stage.c ****   const lbp_feature_arguments *const arguments
-  46:External/Stage/Src/stage.c **** )
-  47:External/Stage/Src/stage.c **** {
- 251              		.loc 1 47 1 is_stmt 1 view -0
- 252              		.cfi_startproc
- 253              		@ args = 0, pretend = 0, frame = 0
- 254              		@ frame_needed = 0, uses_anonymous_args = 0
- 255              		.loc 1 47 1 is_stmt 0 view .LVU45
- 256 0000 70B5     		push	{r4, r5, r6, lr}
- 257              	.LCFI6:
- 258              		.cfi_def_cfa_offset 16
- 259              		.cfi_offset 4, -16
- 260              		.cfi_offset 5, -12
- 261              		.cfi_offset 6, -8
- 262              		.cfi_offset 14, -4
- 263 0002 2DED028B 		vpush.64	{d8}
- 264              	.LCFI7:
- 265              		.cfi_def_cfa_offset 24
- 266              		.cfi_offset 80, -24
- 267              		.cfi_offset 81, -20
- 268 0006 0546     		mov	r5, r0
- 269 0008 0E46     		mov	r6, r1
-  48:External/Stage/Src/stage.c ****   float score = 0.f;
- 270              		.loc 1 48 3 is_stmt 1 view .LVU46
- 271              	.LVL15:
-  49:External/Stage/Src/stage.c **** 
-  50:External/Stage/Src/stage.c ****   for (uint8_t i = 0; i < self->features_amount; i++)
- 272              		.loc 1 50 3 view .LVU47
- 273              	.LBB4:
- 274              		.loc 1 50 8 view .LVU48
- 275              		.loc 1 50 16 is_stmt 0 view .LVU49
- 276 000a 0024     		movs	r4, #0
- 277              	.LBE4:
-  48:External/Stage/Src/stage.c ****   float score = 0.f;
- 278              		.loc 1 48 9 view .LVU50
- 279 000c 9FED118A 		vldr.32	s16, .L24
- 280              	.LBB5:
- 281              		.loc 1 50 3 view .LVU51
- 282 0010 0CE0     		b	.L21
- 283              	.LVL16:
- 284              	.L22:
-  51:External/Stage/Src/stage.c ****   {
-  52:External/Stage/Src/stage.c ****     score += feature_handler.calculate_vote(&self->features[i], arguments);
- 285              		.loc 1 52 5 is_stmt 1 view .LVU52
- 286              		.loc 1 52 29 is_stmt 0 view .LVU53
- 287 0012 114B     		ldr	r3, .L24+4
-ARM GAS  /tmp/ccHjEN20.s 			page 7
-
-
- 288 0014 9B68     		ldr	r3, [r3, #8]
- 289              		.loc 1 52 50 view .LVU54
- 290 0016 2A68     		ldr	r2, [r5]
- 291              		.loc 1 52 60 view .LVU55
- 292 0018 04EB8400 		add	r0, r4, r4, lsl #2
- 293              		.loc 1 52 14 view .LVU56
- 294 001c 3146     		mov	r1, r6
- 295 001e 02EB0010 		add	r0, r2, r0, lsl #4
- 296 0022 9847     		blx	r3
- 297              	.LVL17:
- 298              		.loc 1 52 11 discriminator 1 view .LVU57
- 299 0024 38EE008A 		vadd.f32	s16, s16, s0
- 300              	.LVL18:
-  50:External/Stage/Src/stage.c ****   {
- 301              		.loc 1 50 51 is_stmt 1 discriminator 3 view .LVU58
- 302 0028 0134     		adds	r4, r4, #1
- 303              	.LVL19:
-  50:External/Stage/Src/stage.c ****   {
- 304              		.loc 1 50 51 is_stmt 0 discriminator 3 view .LVU59
- 305 002a E4B2     		uxtb	r4, r4
- 306              	.LVL20:
- 307              	.L21:
-  50:External/Stage/Src/stage.c ****   {
- 308              		.loc 1 50 25 is_stmt 1 discriminator 1 view .LVU60
-  50:External/Stage/Src/stage.c ****   {
- 309              		.loc 1 50 31 is_stmt 0 discriminator 1 view .LVU61
- 310 002c 2B79     		ldrb	r3, [r5, #4]	@ zero_extendqisi2
-  50:External/Stage/Src/stage.c ****   {
- 311              		.loc 1 50 25 discriminator 1 view .LVU62
- 312 002e A342     		cmp	r3, r4
- 313 0030 EFD8     		bhi	.L22
- 314              	.LBE5:
-  53:External/Stage/Src/stage.c ****   }
-  54:External/Stage/Src/stage.c **** 
-  55:External/Stage/Src/stage.c ****   return (score >= (self->threshold - STAGE_EPSILON)) ? true : false;
- 315              		.loc 1 55 3 is_stmt 1 view .LVU63
- 316              		.loc 1 55 25 is_stmt 0 view .LVU64
- 317 0032 B5F90630 		ldrsh	r3, [r5, #6]
- 318              		.loc 1 55 37 view .LVU65
- 319 0036 013B     		subs	r3, r3, #1
- 320              		.loc 1 55 62 view .LVU66
- 321 0038 07EE903A 		vmov	s15, r3	@ int
- 322 003c F8EEE77A 		vcvt.f32.s32	s15, s15
- 323 0040 F4EEC87A 		vcmpe.f32	s15, s16
- 324 0044 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
-  56:External/Stage/Src/stage.c **** }
- 325              		.loc 1 56 1 view .LVU67
- 326 0048 94BF     		ite	ls
- 327 004a 0120     		movls	r0, #1
- 328 004c 0020     		movhi	r0, #0
- 329 004e BDEC028B 		vldm	sp!, {d8}
- 330              	.LCFI8:
- 331              		.cfi_restore 80
- 332              		.cfi_restore 81
- 333              		.cfi_def_cfa_offset 16
- 334              	.LVL21:
- 335              		.loc 1 56 1 view .LVU68
-ARM GAS  /tmp/ccHjEN20.s 			page 8
-
-
- 336 0052 70BD     		pop	{r4, r5, r6, pc}
- 337              	.LVL22:
- 338              	.L25:
- 339              		.loc 1 56 1 view .LVU69
- 340              		.align	2
- 341              	.L24:
- 342 0054 00000000 		.word	0
- 343 0058 00000000 		.word	feature_handler
- 344              		.cfi_endproc
- 345              	.LFE4:
- 347              		.section	.bss.feature_handler,"aw",%nobits
- 348              		.align	2
- 351              	feature_handler:
- 352 0000 00000000 		.space	12
- 352      00000000 
- 352      00000000 
- 353              		.text
- 354              	.Letext0:
- 355              		.file 2 "/usr/src/arm-gnu-toolchain-13.3/arm-none-eabi/include/machine/_default_types.h"
- 356              		.file 3 "/usr/src/arm-gnu-toolchain-13.3/arm-none-eabi/include/sys/_stdint.h"
- 357              		.file 4 "External/LBPFeature/Inc/lbp_feature_defs.h"
- 358              		.file 5 "External/Stage/Inc/stage_defs.h"
-ARM GAS  /tmp/ccHjEN20.s 			page 9
+ 250              		.loc 1 40 1 view .LVU50
+ 251 0052 70BD     		pop	{r4, r5, r6, pc}
+ 252              	.LVL15:
+ 253              	.L19:
+ 254              		.loc 1 40 1 view .LVU51
+ 255              		.align	2
+ 256              	.L18:
+ 257 0054 00000000 		.word	0
+ 258 0058 00000000 		.word	feature_handler
+ 259              		.cfi_endproc
+ 260              	.LFE3:
+ 262              		.section	.bss.feature_handler,"aw",%nobits
+ 263              		.align	2
+ 266              	feature_handler:
+ 267 0000 00000000 		.space	8
+ 267      00000000 
+ 268              		.text
+ 269              	.Letext0:
+ 270              		.file 2 "/usr/src/arm-gnu-toolchain-13.3/arm-none-eabi/include/machine/_default_types.h"
+ 271              		.file 3 "/usr/src/arm-gnu-toolchain-13.3/arm-none-eabi/include/sys/_stdint.h"
+ 272              		.file 4 "External/LBPFeature/Inc/lbp_feature_defs.h"
+ 273              		.file 5 "External/Stage/Inc/stage_defs.h"
+ARM GAS  /tmp/ccHLYG8v.s 			page 7
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 stage.c
-     /tmp/ccHjEN20.s:21     .text.stage_set_feature_handler:00000000 $t
-     /tmp/ccHjEN20.s:27     .text.stage_set_feature_handler:00000000 stage_set_feature_handler
-     /tmp/ccHjEN20.s:61     .text.stage_set_feature_handler:0000001c $d
-     /tmp/ccHjEN20.s:351    .bss.feature_handler:00000000 feature_handler
-     /tmp/ccHjEN20.s:66     .text.stage_reset_feature_handler:00000000 $t
-     /tmp/ccHjEN20.s:72     .text.stage_reset_feature_handler:00000000 stage_reset_feature_handler
-     /tmp/ccHjEN20.s:91     .text.stage_reset_feature_handler:0000000c $d
-     /tmp/ccHjEN20.s:96     .text.stage_calculate_scaled_features:00000000 $t
-     /tmp/ccHjEN20.s:102    .text.stage_calculate_scaled_features:00000000 stage_calculate_scaled_features
-     /tmp/ccHjEN20.s:167    .text.stage_calculate_scaled_features:0000002c $d
-     /tmp/ccHjEN20.s:172    .text.stage_destroy:00000000 $t
-     /tmp/ccHjEN20.s:178    .text.stage_destroy:00000000 stage_destroy
-     /tmp/ccHjEN20.s:237    .text.stage_destroy:00000024 $d
-     /tmp/ccHjEN20.s:242    .text.stage_calculate_prediction:00000000 $t
-     /tmp/ccHjEN20.s:248    .text.stage_calculate_prediction:00000000 stage_calculate_prediction
-     /tmp/ccHjEN20.s:342    .text.stage_calculate_prediction:00000054 $d
-     /tmp/ccHjEN20.s:348    .bss.feature_handler:00000000 $d
+     /tmp/ccHLYG8v.s:21     .text.stage_set_feature_handler:00000000 $t
+     /tmp/ccHLYG8v.s:27     .text.stage_set_feature_handler:00000000 stage_set_feature_handler
+     /tmp/ccHLYG8v.s:53     .text.stage_set_feature_handler:00000018 $d
+     /tmp/ccHLYG8v.s:266    .bss.feature_handler:00000000 feature_handler
+     /tmp/ccHLYG8v.s:58     .text.stage_reset_feature_handler:00000000 $t
+     /tmp/ccHLYG8v.s:64     .text.stage_reset_feature_handler:00000000 stage_reset_feature_handler
+     /tmp/ccHLYG8v.s:82     .text.stage_reset_feature_handler:0000000c $d
+     /tmp/ccHLYG8v.s:87     .text.stage_destroy:00000000 $t
+     /tmp/ccHLYG8v.s:93     .text.stage_destroy:00000000 stage_destroy
+     /tmp/ccHLYG8v.s:152    .text.stage_destroy:00000024 $d
+     /tmp/ccHLYG8v.s:157    .text.stage_calculate_prediction:00000000 $t
+     /tmp/ccHLYG8v.s:163    .text.stage_calculate_prediction:00000000 stage_calculate_prediction
+     /tmp/ccHLYG8v.s:257    .text.stage_calculate_prediction:00000054 $d
+     /tmp/ccHLYG8v.s:263    .bss.feature_handler:00000000 $d
 
 NO UNDEFINED SYMBOLS

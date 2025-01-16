@@ -17,12 +17,6 @@ typedef struct
 
 typedef struct
 {
-  // self, scales, scales_amount
-  void (*generate_scaled_rectangles)(
-    lbp_feature *const,
-    const float *const,
-    const uint8_t
-  );
   // self
   void (*destroy)(lbp_feature *const);
   // self, arguments

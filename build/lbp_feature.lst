@@ -1,4 +1,4 @@
-ARM GAS  /tmp/ccgLfnz8.s 			page 1
+ARM GAS  /tmp/cc7f15XE.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -20,14 +20,14 @@ ARM GAS  /tmp/ccgLfnz8.s 			page 1
   17              	.Ltext0:
   18              		.cfi_sections	.debug_frame
   19              		.file 1 "External/LBPFeature/Src/lbp_feature.c"
-  20              		.section	.text.lbp_feature_get_score,"ax",%progbits
+  20              		.section	.text.lbp_feature_generate_scaled_rectangles,"ax",%progbits
   21              		.align	1
   22              		.syntax unified
   23              		.thumb
   24              		.thumb_func
-  26              	lbp_feature_get_score:
+  26              	lbp_feature_generate_scaled_rectangles:
   27              	.LVL0:
-  28              	.LFB5:
+  28              	.LFB3:
    1:External/LBPFeature/Src/lbp_feature.c **** #include "lbp_feature.h"
    2:External/LBPFeature/Src/lbp_feature.c **** #include <stdlib.h>
    3:External/LBPFeature/Src/lbp_feature.c **** 
@@ -47,18 +47,18 @@ ARM GAS  /tmp/ccgLfnz8.s 			page 1
   17:External/LBPFeature/Src/lbp_feature.c **** 
   18:External/LBPFeature/Src/lbp_feature.c **** // Static prototypes ---------------------------------------------------------
   19:External/LBPFeature/Src/lbp_feature.c **** 
-  20:External/LBPFeature/Src/lbp_feature.c **** static void lbp_feature_allocate_scaled_rectangles(
+  20:External/LBPFeature/Src/lbp_feature.c **** static void lbp_feature_generate_scaled_rectangles(
   21:External/LBPFeature/Src/lbp_feature.c ****   lbp_feature *const self,
-  22:External/LBPFeature/Src/lbp_feature.c ****   const float *const scales,
-  23:External/LBPFeature/Src/lbp_feature.c ****   const uint8_t scales_amount
+  22:External/LBPFeature/Src/lbp_feature.c ****   lbp_feature_rectangle *const scaled_rectangles,
+  23:External/LBPFeature/Src/lbp_feature.c ****   const float scale
   24:External/LBPFeature/Src/lbp_feature.c **** );
   25:External/LBPFeature/Src/lbp_feature.c **** static uint8_t lbp_feature_get_score(
-  26:External/LBPFeature/Src/lbp_feature.c ****   lbp_feature *const self,
+  26:External/LBPFeature/Src/lbp_feature.c ****   const lbp_feature_rectangle *const scaled_rectangles,
   27:External/LBPFeature/Src/lbp_feature.c ****   const lbp_feature_arguments *const arguments
   28:External/LBPFeature/Src/lbp_feature.c **** );
   29:External/LBPFeature/Src/lbp_feature.c **** __attribute__((always_inline))
   30:External/LBPFeature/Src/lbp_feature.c **** static inline uint8_t lbp_feature_get_lbp_value(
-ARM GAS  /tmp/ccgLfnz8.s 			page 2
+ARM GAS  /tmp/cc7f15XE.s 			page 2
 
 
   31:External/LBPFeature/Src/lbp_feature.c ****   const lbp_feature_rectangle *const scaled_rectangles,
@@ -82,1424 +82,1228 @@ ARM GAS  /tmp/ccgLfnz8.s 			page 1
   49:External/LBPFeature/Src/lbp_feature.c ****   integral_image_handler = (lbp_feature_integral_image_handler){ 0 };
   50:External/LBPFeature/Src/lbp_feature.c **** }
   51:External/LBPFeature/Src/lbp_feature.c **** 
-  52:External/LBPFeature/Src/lbp_feature.c **** void lbp_feature_generate_scaled_rectangles(
+  52:External/LBPFeature/Src/lbp_feature.c **** float lbp_feature_calculate_vote(
   53:External/LBPFeature/Src/lbp_feature.c ****   lbp_feature *const self,
-  54:External/LBPFeature/Src/lbp_feature.c ****   const float *const scales,
-  55:External/LBPFeature/Src/lbp_feature.c ****   const uint8_t scales_amount
-  56:External/LBPFeature/Src/lbp_feature.c **** )
-  57:External/LBPFeature/Src/lbp_feature.c **** {
-  58:External/LBPFeature/Src/lbp_feature.c ****   lbp_feature_allocate_scaled_rectangles(self, scales, scales_amount);
-  59:External/LBPFeature/Src/lbp_feature.c **** 
-  60:External/LBPFeature/Src/lbp_feature.c ****   for (uint8_t scale_index = 0; scale_index < scales_amount; scale_index++)
-  61:External/LBPFeature/Src/lbp_feature.c ****   {
-  62:External/LBPFeature/Src/lbp_feature.c ****     float current_scale = scales[scale_index];
-  63:External/LBPFeature/Src/lbp_feature.c ****     lbp_feature_rectangle *current_scaled_rectangles =
-  64:External/LBPFeature/Src/lbp_feature.c ****       self->scaled_rectangles[scale_index];
-  65:External/LBPFeature/Src/lbp_feature.c ****     
-  66:External/LBPFeature/Src/lbp_feature.c ****     for (
-  67:External/LBPFeature/Src/lbp_feature.c ****       uint8_t rectangle_index = 0;
-  68:External/LBPFeature/Src/lbp_feature.c ****       rectangle_index < LBP_FEATURE_RECTANGLES_AMOUNT;
-  69:External/LBPFeature/Src/lbp_feature.c ****       rectangle_index++
-  70:External/LBPFeature/Src/lbp_feature.c ****     )
-  71:External/LBPFeature/Src/lbp_feature.c ****     {
-  72:External/LBPFeature/Src/lbp_feature.c ****       lbp_feature_rectangle current_rectangle =
-  73:External/LBPFeature/Src/lbp_feature.c ****         self->rectangles[rectangle_index];
-  74:External/LBPFeature/Src/lbp_feature.c **** 
-  75:External/LBPFeature/Src/lbp_feature.c ****       current_scaled_rectangles[rectangle_index] = (lbp_feature_rectangle) {
-  76:External/LBPFeature/Src/lbp_feature.c ****         .x = current_rectangle.x * current_scale,
-  77:External/LBPFeature/Src/lbp_feature.c ****         .y = current_rectangle.y * current_scale,
-  78:External/LBPFeature/Src/lbp_feature.c ****         .width = current_rectangle.width * current_scale,
-  79:External/LBPFeature/Src/lbp_feature.c ****         .height = current_rectangle.height * current_scale
-  80:External/LBPFeature/Src/lbp_feature.c ****       };
-  81:External/LBPFeature/Src/lbp_feature.c ****     }
-  82:External/LBPFeature/Src/lbp_feature.c ****   }
-  83:External/LBPFeature/Src/lbp_feature.c **** }
-  84:External/LBPFeature/Src/lbp_feature.c **** 
-  85:External/LBPFeature/Src/lbp_feature.c **** static void lbp_feature_allocate_scaled_rectangles(
-  86:External/LBPFeature/Src/lbp_feature.c ****   lbp_feature *const self,
-  87:External/LBPFeature/Src/lbp_feature.c ****   const float *const scales,
-ARM GAS  /tmp/ccgLfnz8.s 			page 3
-
-
-  88:External/LBPFeature/Src/lbp_feature.c ****   const uint8_t scales_amount
-  89:External/LBPFeature/Src/lbp_feature.c **** )
-  90:External/LBPFeature/Src/lbp_feature.c **** {
-  91:External/LBPFeature/Src/lbp_feature.c ****   self->scaled_rectangles = (lbp_feature_rectangle **)calloc(
-  92:External/LBPFeature/Src/lbp_feature.c ****     scales_amount,
-  93:External/LBPFeature/Src/lbp_feature.c ****     sizeof(void*)
-  94:External/LBPFeature/Src/lbp_feature.c ****   );
-  95:External/LBPFeature/Src/lbp_feature.c **** 
-  96:External/LBPFeature/Src/lbp_feature.c ****   for (uint8_t i = 0; i < scales_amount; i++)
-  97:External/LBPFeature/Src/lbp_feature.c ****   {
-  98:External/LBPFeature/Src/lbp_feature.c ****     self->scaled_rectangles[i] = calloc(
-  99:External/LBPFeature/Src/lbp_feature.c ****       LBP_FEATURE_RECTANGLES_AMOUNT,
- 100:External/LBPFeature/Src/lbp_feature.c ****       sizeof(lbp_feature_rectangle)
- 101:External/LBPFeature/Src/lbp_feature.c ****     );
- 102:External/LBPFeature/Src/lbp_feature.c ****   }
- 103:External/LBPFeature/Src/lbp_feature.c **** 
- 104:External/LBPFeature/Src/lbp_feature.c ****   self->scaled_rectangles_amount = scales_amount;
- 105:External/LBPFeature/Src/lbp_feature.c **** }
- 106:External/LBPFeature/Src/lbp_feature.c **** 
- 107:External/LBPFeature/Src/lbp_feature.c **** float lbp_feature_calculate_vote(
- 108:External/LBPFeature/Src/lbp_feature.c ****   lbp_feature *const self,
- 109:External/LBPFeature/Src/lbp_feature.c ****   const lbp_feature_arguments *const arguments
- 110:External/LBPFeature/Src/lbp_feature.c **** )
- 111:External/LBPFeature/Src/lbp_feature.c **** {
- 112:External/LBPFeature/Src/lbp_feature.c ****   uint8_t score = lbp_feature_get_score(self, arguments);
- 113:External/LBPFeature/Src/lbp_feature.c **** 
- 114:External/LBPFeature/Src/lbp_feature.c ****   return (self->masks[score >> 5] & (1 << (score & 31))) ?
- 115:External/LBPFeature/Src/lbp_feature.c ****     self->right_value : self->left_value;
- 116:External/LBPFeature/Src/lbp_feature.c **** }
- 117:External/LBPFeature/Src/lbp_feature.c **** 
- 118:External/LBPFeature/Src/lbp_feature.c **** static uint8_t lbp_feature_get_score(
- 119:External/LBPFeature/Src/lbp_feature.c ****   lbp_feature *const self,
- 120:External/LBPFeature/Src/lbp_feature.c ****   const lbp_feature_arguments *const arguments
- 121:External/LBPFeature/Src/lbp_feature.c **** )
- 122:External/LBPFeature/Src/lbp_feature.c **** {
-  29              		.loc 1 122 1 view -0
+  54:External/LBPFeature/Src/lbp_feature.c ****   const lbp_feature_arguments *const arguments
+  55:External/LBPFeature/Src/lbp_feature.c **** )
+  56:External/LBPFeature/Src/lbp_feature.c **** {
+  57:External/LBPFeature/Src/lbp_feature.c ****   static lbp_feature_rectangle scaled_rectangles[LBP_FEATURE_RECTANGLES_AMOUNT];
+  58:External/LBPFeature/Src/lbp_feature.c ****   lbp_feature_generate_scaled_rectangles(
+  59:External/LBPFeature/Src/lbp_feature.c ****     self,
+  60:External/LBPFeature/Src/lbp_feature.c ****     (lbp_feature_rectangle*)scaled_rectangles,
+  61:External/LBPFeature/Src/lbp_feature.c ****     arguments->scale
+  62:External/LBPFeature/Src/lbp_feature.c ****   );
+  63:External/LBPFeature/Src/lbp_feature.c **** 
+  64:External/LBPFeature/Src/lbp_feature.c ****   uint8_t score = lbp_feature_get_score(
+  65:External/LBPFeature/Src/lbp_feature.c ****     (lbp_feature_rectangle*)scaled_rectangles,
+  66:External/LBPFeature/Src/lbp_feature.c ****     arguments
+  67:External/LBPFeature/Src/lbp_feature.c ****   );
+  68:External/LBPFeature/Src/lbp_feature.c **** 
+  69:External/LBPFeature/Src/lbp_feature.c ****   return (self->masks[score >> 5] & (1 << (score & 31))) ?
+  70:External/LBPFeature/Src/lbp_feature.c ****     self->right_value : self->left_value;
+  71:External/LBPFeature/Src/lbp_feature.c **** }
+  72:External/LBPFeature/Src/lbp_feature.c **** 
+  73:External/LBPFeature/Src/lbp_feature.c **** static void lbp_feature_generate_scaled_rectangles(
+  74:External/LBPFeature/Src/lbp_feature.c ****   lbp_feature *const self,
+  75:External/LBPFeature/Src/lbp_feature.c ****   lbp_feature_rectangle *const scaled_rectangles,
+  76:External/LBPFeature/Src/lbp_feature.c ****   const float scale
+  77:External/LBPFeature/Src/lbp_feature.c **** )
+  78:External/LBPFeature/Src/lbp_feature.c **** {
+  29              		.loc 1 78 1 view -0
   30              		.cfi_startproc
   31              		@ args = 0, pretend = 0, frame = 8
   32              		@ frame_needed = 0, uses_anonymous_args = 0
-  33              		.loc 1 122 1 is_stmt 0 view .LVU1
-  34 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
-  35              	.LCFI0:
-  36              		.cfi_def_cfa_offset 24
-  37              		.cfi_offset 4, -24
-  38              		.cfi_offset 5, -20
-  39              		.cfi_offset 6, -16
-  40              		.cfi_offset 7, -12
-  41              		.cfi_offset 8, -8
-  42              		.cfi_offset 14, -4
-  43 0004 82B0     		sub	sp, sp, #8
-  44              	.LCFI1:
-  45              		.cfi_def_cfa_offset 32
-  46 0006 0D46     		mov	r5, r1
- 123:External/LBPFeature/Src/lbp_feature.c ****   uint8_t score = 0;
-  47              		.loc 1 123 3 is_stmt 1 view .LVU2
-  48              	.LVL1:
- 124:External/LBPFeature/Src/lbp_feature.c ****   const lbp_feature_rectangle *const scaled_rectangles = 
-ARM GAS  /tmp/ccgLfnz8.s 			page 4
+  33              		@ link register save eliminated.
+  79:External/LBPFeature/Src/lbp_feature.c ****   for (uint8_t i = 0; i < LBP_FEATURE_RECTANGLES_AMOUNT; i++)
+  34              		.loc 1 79 3 view .LVU1
+  35              	.LBB18:
+  36              		.loc 1 79 8 view .LVU2
+ARM GAS  /tmp/cc7f15XE.s 			page 3
 
 
-  49              		.loc 1 124 3 view .LVU3
- 125:External/LBPFeature/Src/lbp_feature.c ****     self->scaled_rectangles[arguments->scale_index];
-  50              		.loc 1 125 9 is_stmt 0 view .LVU4
-  51 0008 436A     		ldr	r3, [r0, #36]
-  52              		.loc 1 125 38 view .LVU5
-  53 000a 8A78     		ldrb	r2, [r1, #2]	@ zero_extendqisi2
- 124:External/LBPFeature/Src/lbp_feature.c ****   const lbp_feature_rectangle *const scaled_rectangles = 
-  54              		.loc 1 124 38 view .LVU6
-  55 000c 53F82240 		ldr	r4, [r3, r2, lsl #2]
-  56              	.LVL2:
- 126:External/LBPFeature/Src/lbp_feature.c ****   
- 127:External/LBPFeature/Src/lbp_feature.c ****   lbp_feature_rectangle center_rect = GET_RECT_WITH_OFFSET(
-  57              		.loc 1 127 3 is_stmt 1 view .LVU7
-  58              		.loc 1 127 39 is_stmt 0 view .LVU8
-  59 0010 237C     		ldrb	r3, [r4, #16]	@ zero_extendqisi2
-  60 0012 0A78     		ldrb	r2, [r1]	@ zero_extendqisi2
-  61 0014 1344     		add	r3, r3, r2
-  62              		.loc 1 127 25 view .LVU9
-  63 0016 8DF80430 		strb	r3, [sp, #4]
-  64              		.loc 1 127 39 view .LVU10
-  65 001a 637C     		ldrb	r3, [r4, #17]	@ zero_extendqisi2
-  66 001c 4A78     		ldrb	r2, [r1, #1]	@ zero_extendqisi2
-  67 001e 1344     		add	r3, r3, r2
-  68              		.loc 1 127 25 view .LVU11
-  69 0020 8DF80530 		strb	r3, [sp, #5]
-  70              		.loc 1 127 39 view .LVU12
-  71 0024 A37C     		ldrb	r3, [r4, #18]	@ zero_extendqisi2
-  72              		.loc 1 127 25 view .LVU13
-  73 0026 8DF80630 		strb	r3, [sp, #6]
-  74              		.loc 1 127 39 view .LVU14
-  75 002a E37C     		ldrb	r3, [r4, #19]	@ zero_extendqisi2
-  76              		.loc 1 127 25 view .LVU15
-  77 002c 8DF80730 		strb	r3, [sp, #7]
- 128:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[LBP_FEATURE_RECT_CENTER],
- 129:External/LBPFeature/Src/lbp_feature.c ****     arguments->offset_x,
- 130:External/LBPFeature/Src/lbp_feature.c ****     arguments->offset_y
- 131:External/LBPFeature/Src/lbp_feature.c ****   );
- 132:External/LBPFeature/Src/lbp_feature.c ****   uint16_t center_value = integral_image_handler.get_rectangle_summarize(
-  78              		.loc 1 132 3 is_stmt 1 view .LVU16
-  79              		.loc 1 132 49 is_stmt 0 view .LVU17
-  80 0030 6F4E     		ldr	r6, .L19
-  81 0032 3368     		ldr	r3, [r6]
-  82              		.loc 1 132 27 view .LVU18
-  83 0034 01A8     		add	r0, sp, #4
-  84              	.LVL3:
-  85              		.loc 1 132 27 view .LVU19
-  86 0036 9847     		blx	r3
-  87              	.LVL4:
-  88              		.loc 1 132 27 view .LVU20
-  89 0038 0746     		mov	r7, r0
-  90              	.LVL5:
- 133:External/LBPFeature/Src/lbp_feature.c ****     &center_rect
- 134:External/LBPFeature/Src/lbp_feature.c ****   );
- 135:External/LBPFeature/Src/lbp_feature.c **** 
- 136:External/LBPFeature/Src/lbp_feature.c ****   score |= lbp_feature_get_lbp_value(
-  91              		.loc 1 136 3 is_stmt 1 view .LVU21
-  92              	.LBB18:
-ARM GAS  /tmp/ccgLfnz8.s 			page 5
+  37              		.loc 1 79 16 is_stmt 0 view .LVU3
+  38 0000 0023     		movs	r3, #0
+  39              	.LVL1:
+  40              		.loc 1 79 25 is_stmt 1 discriminator 1 view .LVU4
+  41 0002 082B     		cmp	r3, #8
+  42 0004 43D8     		bhi	.L7
+  43              	.LBE18:
+  78:External/LBPFeature/Src/lbp_feature.c ****   for (uint8_t i = 0; i < LBP_FEATURE_RECTANGLES_AMOUNT; i++)
+  44              		.loc 1 78 1 is_stmt 0 view .LVU5
+  45 0006 82B0     		sub	sp, sp, #8
+  46              	.LCFI0:
+  47              		.cfi_def_cfa_offset 8
+  48              	.L3:
+  49              	.LBB20:
+  50              	.LBB19:
+  80:External/LBPFeature/Src/lbp_feature.c ****   {
+  81:External/LBPFeature/Src/lbp_feature.c ****     lbp_feature_rectangle current_rectangle = self->rectangles[i];
+  51              		.loc 1 81 5 is_stmt 1 view .LVU6
+  52              		.loc 1 81 27 is_stmt 0 view .LVU7
+  53 0008 50F82320 		ldr	r2, [r0, r3, lsl #2]
+  54 000c 0192     		str	r2, [sp, #4]
+  82:External/LBPFeature/Src/lbp_feature.c **** 
+  83:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[i] = (lbp_feature_rectangle) {
+  55              		.loc 1 83 5 is_stmt 1 view .LVU8
+  56              		.loc 1 83 22 is_stmt 0 view .LVU9
+  57 000e 01EB830C 		add	ip, r1, r3, lsl #2
+  84:External/LBPFeature/Src/lbp_feature.c ****       .x = current_rectangle.x * scale,
+  58              		.loc 1 84 29 view .LVU10
+  59 0012 9DF80420 		ldrb	r2, [sp, #4]	@ zero_extendqisi2
+  60 0016 06EE102A 		vmov	s12, r2	@ int
+  61              		.loc 1 84 32 view .LVU11
+  62 001a B8EEC66A 		vcvt.f32.s32	s12, s12
+  63 001e 26EE006A 		vmul.f32	s12, s12, s0
+  85:External/LBPFeature/Src/lbp_feature.c ****       .y = current_rectangle.y * scale,
+  64              		.loc 1 85 29 view .LVU12
+  65 0022 9DF80520 		ldrb	r2, [sp, #5]	@ zero_extendqisi2
+  66 0026 06EE902A 		vmov	s13, r2	@ int
+  67              		.loc 1 85 32 view .LVU13
+  68 002a F8EEE66A 		vcvt.f32.s32	s13, s13
+  69 002e 66EE806A 		vmul.f32	s13, s13, s0
+  86:External/LBPFeature/Src/lbp_feature.c ****       .width = current_rectangle.width * scale,
+  70              		.loc 1 86 33 view .LVU14
+  71 0032 9DF80620 		ldrb	r2, [sp, #6]	@ zero_extendqisi2
+  72 0036 07EE102A 		vmov	s14, r2	@ int
+  73              		.loc 1 86 40 view .LVU15
+  74 003a B8EEC77A 		vcvt.f32.s32	s14, s14
+  75 003e 27EE007A 		vmul.f32	s14, s14, s0
+  87:External/LBPFeature/Src/lbp_feature.c ****       .height = current_rectangle.height * scale
+  76              		.loc 1 87 34 view .LVU16
+  77 0042 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+  78 0046 07EE902A 		vmov	s15, r2	@ int
+  79              		.loc 1 87 42 view .LVU17
+  80 004a F8EEE77A 		vcvt.f32.s32	s15, s15
+  81 004e 67EE807A 		vmul.f32	s15, s15, s0
+  83:External/LBPFeature/Src/lbp_feature.c ****       .x = current_rectangle.x * scale,
+  82              		.loc 1 83 26 view .LVU18
+  83 0052 BCEEC66A 		vcvt.u32.f32	s12, s12
+ARM GAS  /tmp/cc7f15XE.s 			page 4
 
 
-  93              	.LBI18:
+  84 0056 16EE102A 		vmov	r2, s12	@ int
+  85 005a 01F82320 		strb	r2, [r1, r3, lsl #2]
+  86 005e FCEEE66A 		vcvt.u32.f32	s13, s13
+  87 0062 16EE902A 		vmov	r2, s13	@ int
+  88 0066 8CF80120 		strb	r2, [ip, #1]
+  89 006a BCEEC77A 		vcvt.u32.f32	s14, s14
+  90 006e 17EE102A 		vmov	r2, s14	@ int
+  91 0072 8CF80220 		strb	r2, [ip, #2]
+  92 0076 FCEEE77A 		vcvt.u32.f32	s15, s15
+  93 007a 17EE902A 		vmov	r2, s15	@ int
+  94 007e 8CF80320 		strb	r2, [ip, #3]
+  95              	.LBE19:
+  79:External/LBPFeature/Src/lbp_feature.c ****   {
+  96              		.loc 1 79 59 is_stmt 1 discriminator 3 view .LVU19
+  97 0082 0133     		adds	r3, r3, #1
+  98              	.LVL2:
+  79:External/LBPFeature/Src/lbp_feature.c ****   {
+  99              		.loc 1 79 59 is_stmt 0 discriminator 3 view .LVU20
+ 100 0084 DBB2     		uxtb	r3, r3
+ 101              	.LVL3:
+  79:External/LBPFeature/Src/lbp_feature.c ****   {
+ 102              		.loc 1 79 25 is_stmt 1 discriminator 1 view .LVU21
+ 103 0086 082B     		cmp	r3, #8
+ 104 0088 BED9     		bls	.L3
+ 105              	.LBE20:
+  88:External/LBPFeature/Src/lbp_feature.c ****     };
+  89:External/LBPFeature/Src/lbp_feature.c ****   }
+  90:External/LBPFeature/Src/lbp_feature.c **** }
+ 106              		.loc 1 90 1 is_stmt 0 view .LVU22
+ 107 008a 02B0     		add	sp, sp, #8
+ 108              	.LCFI1:
+ 109              		.cfi_def_cfa_offset 0
+ 110              		@ sp needed
+ 111 008c 7047     		bx	lr
+ 112              	.L7:
+ 113              		.loc 1 90 1 view .LVU23
+ 114 008e 7047     		bx	lr
+ 115              		.cfi_endproc
+ 116              	.LFE3:
+ 118              		.section	.text.lbp_feature_get_score,"ax",%progbits
+ 119              		.align	1
+ 120              		.syntax unified
+ 121              		.thumb
+ 122              		.thumb_func
+ 124              	lbp_feature_get_score:
+ 125              	.LVL4:
+ 126              	.LFB4:
+  91:External/LBPFeature/Src/lbp_feature.c **** 
+  92:External/LBPFeature/Src/lbp_feature.c **** static uint8_t lbp_feature_get_score(
+  93:External/LBPFeature/Src/lbp_feature.c ****   const lbp_feature_rectangle *const scaled_rectangles,
+  94:External/LBPFeature/Src/lbp_feature.c ****   const lbp_feature_arguments *const arguments
+  95:External/LBPFeature/Src/lbp_feature.c **** )
+  96:External/LBPFeature/Src/lbp_feature.c **** {
+ 127              		.loc 1 96 1 is_stmt 1 view -0
+ 128              		.cfi_startproc
+ 129              		@ args = 0, pretend = 0, frame = 8
+ 130              		@ frame_needed = 0, uses_anonymous_args = 0
+ARM GAS  /tmp/cc7f15XE.s 			page 5
+
+
+ 131              		.loc 1 96 1 is_stmt 0 view .LVU25
+ 132 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 133              	.LCFI2:
+ 134              		.cfi_def_cfa_offset 24
+ 135              		.cfi_offset 4, -24
+ 136              		.cfi_offset 5, -20
+ 137              		.cfi_offset 6, -16
+ 138              		.cfi_offset 7, -12
+ 139              		.cfi_offset 8, -8
+ 140              		.cfi_offset 14, -4
+ 141 0004 82B0     		sub	sp, sp, #8
+ 142              	.LCFI3:
+ 143              		.cfi_def_cfa_offset 32
+ 144 0006 0446     		mov	r4, r0
+ 145 0008 0D46     		mov	r5, r1
+  97:External/LBPFeature/Src/lbp_feature.c ****   uint8_t score = 0;
+ 146              		.loc 1 97 3 is_stmt 1 view .LVU26
+ 147              	.LVL5:
+  98:External/LBPFeature/Src/lbp_feature.c ****   
+  99:External/LBPFeature/Src/lbp_feature.c ****   lbp_feature_rectangle center_rect = GET_RECT_WITH_OFFSET(
+ 148              		.loc 1 99 3 view .LVU27
+ 149              		.loc 1 99 39 is_stmt 0 view .LVU28
+ 150 000a 037C     		ldrb	r3, [r0, #16]	@ zero_extendqisi2
+ 151 000c 0A78     		ldrb	r2, [r1]	@ zero_extendqisi2
+ 152 000e 1344     		add	r3, r3, r2
+ 153              		.loc 1 99 25 view .LVU29
+ 154 0010 8DF80430 		strb	r3, [sp, #4]
+ 155              		.loc 1 99 39 view .LVU30
+ 156 0014 437C     		ldrb	r3, [r0, #17]	@ zero_extendqisi2
+ 157 0016 4A78     		ldrb	r2, [r1, #1]	@ zero_extendqisi2
+ 158 0018 1344     		add	r3, r3, r2
+ 159              		.loc 1 99 25 view .LVU31
+ 160 001a 8DF80530 		strb	r3, [sp, #5]
+ 161              		.loc 1 99 39 view .LVU32
+ 162 001e 837C     		ldrb	r3, [r0, #18]	@ zero_extendqisi2
+ 163              		.loc 1 99 25 view .LVU33
+ 164 0020 8DF80630 		strb	r3, [sp, #6]
+ 165              		.loc 1 99 39 view .LVU34
+ 166 0024 C37C     		ldrb	r3, [r0, #19]	@ zero_extendqisi2
+ 167              		.loc 1 99 25 view .LVU35
+ 168 0026 8DF80730 		strb	r3, [sp, #7]
+ 100:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[LBP_FEATURE_RECT_CENTER],
+ 101:External/LBPFeature/Src/lbp_feature.c ****     arguments->offset_x,
+ 102:External/LBPFeature/Src/lbp_feature.c ****     arguments->offset_y
+ 103:External/LBPFeature/Src/lbp_feature.c ****   );
+ 104:External/LBPFeature/Src/lbp_feature.c ****   uint16_t center_value = integral_image_handler.get_rectangle_summarize(
+ 169              		.loc 1 104 3 is_stmt 1 view .LVU36
+ 170              		.loc 1 104 49 is_stmt 0 view .LVU37
+ 171 002a 704E     		ldr	r6, .L26
+ 172 002c 3368     		ldr	r3, [r6]
+ 173              		.loc 1 104 27 view .LVU38
+ 174 002e 01A8     		add	r0, sp, #4
+ 175              	.LVL6:
+ 176              		.loc 1 104 27 view .LVU39
+ 177 0030 9847     		blx	r3
+ 178              	.LVL7:
+ 179              		.loc 1 104 27 view .LVU40
+ARM GAS  /tmp/cc7f15XE.s 			page 6
+
+
+ 180 0032 0746     		mov	r7, r0
+ 181              	.LVL8:
+ 105:External/LBPFeature/Src/lbp_feature.c ****     &center_rect
+ 106:External/LBPFeature/Src/lbp_feature.c ****   );
+ 107:External/LBPFeature/Src/lbp_feature.c **** 
+ 108:External/LBPFeature/Src/lbp_feature.c ****   score |= lbp_feature_get_lbp_value(
+ 182              		.loc 1 108 3 is_stmt 1 view .LVU41
+ 183              	.LBB21:
+ 184              	.LBI21:
+ 109:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles,
+ 110:External/LBPFeature/Src/lbp_feature.c ****     LBP_FEATURE_RECT_UP_LEFT,
+ 111:External/LBPFeature/Src/lbp_feature.c ****     arguments,
+ 112:External/LBPFeature/Src/lbp_feature.c ****     center_value,
+ 113:External/LBPFeature/Src/lbp_feature.c ****     128U
+ 114:External/LBPFeature/Src/lbp_feature.c ****   );
+ 115:External/LBPFeature/Src/lbp_feature.c ****   score |= lbp_feature_get_lbp_value(
+ 116:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles,
+ 117:External/LBPFeature/Src/lbp_feature.c ****     LBP_FEATURE_RECT_UP_CENTER,
+ 118:External/LBPFeature/Src/lbp_feature.c ****     arguments,
+ 119:External/LBPFeature/Src/lbp_feature.c ****     center_value,
+ 120:External/LBPFeature/Src/lbp_feature.c ****     64U
+ 121:External/LBPFeature/Src/lbp_feature.c ****   );
+ 122:External/LBPFeature/Src/lbp_feature.c ****   score |= lbp_feature_get_lbp_value(
+ 123:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles,
+ 124:External/LBPFeature/Src/lbp_feature.c ****     LBP_FEATURE_RECT_UP_RIGHT,
+ 125:External/LBPFeature/Src/lbp_feature.c ****     arguments,
+ 126:External/LBPFeature/Src/lbp_feature.c ****     center_value,
+ 127:External/LBPFeature/Src/lbp_feature.c ****     32U
+ 128:External/LBPFeature/Src/lbp_feature.c ****   );
+ 129:External/LBPFeature/Src/lbp_feature.c **** 
+ 130:External/LBPFeature/Src/lbp_feature.c ****   score |= lbp_feature_get_lbp_value(
+ 131:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles,
+ 132:External/LBPFeature/Src/lbp_feature.c ****     LBP_FEATURE_RECT_LEFT,
+ 133:External/LBPFeature/Src/lbp_feature.c ****     arguments,
+ 134:External/LBPFeature/Src/lbp_feature.c ****     center_value,
+ 135:External/LBPFeature/Src/lbp_feature.c ****     1U
+ 136:External/LBPFeature/Src/lbp_feature.c ****   );
+ 137:External/LBPFeature/Src/lbp_feature.c ****   score |= lbp_feature_get_lbp_value(
+ 138:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles,
+ 139:External/LBPFeature/Src/lbp_feature.c ****     LBP_FEATURE_RECT_RIGHT,
+ 140:External/LBPFeature/Src/lbp_feature.c ****     arguments,
+ 141:External/LBPFeature/Src/lbp_feature.c ****     center_value,
+ 142:External/LBPFeature/Src/lbp_feature.c ****     16U
+ 143:External/LBPFeature/Src/lbp_feature.c ****   );
+ 144:External/LBPFeature/Src/lbp_feature.c **** 
+ 145:External/LBPFeature/Src/lbp_feature.c ****   score |= lbp_feature_get_lbp_value(
+ 146:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles,
+ 147:External/LBPFeature/Src/lbp_feature.c ****     LBP_FEATURE_RECT_DOWN_LEFT,
+ 148:External/LBPFeature/Src/lbp_feature.c ****     arguments,
+ 149:External/LBPFeature/Src/lbp_feature.c ****     center_value,
+ 150:External/LBPFeature/Src/lbp_feature.c ****     2U
+ 151:External/LBPFeature/Src/lbp_feature.c ****   );
+ 152:External/LBPFeature/Src/lbp_feature.c ****   score |= lbp_feature_get_lbp_value(
+ 153:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles,
+ 154:External/LBPFeature/Src/lbp_feature.c ****     LBP_FEATURE_RECT_DOWN_CENTER,
+ 155:External/LBPFeature/Src/lbp_feature.c ****     arguments,
+ 156:External/LBPFeature/Src/lbp_feature.c ****     center_value,
+ARM GAS  /tmp/cc7f15XE.s 			page 7
+
+
+ 157:External/LBPFeature/Src/lbp_feature.c ****     4U
+ 158:External/LBPFeature/Src/lbp_feature.c ****   );
+ 159:External/LBPFeature/Src/lbp_feature.c ****   score |= lbp_feature_get_lbp_value(
+ 160:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles,
+ 161:External/LBPFeature/Src/lbp_feature.c ****     LBP_FEATURE_RECT_DOWN_RIGHT,
+ 162:External/LBPFeature/Src/lbp_feature.c ****     arguments,
+ 163:External/LBPFeature/Src/lbp_feature.c ****     center_value,
+ 164:External/LBPFeature/Src/lbp_feature.c ****     8U
+ 165:External/LBPFeature/Src/lbp_feature.c ****   );
+ 166:External/LBPFeature/Src/lbp_feature.c **** 
+ 167:External/LBPFeature/Src/lbp_feature.c ****   return score;
+ 168:External/LBPFeature/Src/lbp_feature.c **** }
+ 169:External/LBPFeature/Src/lbp_feature.c **** 
+ 170:External/LBPFeature/Src/lbp_feature.c **** __attribute__((always_inline))
+ 171:External/LBPFeature/Src/lbp_feature.c **** static inline uint8_t lbp_feature_get_lbp_value(
+ 185              		.loc 1 171 23 view .LVU42
+ 186              	.LBB22:
+ 172:External/LBPFeature/Src/lbp_feature.c ****   const lbp_feature_rectangle *const scaled_rectangles,
+ 173:External/LBPFeature/Src/lbp_feature.c ****   uint8_t rectangle_index,
+ 174:External/LBPFeature/Src/lbp_feature.c ****   const lbp_feature_arguments *const arguments,
+ 175:External/LBPFeature/Src/lbp_feature.c ****   const uint16_t center_value,
+ 176:External/LBPFeature/Src/lbp_feature.c ****   const uint8_t success_value
+ 177:External/LBPFeature/Src/lbp_feature.c **** )
+ 178:External/LBPFeature/Src/lbp_feature.c **** {
+ 179:External/LBPFeature/Src/lbp_feature.c ****   lbp_feature_rectangle rect_position = GET_RECT_WITH_OFFSET(
+ 187              		.loc 1 179 3 view .LVU43
+ 188              		.loc 1 179 41 is_stmt 0 view .LVU44
+ 189 0034 2378     		ldrb	r3, [r4]	@ zero_extendqisi2
+ 190 0036 2A78     		ldrb	r2, [r5]	@ zero_extendqisi2
+ 191 0038 1344     		add	r3, r3, r2
+ 192              		.loc 1 179 25 view .LVU45
+ 193 003a 8DF80030 		strb	r3, [sp]
+ 194              		.loc 1 179 41 view .LVU46
+ 195 003e 6378     		ldrb	r3, [r4, #1]	@ zero_extendqisi2
+ 196 0040 6A78     		ldrb	r2, [r5, #1]	@ zero_extendqisi2
+ 197 0042 1344     		add	r3, r3, r2
+ 198              		.loc 1 179 25 view .LVU47
+ 199 0044 8DF80130 		strb	r3, [sp, #1]
+ 200              		.loc 1 179 41 view .LVU48
+ 201 0048 A378     		ldrb	r3, [r4, #2]	@ zero_extendqisi2
+ 202              		.loc 1 179 25 view .LVU49
+ 203 004a 8DF80230 		strb	r3, [sp, #2]
+ 204              		.loc 1 179 41 view .LVU50
+ 205 004e E378     		ldrb	r3, [r4, #3]	@ zero_extendqisi2
+ 206              		.loc 1 179 25 view .LVU51
+ 207 0050 8DF80330 		strb	r3, [sp, #3]
+ 180:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 181:External/LBPFeature/Src/lbp_feature.c ****     arguments->offset_x,
+ 182:External/LBPFeature/Src/lbp_feature.c ****     arguments->offset_y
+ 183:External/LBPFeature/Src/lbp_feature.c ****   );
+ 184:External/LBPFeature/Src/lbp_feature.c **** 
+ 185:External/LBPFeature/Src/lbp_feature.c ****   if (
+ 208              		.loc 1 185 3 is_stmt 1 view .LVU52
+ 186:External/LBPFeature/Src/lbp_feature.c ****     integral_image_handler.get_rectangle_summarize(&rect_position) >=
+ 209              		.loc 1 186 27 is_stmt 0 view .LVU53
+ 210 0054 3368     		ldr	r3, [r6]
+ 211              		.loc 1 186 5 view .LVU54
+ARM GAS  /tmp/cc7f15XE.s 			page 8
+
+
+ 212 0056 6846     		mov	r0, sp
+ 213 0058 9847     		blx	r3
+ 214              	.LVL9:
+ 185:External/LBPFeature/Src/lbp_feature.c ****     integral_image_handler.get_rectangle_summarize(&rect_position) >=
+ 215              		.loc 1 185 6 view .LVU55
+ 216 005a 8742     		cmp	r7, r0
+ 217 005c 00F2B480 		bhi	.L17
+ 187:External/LBPFeature/Src/lbp_feature.c ****       center_value
+ 188:External/LBPFeature/Src/lbp_feature.c ****   )
+ 189:External/LBPFeature/Src/lbp_feature.c ****     return success_value;
+ 218              		.loc 1 189 12 view .LVU56
+ 219 0060 4FF08008 		mov	r8, #128
+ 220              	.L9:
+ 221              	.LVL10:
+ 222              		.loc 1 189 12 view .LVU57
+ 223              	.LBE22:
+ 224              	.LBE21:
+ 115:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles,
+ 225              		.loc 1 115 3 is_stmt 1 view .LVU58
+ 226              	.LBB24:
+ 227              	.LBI24:
+ 171:External/LBPFeature/Src/lbp_feature.c ****   const lbp_feature_rectangle *const scaled_rectangles,
+ 228              		.loc 1 171 23 view .LVU59
+ 229              	.LBB25:
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 230              		.loc 1 179 3 view .LVU60
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 231              		.loc 1 179 41 is_stmt 0 view .LVU61
+ 232 0064 2379     		ldrb	r3, [r4, #4]	@ zero_extendqisi2
+ 233 0066 2A78     		ldrb	r2, [r5]	@ zero_extendqisi2
+ 234 0068 1344     		add	r3, r3, r2
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 235              		.loc 1 179 25 view .LVU62
+ 236 006a 8DF80030 		strb	r3, [sp]
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 237              		.loc 1 179 41 view .LVU63
+ 238 006e 6379     		ldrb	r3, [r4, #5]	@ zero_extendqisi2
+ 239 0070 6A78     		ldrb	r2, [r5, #1]	@ zero_extendqisi2
+ 240 0072 1344     		add	r3, r3, r2
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 241              		.loc 1 179 25 view .LVU64
+ 242 0074 8DF80130 		strb	r3, [sp, #1]
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 243              		.loc 1 179 41 view .LVU65
+ 244 0078 A379     		ldrb	r3, [r4, #6]	@ zero_extendqisi2
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 245              		.loc 1 179 25 view .LVU66
+ 246 007a 8DF80230 		strb	r3, [sp, #2]
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 247              		.loc 1 179 41 view .LVU67
+ 248 007e E379     		ldrb	r3, [r4, #7]	@ zero_extendqisi2
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 249              		.loc 1 179 25 view .LVU68
+ 250 0080 8DF80330 		strb	r3, [sp, #3]
+ 185:External/LBPFeature/Src/lbp_feature.c ****     integral_image_handler.get_rectangle_summarize(&rect_position) >=
+ 251              		.loc 1 185 3 is_stmt 1 view .LVU69
+ 186:External/LBPFeature/Src/lbp_feature.c ****       center_value
+ARM GAS  /tmp/cc7f15XE.s 			page 9
+
+
+ 252              		.loc 1 186 27 is_stmt 0 view .LVU70
+ 253 0084 594B     		ldr	r3, .L26
+ 254 0086 1B68     		ldr	r3, [r3]
+ 186:External/LBPFeature/Src/lbp_feature.c ****       center_value
+ 255              		.loc 1 186 5 view .LVU71
+ 256 0088 6846     		mov	r0, sp
+ 257 008a 9847     		blx	r3
+ 258              	.LVL11:
+ 185:External/LBPFeature/Src/lbp_feature.c ****     integral_image_handler.get_rectangle_summarize(&rect_position) >=
+ 259              		.loc 1 185 6 view .LVU72
+ 260 008c 8742     		cmp	r7, r0
+ 261 008e 00F29E80 		bhi	.L18
+ 262              		.loc 1 189 12 view .LVU73
+ 263 0092 4026     		movs	r6, #64
+ 264              	.L10:
+ 265              	.LVL12:
+ 266              		.loc 1 189 12 view .LVU74
+ 267              	.LBE25:
+ 268              	.LBE24:
+ 115:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles,
+ 269              		.loc 1 115 9 discriminator 1 view .LVU75
+ 270 0094 46EA0806 		orr	r6, r6, r8
+ 271              	.LVL13:
+ 122:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles,
+ 272              		.loc 1 122 3 is_stmt 1 view .LVU76
+ 273              	.LBB27:
+ 274              	.LBI27:
+ 171:External/LBPFeature/Src/lbp_feature.c ****   const lbp_feature_rectangle *const scaled_rectangles,
+ 275              		.loc 1 171 23 view .LVU77
+ 276              	.LBB28:
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 277              		.loc 1 179 3 view .LVU78
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 278              		.loc 1 179 41 is_stmt 0 view .LVU79
+ 279 0098 237A     		ldrb	r3, [r4, #8]	@ zero_extendqisi2
+ 280 009a 2A78     		ldrb	r2, [r5]	@ zero_extendqisi2
+ 281 009c 1344     		add	r3, r3, r2
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 282              		.loc 1 179 25 view .LVU80
+ 283 009e 8DF80030 		strb	r3, [sp]
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 284              		.loc 1 179 41 view .LVU81
+ 285 00a2 637A     		ldrb	r3, [r4, #9]	@ zero_extendqisi2
+ 286 00a4 6A78     		ldrb	r2, [r5, #1]	@ zero_extendqisi2
+ 287 00a6 1344     		add	r3, r3, r2
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 288              		.loc 1 179 25 view .LVU82
+ 289 00a8 8DF80130 		strb	r3, [sp, #1]
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 290              		.loc 1 179 41 view .LVU83
+ 291 00ac A37A     		ldrb	r3, [r4, #10]	@ zero_extendqisi2
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 292              		.loc 1 179 25 view .LVU84
+ 293 00ae 8DF80230 		strb	r3, [sp, #2]
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 294              		.loc 1 179 41 view .LVU85
+ 295 00b2 E37A     		ldrb	r3, [r4, #11]	@ zero_extendqisi2
+ARM GAS  /tmp/cc7f15XE.s 			page 10
+
+
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 296              		.loc 1 179 25 view .LVU86
+ 297 00b4 8DF80330 		strb	r3, [sp, #3]
+ 185:External/LBPFeature/Src/lbp_feature.c ****     integral_image_handler.get_rectangle_summarize(&rect_position) >=
+ 298              		.loc 1 185 3 is_stmt 1 view .LVU87
+ 186:External/LBPFeature/Src/lbp_feature.c ****       center_value
+ 299              		.loc 1 186 27 is_stmt 0 view .LVU88
+ 300 00b8 4C4B     		ldr	r3, .L26
+ 301 00ba 1B68     		ldr	r3, [r3]
+ 186:External/LBPFeature/Src/lbp_feature.c ****       center_value
+ 302              		.loc 1 186 5 view .LVU89
+ 303 00bc 6846     		mov	r0, sp
+ 304 00be 9847     		blx	r3
+ 305              	.LVL14:
+ 185:External/LBPFeature/Src/lbp_feature.c ****     integral_image_handler.get_rectangle_summarize(&rect_position) >=
+ 306              		.loc 1 185 6 view .LVU90
+ 307 00c0 8742     		cmp	r7, r0
+ 308 00c2 00F28680 		bhi	.L19
+ 309              		.loc 1 189 12 view .LVU91
+ 310 00c6 2023     		movs	r3, #32
+ 311              	.L11:
+ 312              	.LVL15:
+ 313              		.loc 1 189 12 view .LVU92
+ 314              	.LBE28:
+ 315              	.LBE27:
+ 122:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles,
+ 316              		.loc 1 122 9 discriminator 1 view .LVU93
+ 317 00c8 1E43     		orrs	r6, r6, r3
+ 318              	.LVL16:
+ 130:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles,
+ 319              		.loc 1 130 3 is_stmt 1 view .LVU94
+ 320              	.LBB30:
+ 321              	.LBI30:
+ 171:External/LBPFeature/Src/lbp_feature.c ****   const lbp_feature_rectangle *const scaled_rectangles,
+ 322              		.loc 1 171 23 view .LVU95
+ 323              	.LBB31:
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 324              		.loc 1 179 3 view .LVU96
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 325              		.loc 1 179 41 is_stmt 0 view .LVU97
+ 326 00ca 237B     		ldrb	r3, [r4, #12]	@ zero_extendqisi2
+ 327 00cc 2A78     		ldrb	r2, [r5]	@ zero_extendqisi2
+ 328 00ce 1344     		add	r3, r3, r2
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 329              		.loc 1 179 25 view .LVU98
+ 330 00d0 8DF80030 		strb	r3, [sp]
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 331              		.loc 1 179 41 view .LVU99
+ 332 00d4 637B     		ldrb	r3, [r4, #13]	@ zero_extendqisi2
+ 333 00d6 6A78     		ldrb	r2, [r5, #1]	@ zero_extendqisi2
+ 334 00d8 1344     		add	r3, r3, r2
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 335              		.loc 1 179 25 view .LVU100
+ 336 00da 8DF80130 		strb	r3, [sp, #1]
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 337              		.loc 1 179 41 view .LVU101
+ 338 00de A37B     		ldrb	r3, [r4, #14]	@ zero_extendqisi2
+ARM GAS  /tmp/cc7f15XE.s 			page 11
+
+
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 339              		.loc 1 179 25 view .LVU102
+ 340 00e0 8DF80230 		strb	r3, [sp, #2]
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 341              		.loc 1 179 41 view .LVU103
+ 342 00e4 E37B     		ldrb	r3, [r4, #15]	@ zero_extendqisi2
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 343              		.loc 1 179 25 view .LVU104
+ 344 00e6 8DF80330 		strb	r3, [sp, #3]
+ 185:External/LBPFeature/Src/lbp_feature.c ****     integral_image_handler.get_rectangle_summarize(&rect_position) >=
+ 345              		.loc 1 185 3 is_stmt 1 view .LVU105
+ 186:External/LBPFeature/Src/lbp_feature.c ****       center_value
+ 346              		.loc 1 186 27 is_stmt 0 view .LVU106
+ 347 00ea 404B     		ldr	r3, .L26
+ 348 00ec 1B68     		ldr	r3, [r3]
+ 186:External/LBPFeature/Src/lbp_feature.c ****       center_value
+ 349              		.loc 1 186 5 view .LVU107
+ 350 00ee 6846     		mov	r0, sp
+ 351 00f0 9847     		blx	r3
+ 352              	.LVL17:
+ 185:External/LBPFeature/Src/lbp_feature.c ****     integral_image_handler.get_rectangle_summarize(&rect_position) >=
+ 353              		.loc 1 185 6 view .LVU108
+ 354 00f2 8742     		cmp	r7, r0
+ 355 00f4 6FD8     		bhi	.L20
+ 356              		.loc 1 189 12 view .LVU109
+ 357 00f6 0123     		movs	r3, #1
+ 358              	.L12:
+ 359              	.LVL18:
+ 360              		.loc 1 189 12 view .LVU110
+ 361              	.LBE31:
+ 362              	.LBE30:
+ 130:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles,
+ 363              		.loc 1 130 9 discriminator 1 view .LVU111
+ 364 00f8 1E43     		orrs	r6, r6, r3
+ 365              	.LVL19:
  137:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles,
- 138:External/LBPFeature/Src/lbp_feature.c ****     LBP_FEATURE_RECT_UP_LEFT,
- 139:External/LBPFeature/Src/lbp_feature.c ****     arguments,
- 140:External/LBPFeature/Src/lbp_feature.c ****     center_value,
- 141:External/LBPFeature/Src/lbp_feature.c ****     128U
- 142:External/LBPFeature/Src/lbp_feature.c ****   );
- 143:External/LBPFeature/Src/lbp_feature.c ****   score |= lbp_feature_get_lbp_value(
- 144:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles,
- 145:External/LBPFeature/Src/lbp_feature.c ****     LBP_FEATURE_RECT_UP_CENTER,
- 146:External/LBPFeature/Src/lbp_feature.c ****     arguments,
- 147:External/LBPFeature/Src/lbp_feature.c ****     center_value,
- 148:External/LBPFeature/Src/lbp_feature.c ****     64U
- 149:External/LBPFeature/Src/lbp_feature.c ****   );
- 150:External/LBPFeature/Src/lbp_feature.c ****   score |= lbp_feature_get_lbp_value(
- 151:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles,
- 152:External/LBPFeature/Src/lbp_feature.c ****     LBP_FEATURE_RECT_UP_RIGHT,
- 153:External/LBPFeature/Src/lbp_feature.c ****     arguments,
- 154:External/LBPFeature/Src/lbp_feature.c ****     center_value,
- 155:External/LBPFeature/Src/lbp_feature.c ****     32U
- 156:External/LBPFeature/Src/lbp_feature.c ****   );
- 157:External/LBPFeature/Src/lbp_feature.c **** 
- 158:External/LBPFeature/Src/lbp_feature.c ****   score |= lbp_feature_get_lbp_value(
+ 366              		.loc 1 137 3 is_stmt 1 view .LVU112
+ 367              	.LBB33:
+ 368              	.LBI33:
+ 171:External/LBPFeature/Src/lbp_feature.c ****   const lbp_feature_rectangle *const scaled_rectangles,
+ 369              		.loc 1 171 23 view .LVU113
+ 370              	.LBB34:
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 371              		.loc 1 179 3 view .LVU114
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 372              		.loc 1 179 41 is_stmt 0 view .LVU115
+ 373 00fa 237D     		ldrb	r3, [r4, #20]	@ zero_extendqisi2
+ 374 00fc 2A78     		ldrb	r2, [r5]	@ zero_extendqisi2
+ 375 00fe 1344     		add	r3, r3, r2
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 376              		.loc 1 179 25 view .LVU116
+ 377 0100 8DF80030 		strb	r3, [sp]
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 378              		.loc 1 179 41 view .LVU117
+ 379 0104 637D     		ldrb	r3, [r4, #21]	@ zero_extendqisi2
+ 380 0106 6A78     		ldrb	r2, [r5, #1]	@ zero_extendqisi2
+ 381 0108 1344     		add	r3, r3, r2
+ARM GAS  /tmp/cc7f15XE.s 			page 12
+
+
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 382              		.loc 1 179 25 view .LVU118
+ 383 010a 8DF80130 		strb	r3, [sp, #1]
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 384              		.loc 1 179 41 view .LVU119
+ 385 010e A37D     		ldrb	r3, [r4, #22]	@ zero_extendqisi2
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 386              		.loc 1 179 25 view .LVU120
+ 387 0110 8DF80230 		strb	r3, [sp, #2]
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 388              		.loc 1 179 41 view .LVU121
+ 389 0114 E37D     		ldrb	r3, [r4, #23]	@ zero_extendqisi2
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 390              		.loc 1 179 25 view .LVU122
+ 391 0116 8DF80330 		strb	r3, [sp, #3]
+ 185:External/LBPFeature/Src/lbp_feature.c ****     integral_image_handler.get_rectangle_summarize(&rect_position) >=
+ 392              		.loc 1 185 3 is_stmt 1 view .LVU123
+ 186:External/LBPFeature/Src/lbp_feature.c ****       center_value
+ 393              		.loc 1 186 27 is_stmt 0 view .LVU124
+ 394 011a 344B     		ldr	r3, .L26
+ 395 011c 1B68     		ldr	r3, [r3]
+ 186:External/LBPFeature/Src/lbp_feature.c ****       center_value
+ 396              		.loc 1 186 5 view .LVU125
+ 397 011e 6846     		mov	r0, sp
+ 398 0120 9847     		blx	r3
+ 399              	.LVL20:
+ 185:External/LBPFeature/Src/lbp_feature.c ****     integral_image_handler.get_rectangle_summarize(&rect_position) >=
+ 400              		.loc 1 185 6 view .LVU126
+ 401 0122 8742     		cmp	r7, r0
+ 402 0124 59D8     		bhi	.L21
+ 403              		.loc 1 189 12 view .LVU127
+ 404 0126 1023     		movs	r3, #16
+ 405              	.L13:
+ 406              	.LVL21:
+ 407              		.loc 1 189 12 view .LVU128
+ 408              	.LBE34:
+ 409              	.LBE33:
+ 137:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles,
+ 410              		.loc 1 137 9 discriminator 1 view .LVU129
+ 411 0128 1E43     		orrs	r6, r6, r3
+ 412              	.LVL22:
+ 145:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles,
+ 413              		.loc 1 145 3 is_stmt 1 view .LVU130
+ 414              	.LBB36:
+ 415              	.LBI36:
+ 171:External/LBPFeature/Src/lbp_feature.c ****   const lbp_feature_rectangle *const scaled_rectangles,
+ 416              		.loc 1 171 23 view .LVU131
+ 417              	.LBB37:
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 418              		.loc 1 179 3 view .LVU132
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 419              		.loc 1 179 41 is_stmt 0 view .LVU133
+ 420 012a 237E     		ldrb	r3, [r4, #24]	@ zero_extendqisi2
+ 421 012c 2A78     		ldrb	r2, [r5]	@ zero_extendqisi2
+ 422 012e 1344     		add	r3, r3, r2
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 423              		.loc 1 179 25 view .LVU134
+ARM GAS  /tmp/cc7f15XE.s 			page 13
+
+
+ 424 0130 8DF80030 		strb	r3, [sp]
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 425              		.loc 1 179 41 view .LVU135
+ 426 0134 637E     		ldrb	r3, [r4, #25]	@ zero_extendqisi2
+ 427 0136 6A78     		ldrb	r2, [r5, #1]	@ zero_extendqisi2
+ 428 0138 1344     		add	r3, r3, r2
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 429              		.loc 1 179 25 view .LVU136
+ 430 013a 8DF80130 		strb	r3, [sp, #1]
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 431              		.loc 1 179 41 view .LVU137
+ 432 013e A37E     		ldrb	r3, [r4, #26]	@ zero_extendqisi2
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 433              		.loc 1 179 25 view .LVU138
+ 434 0140 8DF80230 		strb	r3, [sp, #2]
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 435              		.loc 1 179 41 view .LVU139
+ 436 0144 E37E     		ldrb	r3, [r4, #27]	@ zero_extendqisi2
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 437              		.loc 1 179 25 view .LVU140
+ 438 0146 8DF80330 		strb	r3, [sp, #3]
+ 185:External/LBPFeature/Src/lbp_feature.c ****     integral_image_handler.get_rectangle_summarize(&rect_position) >=
+ 439              		.loc 1 185 3 is_stmt 1 view .LVU141
+ 186:External/LBPFeature/Src/lbp_feature.c ****       center_value
+ 440              		.loc 1 186 27 is_stmt 0 view .LVU142
+ 441 014a 284B     		ldr	r3, .L26
+ 442 014c 1B68     		ldr	r3, [r3]
+ 186:External/LBPFeature/Src/lbp_feature.c ****       center_value
+ 443              		.loc 1 186 5 view .LVU143
+ 444 014e 6846     		mov	r0, sp
+ 445 0150 9847     		blx	r3
+ 446              	.LVL23:
+ 185:External/LBPFeature/Src/lbp_feature.c ****     integral_image_handler.get_rectangle_summarize(&rect_position) >=
+ 447              		.loc 1 185 6 view .LVU144
+ 448 0152 8742     		cmp	r7, r0
+ 449 0154 43D8     		bhi	.L22
+ 450              		.loc 1 189 12 view .LVU145
+ 451 0156 0223     		movs	r3, #2
+ 452              	.L14:
+ 453              	.LVL24:
+ 454              		.loc 1 189 12 view .LVU146
+ 455              	.LBE37:
+ 456              	.LBE36:
+ 145:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles,
+ 457              		.loc 1 145 9 discriminator 1 view .LVU147
+ 458 0158 1E43     		orrs	r6, r6, r3
+ 459              	.LVL25:
+ 152:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles,
+ 460              		.loc 1 152 3 is_stmt 1 view .LVU148
+ 461              	.LBB39:
+ 462              	.LBI39:
+ 171:External/LBPFeature/Src/lbp_feature.c ****   const lbp_feature_rectangle *const scaled_rectangles,
+ 463              		.loc 1 171 23 view .LVU149
+ 464              	.LBB40:
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 465              		.loc 1 179 3 view .LVU150
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ARM GAS  /tmp/cc7f15XE.s 			page 14
+
+
+ 466              		.loc 1 179 41 is_stmt 0 view .LVU151
+ 467 015a 237F     		ldrb	r3, [r4, #28]	@ zero_extendqisi2
+ 468 015c 2A78     		ldrb	r2, [r5]	@ zero_extendqisi2
+ 469 015e 1344     		add	r3, r3, r2
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 470              		.loc 1 179 25 view .LVU152
+ 471 0160 8DF80030 		strb	r3, [sp]
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 472              		.loc 1 179 41 view .LVU153
+ 473 0164 637F     		ldrb	r3, [r4, #29]	@ zero_extendqisi2
+ 474 0166 6A78     		ldrb	r2, [r5, #1]	@ zero_extendqisi2
+ 475 0168 1344     		add	r3, r3, r2
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 476              		.loc 1 179 25 view .LVU154
+ 477 016a 8DF80130 		strb	r3, [sp, #1]
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 478              		.loc 1 179 41 view .LVU155
+ 479 016e A37F     		ldrb	r3, [r4, #30]	@ zero_extendqisi2
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 480              		.loc 1 179 25 view .LVU156
+ 481 0170 8DF80230 		strb	r3, [sp, #2]
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 482              		.loc 1 179 41 view .LVU157
+ 483 0174 E37F     		ldrb	r3, [r4, #31]	@ zero_extendqisi2
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 484              		.loc 1 179 25 view .LVU158
+ 485 0176 8DF80330 		strb	r3, [sp, #3]
+ 185:External/LBPFeature/Src/lbp_feature.c ****     integral_image_handler.get_rectangle_summarize(&rect_position) >=
+ 486              		.loc 1 185 3 is_stmt 1 view .LVU159
+ 186:External/LBPFeature/Src/lbp_feature.c ****       center_value
+ 487              		.loc 1 186 27 is_stmt 0 view .LVU160
+ 488 017a 1C4B     		ldr	r3, .L26
+ 489 017c 1B68     		ldr	r3, [r3]
+ 186:External/LBPFeature/Src/lbp_feature.c ****       center_value
+ 490              		.loc 1 186 5 view .LVU161
+ 491 017e 6846     		mov	r0, sp
+ 492 0180 9847     		blx	r3
+ 493              	.LVL26:
+ 185:External/LBPFeature/Src/lbp_feature.c ****     integral_image_handler.get_rectangle_summarize(&rect_position) >=
+ 494              		.loc 1 185 6 view .LVU162
+ 495 0182 8742     		cmp	r7, r0
+ 496 0184 2DD8     		bhi	.L23
+ 497              		.loc 1 189 12 view .LVU163
+ 498 0186 0423     		movs	r3, #4
+ 499              	.L15:
+ 500              	.LVL27:
+ 501              		.loc 1 189 12 view .LVU164
+ 502              	.LBE40:
+ 503              	.LBE39:
+ 152:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles,
+ 504              		.loc 1 152 9 discriminator 1 view .LVU165
+ 505 0188 1E43     		orrs	r6, r6, r3
+ 506              	.LVL28:
  159:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles,
- 160:External/LBPFeature/Src/lbp_feature.c ****     LBP_FEATURE_RECT_LEFT,
- 161:External/LBPFeature/Src/lbp_feature.c ****     arguments,
- 162:External/LBPFeature/Src/lbp_feature.c ****     center_value,
- 163:External/LBPFeature/Src/lbp_feature.c ****     1U
- 164:External/LBPFeature/Src/lbp_feature.c ****   );
- 165:External/LBPFeature/Src/lbp_feature.c ****   score |= lbp_feature_get_lbp_value(
- 166:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles,
- 167:External/LBPFeature/Src/lbp_feature.c ****     LBP_FEATURE_RECT_RIGHT,
- 168:External/LBPFeature/Src/lbp_feature.c ****     arguments,
- 169:External/LBPFeature/Src/lbp_feature.c ****     center_value,
- 170:External/LBPFeature/Src/lbp_feature.c ****     16U
- 171:External/LBPFeature/Src/lbp_feature.c ****   );
- 172:External/LBPFeature/Src/lbp_feature.c **** 
- 173:External/LBPFeature/Src/lbp_feature.c ****   score |= lbp_feature_get_lbp_value(
- 174:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles,
- 175:External/LBPFeature/Src/lbp_feature.c ****     LBP_FEATURE_RECT_DOWN_LEFT,
- 176:External/LBPFeature/Src/lbp_feature.c ****     arguments,
- 177:External/LBPFeature/Src/lbp_feature.c ****     center_value,
- 178:External/LBPFeature/Src/lbp_feature.c ****     2U
- 179:External/LBPFeature/Src/lbp_feature.c ****   );
- 180:External/LBPFeature/Src/lbp_feature.c ****   score |= lbp_feature_get_lbp_value(
- 181:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles,
- 182:External/LBPFeature/Src/lbp_feature.c ****     LBP_FEATURE_RECT_DOWN_CENTER,
- 183:External/LBPFeature/Src/lbp_feature.c ****     arguments,
- 184:External/LBPFeature/Src/lbp_feature.c ****     center_value,
- 185:External/LBPFeature/Src/lbp_feature.c ****     4U
- 186:External/LBPFeature/Src/lbp_feature.c ****   );
- 187:External/LBPFeature/Src/lbp_feature.c ****   score |= lbp_feature_get_lbp_value(
- 188:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles,
- 189:External/LBPFeature/Src/lbp_feature.c ****     LBP_FEATURE_RECT_DOWN_RIGHT,
- 190:External/LBPFeature/Src/lbp_feature.c ****     arguments,
- 191:External/LBPFeature/Src/lbp_feature.c ****     center_value,
- 192:External/LBPFeature/Src/lbp_feature.c ****     8U
-ARM GAS  /tmp/ccgLfnz8.s 			page 6
+ 507              		.loc 1 159 3 is_stmt 1 view .LVU166
+ 508              	.LBB42:
+ 509              	.LBI42:
+ARM GAS  /tmp/cc7f15XE.s 			page 15
 
 
- 193:External/LBPFeature/Src/lbp_feature.c ****   );
- 194:External/LBPFeature/Src/lbp_feature.c **** 
- 195:External/LBPFeature/Src/lbp_feature.c ****   return score;
- 196:External/LBPFeature/Src/lbp_feature.c **** }
- 197:External/LBPFeature/Src/lbp_feature.c **** 
- 198:External/LBPFeature/Src/lbp_feature.c **** __attribute__((always_inline))
- 199:External/LBPFeature/Src/lbp_feature.c **** static inline uint8_t lbp_feature_get_lbp_value(
-  94              		.loc 1 199 23 view .LVU22
-  95              	.LBB19:
- 200:External/LBPFeature/Src/lbp_feature.c ****   const lbp_feature_rectangle *const scaled_rectangles,
- 201:External/LBPFeature/Src/lbp_feature.c ****   uint8_t rectangle_index,
- 202:External/LBPFeature/Src/lbp_feature.c ****   const lbp_feature_arguments *const arguments,
- 203:External/LBPFeature/Src/lbp_feature.c ****   const uint16_t center_value,
- 204:External/LBPFeature/Src/lbp_feature.c ****   const uint8_t success_value
- 205:External/LBPFeature/Src/lbp_feature.c **** )
- 206:External/LBPFeature/Src/lbp_feature.c **** {
- 207:External/LBPFeature/Src/lbp_feature.c ****   lbp_feature_rectangle rect_position = GET_RECT_WITH_OFFSET(
-  96              		.loc 1 207 3 view .LVU23
-  97              		.loc 1 207 41 is_stmt 0 view .LVU24
-  98 003a 2378     		ldrb	r3, [r4]	@ zero_extendqisi2
-  99 003c 2A78     		ldrb	r2, [r5]	@ zero_extendqisi2
- 100 003e 1344     		add	r3, r3, r2
- 101              		.loc 1 207 25 view .LVU25
- 102 0040 8DF80030 		strb	r3, [sp]
- 103              		.loc 1 207 41 view .LVU26
- 104 0044 6378     		ldrb	r3, [r4, #1]	@ zero_extendqisi2
- 105 0046 6A78     		ldrb	r2, [r5, #1]	@ zero_extendqisi2
- 106 0048 1344     		add	r3, r3, r2
- 107              		.loc 1 207 25 view .LVU27
- 108 004a 8DF80130 		strb	r3, [sp, #1]
- 109              		.loc 1 207 41 view .LVU28
- 110 004e A378     		ldrb	r3, [r4, #2]	@ zero_extendqisi2
- 111              		.loc 1 207 25 view .LVU29
- 112 0050 8DF80230 		strb	r3, [sp, #2]
- 113              		.loc 1 207 41 view .LVU30
- 114 0054 E378     		ldrb	r3, [r4, #3]	@ zero_extendqisi2
- 115              		.loc 1 207 25 view .LVU31
- 116 0056 8DF80330 		strb	r3, [sp, #3]
- 208:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 209:External/LBPFeature/Src/lbp_feature.c ****     arguments->offset_x,
- 210:External/LBPFeature/Src/lbp_feature.c ****     arguments->offset_y
- 211:External/LBPFeature/Src/lbp_feature.c ****   );
- 212:External/LBPFeature/Src/lbp_feature.c **** 
- 213:External/LBPFeature/Src/lbp_feature.c ****   if (
- 117              		.loc 1 213 3 is_stmt 1 view .LVU32
- 214:External/LBPFeature/Src/lbp_feature.c ****     integral_image_handler.get_rectangle_summarize(&rect_position) >=
- 118              		.loc 1 214 27 is_stmt 0 view .LVU33
- 119 005a 3368     		ldr	r3, [r6]
- 120              		.loc 1 214 5 view .LVU34
- 121 005c 6846     		mov	r0, sp
- 122 005e 9847     		blx	r3
- 123              	.LVL6:
- 213:External/LBPFeature/Src/lbp_feature.c ****     integral_image_handler.get_rectangle_summarize(&rect_position) >=
- 124              		.loc 1 213 6 view .LVU35
- 125 0060 8742     		cmp	r7, r0
- 126 0062 00F2B480 		bhi	.L10
- 215:External/LBPFeature/Src/lbp_feature.c ****       center_value
-ARM GAS  /tmp/ccgLfnz8.s 			page 7
+ 171:External/LBPFeature/Src/lbp_feature.c ****   const lbp_feature_rectangle *const scaled_rectangles,
+ 510              		.loc 1 171 23 view .LVU167
+ 511              	.LBB43:
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 512              		.loc 1 179 3 view .LVU168
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 513              		.loc 1 179 41 is_stmt 0 view .LVU169
+ 514 018a 94F82030 		ldrb	r3, [r4, #32]	@ zero_extendqisi2
+ 515 018e 2A78     		ldrb	r2, [r5]	@ zero_extendqisi2
+ 516 0190 1344     		add	r3, r3, r2
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 517              		.loc 1 179 25 view .LVU170
+ 518 0192 8DF80030 		strb	r3, [sp]
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 519              		.loc 1 179 41 view .LVU171
+ 520 0196 94F82130 		ldrb	r3, [r4, #33]	@ zero_extendqisi2
+ 521 019a 6A78     		ldrb	r2, [r5, #1]	@ zero_extendqisi2
+ 522 019c 1344     		add	r3, r3, r2
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 523              		.loc 1 179 25 view .LVU172
+ 524 019e 8DF80130 		strb	r3, [sp, #1]
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 525              		.loc 1 179 41 view .LVU173
+ 526 01a2 94F82230 		ldrb	r3, [r4, #34]	@ zero_extendqisi2
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 527              		.loc 1 179 25 view .LVU174
+ 528 01a6 8DF80230 		strb	r3, [sp, #2]
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 529              		.loc 1 179 41 view .LVU175
+ 530 01aa 94F82330 		ldrb	r3, [r4, #35]	@ zero_extendqisi2
+ 179:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
+ 531              		.loc 1 179 25 view .LVU176
+ 532 01ae 8DF80330 		strb	r3, [sp, #3]
+ 185:External/LBPFeature/Src/lbp_feature.c ****     integral_image_handler.get_rectangle_summarize(&rect_position) >=
+ 533              		.loc 1 185 3 is_stmt 1 view .LVU177
+ 186:External/LBPFeature/Src/lbp_feature.c ****       center_value
+ 534              		.loc 1 186 27 is_stmt 0 view .LVU178
+ 535 01b2 0E4B     		ldr	r3, .L26
+ 536 01b4 1B68     		ldr	r3, [r3]
+ 186:External/LBPFeature/Src/lbp_feature.c ****       center_value
+ 537              		.loc 1 186 5 view .LVU179
+ 538 01b6 6846     		mov	r0, sp
+ 539 01b8 9847     		blx	r3
+ 540              	.LVL29:
+ 185:External/LBPFeature/Src/lbp_feature.c ****     integral_image_handler.get_rectangle_summarize(&rect_position) >=
+ 541              		.loc 1 185 6 view .LVU180
+ 542 01ba 8742     		cmp	r7, r0
+ 543 01bc 13D8     		bhi	.L24
+ 544              		.loc 1 189 12 view .LVU181
+ 545 01be 0820     		movs	r0, #8
+ 546              	.L16:
+ 547              	.LVL30:
+ 548              		.loc 1 189 12 view .LVU182
+ 549              	.LBE43:
+ 550              	.LBE42:
+ 167:External/LBPFeature/Src/lbp_feature.c **** }
+ 551              		.loc 1 167 3 is_stmt 1 view .LVU183
+ARM GAS  /tmp/cc7f15XE.s 			page 16
 
 
- 216:External/LBPFeature/Src/lbp_feature.c ****   )
- 217:External/LBPFeature/Src/lbp_feature.c ****     return success_value;
- 127              		.loc 1 217 12 view .LVU36
- 128 0066 4FF08008 		mov	r8, #128
- 129              	.L2:
- 130              	.LVL7:
- 131              		.loc 1 217 12 view .LVU37
- 132              	.LBE19:
- 133              	.LBE18:
- 143:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles,
- 134              		.loc 1 143 3 is_stmt 1 view .LVU38
- 135              	.LBB21:
- 136              	.LBI21:
- 199:External/LBPFeature/Src/lbp_feature.c ****   const lbp_feature_rectangle *const scaled_rectangles,
- 137              		.loc 1 199 23 view .LVU39
- 138              	.LBB22:
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 139              		.loc 1 207 3 view .LVU40
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 140              		.loc 1 207 41 is_stmt 0 view .LVU41
- 141 006a 2379     		ldrb	r3, [r4, #4]	@ zero_extendqisi2
- 142 006c 2A78     		ldrb	r2, [r5]	@ zero_extendqisi2
- 143 006e 1344     		add	r3, r3, r2
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 144              		.loc 1 207 25 view .LVU42
- 145 0070 8DF80030 		strb	r3, [sp]
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 146              		.loc 1 207 41 view .LVU43
- 147 0074 6379     		ldrb	r3, [r4, #5]	@ zero_extendqisi2
- 148 0076 6A78     		ldrb	r2, [r5, #1]	@ zero_extendqisi2
- 149 0078 1344     		add	r3, r3, r2
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 150              		.loc 1 207 25 view .LVU44
- 151 007a 8DF80130 		strb	r3, [sp, #1]
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 152              		.loc 1 207 41 view .LVU45
- 153 007e A379     		ldrb	r3, [r4, #6]	@ zero_extendqisi2
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 154              		.loc 1 207 25 view .LVU46
- 155 0080 8DF80230 		strb	r3, [sp, #2]
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 156              		.loc 1 207 41 view .LVU47
- 157 0084 E379     		ldrb	r3, [r4, #7]	@ zero_extendqisi2
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 158              		.loc 1 207 25 view .LVU48
- 159 0086 8DF80330 		strb	r3, [sp, #3]
- 213:External/LBPFeature/Src/lbp_feature.c ****     integral_image_handler.get_rectangle_summarize(&rect_position) >=
- 160              		.loc 1 213 3 is_stmt 1 view .LVU49
- 214:External/LBPFeature/Src/lbp_feature.c ****       center_value
- 161              		.loc 1 214 27 is_stmt 0 view .LVU50
- 162 008a 594B     		ldr	r3, .L19
- 163 008c 1B68     		ldr	r3, [r3]
- 214:External/LBPFeature/Src/lbp_feature.c ****       center_value
- 164              		.loc 1 214 5 view .LVU51
- 165 008e 6846     		mov	r0, sp
- 166 0090 9847     		blx	r3
- 167              	.LVL8:
-ARM GAS  /tmp/ccgLfnz8.s 			page 8
+ 168:External/LBPFeature/Src/lbp_feature.c **** 
+ 552              		.loc 1 168 1 is_stmt 0 view .LVU184
+ 553 01c0 3043     		orrs	r0, r0, r6
+ 554              	.LVL31:
+ 168:External/LBPFeature/Src/lbp_feature.c **** 
+ 555              		.loc 1 168 1 view .LVU185
+ 556 01c2 02B0     		add	sp, sp, #8
+ 557              	.LCFI4:
+ 558              		.cfi_remember_state
+ 559              		.cfi_def_cfa_offset 24
+ 560              		@ sp needed
+ 561 01c4 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 562              	.LVL32:
+ 563              	.L17:
+ 564              	.LCFI5:
+ 565              		.cfi_restore_state
+ 566              	.LBB45:
+ 567              	.LBB23:
+ 190:External/LBPFeature/Src/lbp_feature.c ****   else
+ 191:External/LBPFeature/Src/lbp_feature.c ****     return 0;
+ 568              		.loc 1 191 12 view .LVU186
+ 569 01c8 4FF00008 		mov	r8, #0
+ 570 01cc 4AE7     		b	.L9
+ 571              	.LVL33:
+ 572              	.L18:
+ 573              		.loc 1 191 12 view .LVU187
+ 574              	.LBE23:
+ 575              	.LBE45:
+ 576              	.LBB46:
+ 577              	.LBB26:
+ 578 01ce 0026     		movs	r6, #0
+ 579 01d0 60E7     		b	.L10
+ 580              	.LVL34:
+ 581              	.L19:
+ 582              		.loc 1 191 12 view .LVU188
+ 583              	.LBE26:
+ 584              	.LBE46:
+ 585              	.LBB47:
+ 586              	.LBB29:
+ 587 01d2 0023     		movs	r3, #0
+ 588 01d4 78E7     		b	.L11
+ 589              	.LVL35:
+ 590              	.L20:
+ 591              		.loc 1 191 12 view .LVU189
+ 592              	.LBE29:
+ 593              	.LBE47:
+ 594              	.LBB48:
+ 595              	.LBB32:
+ 596 01d6 0023     		movs	r3, #0
+ 597 01d8 8EE7     		b	.L12
+ 598              	.LVL36:
+ 599              	.L21:
+ 600              		.loc 1 191 12 view .LVU190
+ 601              	.LBE32:
+ 602              	.LBE48:
+ 603              	.LBB49:
+ 604              	.LBB35:
+ARM GAS  /tmp/cc7f15XE.s 			page 17
 
 
- 213:External/LBPFeature/Src/lbp_feature.c ****     integral_image_handler.get_rectangle_summarize(&rect_position) >=
- 168              		.loc 1 213 6 view .LVU52
- 169 0092 8742     		cmp	r7, r0
- 170 0094 00F29E80 		bhi	.L11
- 171              		.loc 1 217 12 view .LVU53
- 172 0098 4026     		movs	r6, #64
- 173              	.L3:
- 174              	.LVL9:
- 175              		.loc 1 217 12 view .LVU54
- 176              	.LBE22:
- 177              	.LBE21:
- 143:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles,
- 178              		.loc 1 143 9 discriminator 1 view .LVU55
- 179 009a 46EA0806 		orr	r6, r6, r8
- 180              	.LVL10:
- 150:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles,
- 181              		.loc 1 150 3 is_stmt 1 view .LVU56
- 182              	.LBB24:
- 183              	.LBI24:
- 199:External/LBPFeature/Src/lbp_feature.c ****   const lbp_feature_rectangle *const scaled_rectangles,
- 184              		.loc 1 199 23 view .LVU57
- 185              	.LBB25:
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 186              		.loc 1 207 3 view .LVU58
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 187              		.loc 1 207 41 is_stmt 0 view .LVU59
- 188 009e 237A     		ldrb	r3, [r4, #8]	@ zero_extendqisi2
- 189 00a0 2A78     		ldrb	r2, [r5]	@ zero_extendqisi2
- 190 00a2 1344     		add	r3, r3, r2
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 191              		.loc 1 207 25 view .LVU60
- 192 00a4 8DF80030 		strb	r3, [sp]
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 193              		.loc 1 207 41 view .LVU61
- 194 00a8 637A     		ldrb	r3, [r4, #9]	@ zero_extendqisi2
- 195 00aa 6A78     		ldrb	r2, [r5, #1]	@ zero_extendqisi2
- 196 00ac 1344     		add	r3, r3, r2
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 197              		.loc 1 207 25 view .LVU62
- 198 00ae 8DF80130 		strb	r3, [sp, #1]
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 199              		.loc 1 207 41 view .LVU63
- 200 00b2 A37A     		ldrb	r3, [r4, #10]	@ zero_extendqisi2
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 201              		.loc 1 207 25 view .LVU64
- 202 00b4 8DF80230 		strb	r3, [sp, #2]
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 203              		.loc 1 207 41 view .LVU65
- 204 00b8 E37A     		ldrb	r3, [r4, #11]	@ zero_extendqisi2
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 205              		.loc 1 207 25 view .LVU66
- 206 00ba 8DF80330 		strb	r3, [sp, #3]
- 213:External/LBPFeature/Src/lbp_feature.c ****     integral_image_handler.get_rectangle_summarize(&rect_position) >=
- 207              		.loc 1 213 3 is_stmt 1 view .LVU67
- 214:External/LBPFeature/Src/lbp_feature.c ****       center_value
- 208              		.loc 1 214 27 is_stmt 0 view .LVU68
- 209 00be 4C4B     		ldr	r3, .L19
-ARM GAS  /tmp/ccgLfnz8.s 			page 9
-
-
- 210 00c0 1B68     		ldr	r3, [r3]
- 214:External/LBPFeature/Src/lbp_feature.c ****       center_value
- 211              		.loc 1 214 5 view .LVU69
- 212 00c2 6846     		mov	r0, sp
- 213 00c4 9847     		blx	r3
- 214              	.LVL11:
- 213:External/LBPFeature/Src/lbp_feature.c ****     integral_image_handler.get_rectangle_summarize(&rect_position) >=
- 215              		.loc 1 213 6 view .LVU70
- 216 00c6 8742     		cmp	r7, r0
- 217 00c8 00F28680 		bhi	.L12
- 218              		.loc 1 217 12 view .LVU71
- 219 00cc 2023     		movs	r3, #32
- 220              	.L4:
- 221              	.LVL12:
- 222              		.loc 1 217 12 view .LVU72
- 223              	.LBE25:
- 224              	.LBE24:
- 150:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles,
- 225              		.loc 1 150 9 discriminator 1 view .LVU73
- 226 00ce 1E43     		orrs	r6, r6, r3
- 227              	.LVL13:
- 158:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles,
- 228              		.loc 1 158 3 is_stmt 1 view .LVU74
- 229              	.LBB27:
- 230              	.LBI27:
- 199:External/LBPFeature/Src/lbp_feature.c ****   const lbp_feature_rectangle *const scaled_rectangles,
- 231              		.loc 1 199 23 view .LVU75
- 232              	.LBB28:
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 233              		.loc 1 207 3 view .LVU76
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 234              		.loc 1 207 41 is_stmt 0 view .LVU77
- 235 00d0 237B     		ldrb	r3, [r4, #12]	@ zero_extendqisi2
- 236 00d2 2A78     		ldrb	r2, [r5]	@ zero_extendqisi2
- 237 00d4 1344     		add	r3, r3, r2
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 238              		.loc 1 207 25 view .LVU78
- 239 00d6 8DF80030 		strb	r3, [sp]
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 240              		.loc 1 207 41 view .LVU79
- 241 00da 637B     		ldrb	r3, [r4, #13]	@ zero_extendqisi2
- 242 00dc 6A78     		ldrb	r2, [r5, #1]	@ zero_extendqisi2
- 243 00de 1344     		add	r3, r3, r2
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 244              		.loc 1 207 25 view .LVU80
- 245 00e0 8DF80130 		strb	r3, [sp, #1]
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 246              		.loc 1 207 41 view .LVU81
- 247 00e4 A37B     		ldrb	r3, [r4, #14]	@ zero_extendqisi2
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 248              		.loc 1 207 25 view .LVU82
- 249 00e6 8DF80230 		strb	r3, [sp, #2]
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 250              		.loc 1 207 41 view .LVU83
- 251 00ea E37B     		ldrb	r3, [r4, #15]	@ zero_extendqisi2
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 252              		.loc 1 207 25 view .LVU84
-ARM GAS  /tmp/ccgLfnz8.s 			page 10
-
-
- 253 00ec 8DF80330 		strb	r3, [sp, #3]
- 213:External/LBPFeature/Src/lbp_feature.c ****     integral_image_handler.get_rectangle_summarize(&rect_position) >=
- 254              		.loc 1 213 3 is_stmt 1 view .LVU85
- 214:External/LBPFeature/Src/lbp_feature.c ****       center_value
- 255              		.loc 1 214 27 is_stmt 0 view .LVU86
- 256 00f0 3F4B     		ldr	r3, .L19
- 257 00f2 1B68     		ldr	r3, [r3]
- 214:External/LBPFeature/Src/lbp_feature.c ****       center_value
- 258              		.loc 1 214 5 view .LVU87
- 259 00f4 6846     		mov	r0, sp
- 260 00f6 9847     		blx	r3
- 261              	.LVL14:
- 213:External/LBPFeature/Src/lbp_feature.c ****     integral_image_handler.get_rectangle_summarize(&rect_position) >=
- 262              		.loc 1 213 6 view .LVU88
- 263 00f8 8742     		cmp	r7, r0
- 264 00fa 6FD8     		bhi	.L13
- 265              		.loc 1 217 12 view .LVU89
- 266 00fc 0123     		movs	r3, #1
- 267              	.L5:
- 268              	.LVL15:
- 269              		.loc 1 217 12 view .LVU90
- 270              	.LBE28:
- 271              	.LBE27:
- 158:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles,
- 272              		.loc 1 158 9 discriminator 1 view .LVU91
- 273 00fe 1E43     		orrs	r6, r6, r3
- 274              	.LVL16:
- 165:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles,
- 275              		.loc 1 165 3 is_stmt 1 view .LVU92
- 276              	.LBB30:
- 277              	.LBI30:
- 199:External/LBPFeature/Src/lbp_feature.c ****   const lbp_feature_rectangle *const scaled_rectangles,
- 278              		.loc 1 199 23 view .LVU93
- 279              	.LBB31:
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 280              		.loc 1 207 3 view .LVU94
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 281              		.loc 1 207 41 is_stmt 0 view .LVU95
- 282 0100 237D     		ldrb	r3, [r4, #20]	@ zero_extendqisi2
- 283 0102 2A78     		ldrb	r2, [r5]	@ zero_extendqisi2
- 284 0104 1344     		add	r3, r3, r2
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 285              		.loc 1 207 25 view .LVU96
- 286 0106 8DF80030 		strb	r3, [sp]
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 287              		.loc 1 207 41 view .LVU97
- 288 010a 637D     		ldrb	r3, [r4, #21]	@ zero_extendqisi2
- 289 010c 6A78     		ldrb	r2, [r5, #1]	@ zero_extendqisi2
- 290 010e 1344     		add	r3, r3, r2
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 291              		.loc 1 207 25 view .LVU98
- 292 0110 8DF80130 		strb	r3, [sp, #1]
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 293              		.loc 1 207 41 view .LVU99
- 294 0114 A37D     		ldrb	r3, [r4, #22]	@ zero_extendqisi2
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 295              		.loc 1 207 25 view .LVU100
-ARM GAS  /tmp/ccgLfnz8.s 			page 11
-
-
- 296 0116 8DF80230 		strb	r3, [sp, #2]
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 297              		.loc 1 207 41 view .LVU101
- 298 011a E37D     		ldrb	r3, [r4, #23]	@ zero_extendqisi2
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 299              		.loc 1 207 25 view .LVU102
- 300 011c 8DF80330 		strb	r3, [sp, #3]
- 213:External/LBPFeature/Src/lbp_feature.c ****     integral_image_handler.get_rectangle_summarize(&rect_position) >=
- 301              		.loc 1 213 3 is_stmt 1 view .LVU103
- 214:External/LBPFeature/Src/lbp_feature.c ****       center_value
- 302              		.loc 1 214 27 is_stmt 0 view .LVU104
- 303 0120 334B     		ldr	r3, .L19
- 304 0122 1B68     		ldr	r3, [r3]
- 214:External/LBPFeature/Src/lbp_feature.c ****       center_value
- 305              		.loc 1 214 5 view .LVU105
- 306 0124 6846     		mov	r0, sp
- 307 0126 9847     		blx	r3
- 308              	.LVL17:
- 213:External/LBPFeature/Src/lbp_feature.c ****     integral_image_handler.get_rectangle_summarize(&rect_position) >=
- 309              		.loc 1 213 6 view .LVU106
- 310 0128 8742     		cmp	r7, r0
- 311 012a 59D8     		bhi	.L14
- 312              		.loc 1 217 12 view .LVU107
- 313 012c 1023     		movs	r3, #16
- 314              	.L6:
- 315              	.LVL18:
- 316              		.loc 1 217 12 view .LVU108
- 317              	.LBE31:
- 318              	.LBE30:
- 165:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles,
- 319              		.loc 1 165 9 discriminator 1 view .LVU109
- 320 012e 1E43     		orrs	r6, r6, r3
- 321              	.LVL19:
- 173:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles,
- 322              		.loc 1 173 3 is_stmt 1 view .LVU110
- 323              	.LBB33:
- 324              	.LBI33:
- 199:External/LBPFeature/Src/lbp_feature.c ****   const lbp_feature_rectangle *const scaled_rectangles,
- 325              		.loc 1 199 23 view .LVU111
- 326              	.LBB34:
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 327              		.loc 1 207 3 view .LVU112
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 328              		.loc 1 207 41 is_stmt 0 view .LVU113
- 329 0130 237E     		ldrb	r3, [r4, #24]	@ zero_extendqisi2
- 330 0132 2A78     		ldrb	r2, [r5]	@ zero_extendqisi2
- 331 0134 1344     		add	r3, r3, r2
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 332              		.loc 1 207 25 view .LVU114
- 333 0136 8DF80030 		strb	r3, [sp]
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 334              		.loc 1 207 41 view .LVU115
- 335 013a 637E     		ldrb	r3, [r4, #25]	@ zero_extendqisi2
- 336 013c 6A78     		ldrb	r2, [r5, #1]	@ zero_extendqisi2
- 337 013e 1344     		add	r3, r3, r2
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 338              		.loc 1 207 25 view .LVU116
-ARM GAS  /tmp/ccgLfnz8.s 			page 12
-
-
- 339 0140 8DF80130 		strb	r3, [sp, #1]
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 340              		.loc 1 207 41 view .LVU117
- 341 0144 A37E     		ldrb	r3, [r4, #26]	@ zero_extendqisi2
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 342              		.loc 1 207 25 view .LVU118
- 343 0146 8DF80230 		strb	r3, [sp, #2]
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 344              		.loc 1 207 41 view .LVU119
- 345 014a E37E     		ldrb	r3, [r4, #27]	@ zero_extendqisi2
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 346              		.loc 1 207 25 view .LVU120
- 347 014c 8DF80330 		strb	r3, [sp, #3]
- 213:External/LBPFeature/Src/lbp_feature.c ****     integral_image_handler.get_rectangle_summarize(&rect_position) >=
- 348              		.loc 1 213 3 is_stmt 1 view .LVU121
- 214:External/LBPFeature/Src/lbp_feature.c ****       center_value
- 349              		.loc 1 214 27 is_stmt 0 view .LVU122
- 350 0150 274B     		ldr	r3, .L19
- 351 0152 1B68     		ldr	r3, [r3]
- 214:External/LBPFeature/Src/lbp_feature.c ****       center_value
- 352              		.loc 1 214 5 view .LVU123
- 353 0154 6846     		mov	r0, sp
- 354 0156 9847     		blx	r3
- 355              	.LVL20:
- 213:External/LBPFeature/Src/lbp_feature.c ****     integral_image_handler.get_rectangle_summarize(&rect_position) >=
- 356              		.loc 1 213 6 view .LVU124
- 357 0158 8742     		cmp	r7, r0
- 358 015a 43D8     		bhi	.L15
- 359              		.loc 1 217 12 view .LVU125
- 360 015c 0223     		movs	r3, #2
- 361              	.L7:
- 362              	.LVL21:
- 363              		.loc 1 217 12 view .LVU126
- 364              	.LBE34:
- 365              	.LBE33:
- 173:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles,
- 366              		.loc 1 173 9 discriminator 1 view .LVU127
- 367 015e 1E43     		orrs	r6, r6, r3
- 368              	.LVL22:
- 180:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles,
- 369              		.loc 1 180 3 is_stmt 1 view .LVU128
- 370              	.LBB36:
- 371              	.LBI36:
- 199:External/LBPFeature/Src/lbp_feature.c ****   const lbp_feature_rectangle *const scaled_rectangles,
- 372              		.loc 1 199 23 view .LVU129
- 373              	.LBB37:
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 374              		.loc 1 207 3 view .LVU130
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 375              		.loc 1 207 41 is_stmt 0 view .LVU131
- 376 0160 237F     		ldrb	r3, [r4, #28]	@ zero_extendqisi2
- 377 0162 2A78     		ldrb	r2, [r5]	@ zero_extendqisi2
- 378 0164 1344     		add	r3, r3, r2
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 379              		.loc 1 207 25 view .LVU132
- 380 0166 8DF80030 		strb	r3, [sp]
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
-ARM GAS  /tmp/ccgLfnz8.s 			page 13
-
-
- 381              		.loc 1 207 41 view .LVU133
- 382 016a 637F     		ldrb	r3, [r4, #29]	@ zero_extendqisi2
- 383 016c 6A78     		ldrb	r2, [r5, #1]	@ zero_extendqisi2
- 384 016e 1344     		add	r3, r3, r2
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 385              		.loc 1 207 25 view .LVU134
- 386 0170 8DF80130 		strb	r3, [sp, #1]
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 387              		.loc 1 207 41 view .LVU135
- 388 0174 A37F     		ldrb	r3, [r4, #30]	@ zero_extendqisi2
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 389              		.loc 1 207 25 view .LVU136
- 390 0176 8DF80230 		strb	r3, [sp, #2]
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 391              		.loc 1 207 41 view .LVU137
- 392 017a E37F     		ldrb	r3, [r4, #31]	@ zero_extendqisi2
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 393              		.loc 1 207 25 view .LVU138
- 394 017c 8DF80330 		strb	r3, [sp, #3]
- 213:External/LBPFeature/Src/lbp_feature.c ****     integral_image_handler.get_rectangle_summarize(&rect_position) >=
- 395              		.loc 1 213 3 is_stmt 1 view .LVU139
- 214:External/LBPFeature/Src/lbp_feature.c ****       center_value
- 396              		.loc 1 214 27 is_stmt 0 view .LVU140
- 397 0180 1B4B     		ldr	r3, .L19
- 398 0182 1B68     		ldr	r3, [r3]
- 214:External/LBPFeature/Src/lbp_feature.c ****       center_value
- 399              		.loc 1 214 5 view .LVU141
- 400 0184 6846     		mov	r0, sp
- 401 0186 9847     		blx	r3
- 402              	.LVL23:
- 213:External/LBPFeature/Src/lbp_feature.c ****     integral_image_handler.get_rectangle_summarize(&rect_position) >=
- 403              		.loc 1 213 6 view .LVU142
- 404 0188 8742     		cmp	r7, r0
- 405 018a 2DD8     		bhi	.L16
- 406              		.loc 1 217 12 view .LVU143
- 407 018c 0423     		movs	r3, #4
- 408              	.L8:
- 409              	.LVL24:
- 410              		.loc 1 217 12 view .LVU144
- 411              	.LBE37:
- 412              	.LBE36:
- 180:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles,
- 413              		.loc 1 180 9 discriminator 1 view .LVU145
- 414 018e 1E43     		orrs	r6, r6, r3
- 415              	.LVL25:
- 187:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles,
- 416              		.loc 1 187 3 is_stmt 1 view .LVU146
- 417              	.LBB39:
- 418              	.LBI39:
- 199:External/LBPFeature/Src/lbp_feature.c ****   const lbp_feature_rectangle *const scaled_rectangles,
- 419              		.loc 1 199 23 view .LVU147
- 420              	.LBB40:
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 421              		.loc 1 207 3 view .LVU148
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 422              		.loc 1 207 41 is_stmt 0 view .LVU149
- 423 0190 94F82030 		ldrb	r3, [r4, #32]	@ zero_extendqisi2
-ARM GAS  /tmp/ccgLfnz8.s 			page 14
-
-
- 424 0194 2A78     		ldrb	r2, [r5]	@ zero_extendqisi2
- 425 0196 1344     		add	r3, r3, r2
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 426              		.loc 1 207 25 view .LVU150
- 427 0198 8DF80030 		strb	r3, [sp]
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 428              		.loc 1 207 41 view .LVU151
- 429 019c 94F82130 		ldrb	r3, [r4, #33]	@ zero_extendqisi2
- 430 01a0 6A78     		ldrb	r2, [r5, #1]	@ zero_extendqisi2
- 431 01a2 1344     		add	r3, r3, r2
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 432              		.loc 1 207 25 view .LVU152
- 433 01a4 8DF80130 		strb	r3, [sp, #1]
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 434              		.loc 1 207 41 view .LVU153
- 435 01a8 94F82230 		ldrb	r3, [r4, #34]	@ zero_extendqisi2
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 436              		.loc 1 207 25 view .LVU154
- 437 01ac 8DF80230 		strb	r3, [sp, #2]
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 438              		.loc 1 207 41 view .LVU155
- 439 01b0 94F82330 		ldrb	r3, [r4, #35]	@ zero_extendqisi2
- 207:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles[rectangle_index],
- 440              		.loc 1 207 25 view .LVU156
- 441 01b4 8DF80330 		strb	r3, [sp, #3]
- 213:External/LBPFeature/Src/lbp_feature.c ****     integral_image_handler.get_rectangle_summarize(&rect_position) >=
- 442              		.loc 1 213 3 is_stmt 1 view .LVU157
- 214:External/LBPFeature/Src/lbp_feature.c ****       center_value
- 443              		.loc 1 214 27 is_stmt 0 view .LVU158
- 444 01b8 0D4B     		ldr	r3, .L19
- 445 01ba 1B68     		ldr	r3, [r3]
- 214:External/LBPFeature/Src/lbp_feature.c ****       center_value
- 446              		.loc 1 214 5 view .LVU159
- 447 01bc 6846     		mov	r0, sp
- 448 01be 9847     		blx	r3
- 449              	.LVL26:
- 213:External/LBPFeature/Src/lbp_feature.c ****     integral_image_handler.get_rectangle_summarize(&rect_position) >=
- 450              		.loc 1 213 6 view .LVU160
- 451 01c0 8742     		cmp	r7, r0
- 452 01c2 13D8     		bhi	.L17
- 453              		.loc 1 217 12 view .LVU161
- 454 01c4 0820     		movs	r0, #8
- 455              	.L9:
- 456              	.LVL27:
- 457              		.loc 1 217 12 view .LVU162
- 458              	.LBE40:
- 459              	.LBE39:
- 195:External/LBPFeature/Src/lbp_feature.c **** }
- 460              		.loc 1 195 3 is_stmt 1 view .LVU163
- 196:External/LBPFeature/Src/lbp_feature.c **** 
- 461              		.loc 1 196 1 is_stmt 0 view .LVU164
- 462 01c6 3043     		orrs	r0, r0, r6
- 463              	.LVL28:
- 196:External/LBPFeature/Src/lbp_feature.c **** 
- 464              		.loc 1 196 1 view .LVU165
- 465 01c8 02B0     		add	sp, sp, #8
- 466              	.LCFI2:
-ARM GAS  /tmp/ccgLfnz8.s 			page 15
-
-
- 467              		.cfi_remember_state
- 468              		.cfi_def_cfa_offset 24
- 469              		@ sp needed
- 470 01ca BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
- 471              	.LVL29:
- 472              	.L10:
- 473              	.LCFI3:
- 474              		.cfi_restore_state
- 475              	.LBB42:
- 476              	.LBB20:
- 218:External/LBPFeature/Src/lbp_feature.c ****   else
- 219:External/LBPFeature/Src/lbp_feature.c ****     return 0;
- 477              		.loc 1 219 12 view .LVU166
- 478 01ce 4FF00008 		mov	r8, #0
- 479 01d2 4AE7     		b	.L2
- 480              	.LVL30:
- 481              	.L11:
- 482              		.loc 1 219 12 view .LVU167
- 483              	.LBE20:
- 484              	.LBE42:
- 485              	.LBB43:
- 486              	.LBB23:
- 487 01d4 0026     		movs	r6, #0
- 488 01d6 60E7     		b	.L3
- 489              	.LVL31:
- 490              	.L12:
- 491              		.loc 1 219 12 view .LVU168
- 492              	.LBE23:
- 493              	.LBE43:
- 494              	.LBB44:
- 495              	.LBB26:
- 496 01d8 0023     		movs	r3, #0
- 497 01da 78E7     		b	.L4
- 498              	.LVL32:
- 499              	.L13:
- 500              		.loc 1 219 12 view .LVU169
- 501              	.LBE26:
- 502              	.LBE44:
- 503              	.LBB45:
- 504              	.LBB29:
- 505 01dc 0023     		movs	r3, #0
- 506 01de 8EE7     		b	.L5
- 507              	.LVL33:
- 508              	.L14:
- 509              		.loc 1 219 12 view .LVU170
- 510              	.LBE29:
- 511              	.LBE45:
- 512              	.LBB46:
- 513              	.LBB32:
- 514 01e0 0023     		movs	r3, #0
- 515 01e2 A4E7     		b	.L6
- 516              	.LVL34:
- 517              	.L15:
- 518              		.loc 1 219 12 view .LVU171
- 519              	.LBE32:
- 520              	.LBE46:
- 521              	.LBB47:
-ARM GAS  /tmp/ccgLfnz8.s 			page 16
-
-
- 522              	.LBB35:
- 523 01e4 0023     		movs	r3, #0
- 524 01e6 BAE7     		b	.L7
- 525              	.LVL35:
- 526              	.L16:
- 527              		.loc 1 219 12 view .LVU172
- 528              	.LBE35:
- 529              	.LBE47:
- 530              	.LBB48:
- 531              	.LBB38:
- 532 01e8 0023     		movs	r3, #0
- 533 01ea D0E7     		b	.L8
- 534              	.LVL36:
- 535              	.L17:
- 536              		.loc 1 219 12 view .LVU173
- 537              	.LBE38:
- 538              	.LBE48:
- 539              	.LBB49:
- 540              	.LBB41:
- 541 01ec 0020     		movs	r0, #0
- 542 01ee EAE7     		b	.L9
- 543              	.L20:
- 544              		.align	2
- 545              	.L19:
- 546 01f0 00000000 		.word	integral_image_handler
- 547              	.LBE41:
- 548              	.LBE49:
- 549              		.cfi_endproc
- 550              	.LFE5:
- 552              		.section	.text.lbp_feature_allocate_scaled_rectangles,"ax",%progbits
- 553              		.align	1
- 554              		.syntax unified
- 555              		.thumb
- 556              		.thumb_func
- 558              	lbp_feature_allocate_scaled_rectangles:
- 559              	.LVL37:
- 560              	.LFB3:
-  90:External/LBPFeature/Src/lbp_feature.c ****   self->scaled_rectangles = (lbp_feature_rectangle **)calloc(
- 561              		.loc 1 90 1 is_stmt 1 view -0
- 562              		.cfi_startproc
- 563              		@ args = 0, pretend = 0, frame = 0
- 564              		@ frame_needed = 0, uses_anonymous_args = 0
-  90:External/LBPFeature/Src/lbp_feature.c ****   self->scaled_rectangles = (lbp_feature_rectangle **)calloc(
- 565              		.loc 1 90 1 is_stmt 0 view .LVU175
- 566 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
- 567              	.LCFI4:
- 568              		.cfi_def_cfa_offset 24
- 569              		.cfi_offset 3, -24
- 570              		.cfi_offset 4, -20
- 571              		.cfi_offset 5, -16
- 572              		.cfi_offset 6, -12
- 573              		.cfi_offset 7, -8
- 574              		.cfi_offset 14, -4
- 575 0002 0746     		mov	r7, r0
- 576 0004 1646     		mov	r6, r2
-  91:External/LBPFeature/Src/lbp_feature.c ****     scales_amount,
- 577              		.loc 1 91 3 is_stmt 1 view .LVU176
-ARM GAS  /tmp/ccgLfnz8.s 			page 17
-
-
-  91:External/LBPFeature/Src/lbp_feature.c ****     scales_amount,
- 578              		.loc 1 91 55 is_stmt 0 view .LVU177
- 579 0006 0421     		movs	r1, #4
- 580              	.LVL38:
-  91:External/LBPFeature/Src/lbp_feature.c ****     scales_amount,
- 581              		.loc 1 91 55 view .LVU178
- 582 0008 1046     		mov	r0, r2
- 583              	.LVL39:
-  91:External/LBPFeature/Src/lbp_feature.c ****     scales_amount,
- 584              		.loc 1 91 55 view .LVU179
- 585 000a FFF7FEFF 		bl	calloc
- 586              	.LVL40:
-  91:External/LBPFeature/Src/lbp_feature.c ****     scales_amount,
- 587              		.loc 1 91 27 discriminator 1 view .LVU180
- 588 000e 7862     		str	r0, [r7, #36]
-  96:External/LBPFeature/Src/lbp_feature.c ****   {
- 589              		.loc 1 96 3 is_stmt 1 view .LVU181
- 590              	.LBB50:
-  96:External/LBPFeature/Src/lbp_feature.c ****   {
- 591              		.loc 1 96 8 view .LVU182
- 592              	.LVL41:
-  96:External/LBPFeature/Src/lbp_feature.c ****   {
- 593              		.loc 1 96 16 is_stmt 0 view .LVU183
- 594 0010 0024     		movs	r4, #0
-  96:External/LBPFeature/Src/lbp_feature.c ****   {
- 595              		.loc 1 96 3 view .LVU184
- 596 0012 08E0     		b	.L22
- 597              	.LVL42:
- 598              	.L23:
-  98:External/LBPFeature/Src/lbp_feature.c ****       LBP_FEATURE_RECTANGLES_AMOUNT,
- 599              		.loc 1 98 5 is_stmt 1 view .LVU185
-  98:External/LBPFeature/Src/lbp_feature.c ****       LBP_FEATURE_RECTANGLES_AMOUNT,
- 600              		.loc 1 98 9 is_stmt 0 view .LVU186
- 601 0014 7D6A     		ldr	r5, [r7, #36]
-  98:External/LBPFeature/Src/lbp_feature.c ****       LBP_FEATURE_RECTANGLES_AMOUNT,
- 602              		.loc 1 98 34 view .LVU187
- 603 0016 0421     		movs	r1, #4
- 604 0018 0920     		movs	r0, #9
- 605 001a FFF7FEFF 		bl	calloc
- 606              	.LVL43:
-  98:External/LBPFeature/Src/lbp_feature.c ****       LBP_FEATURE_RECTANGLES_AMOUNT,
- 607              		.loc 1 98 32 discriminator 1 view .LVU188
- 608 001e 45F82400 		str	r0, [r5, r4, lsl #2]
-  96:External/LBPFeature/Src/lbp_feature.c ****   {
- 609              		.loc 1 96 43 is_stmt 1 discriminator 3 view .LVU189
- 610 0022 0134     		adds	r4, r4, #1
- 611              	.LVL44:
-  96:External/LBPFeature/Src/lbp_feature.c ****   {
- 612              		.loc 1 96 43 is_stmt 0 discriminator 3 view .LVU190
- 613 0024 E4B2     		uxtb	r4, r4
- 614              	.LVL45:
- 615              	.L22:
-  96:External/LBPFeature/Src/lbp_feature.c ****   {
- 616              		.loc 1 96 25 is_stmt 1 discriminator 1 view .LVU191
- 617 0026 B442     		cmp	r4, r6
- 618 0028 F4D3     		bcc	.L23
- 619              	.LBE50:
-ARM GAS  /tmp/ccgLfnz8.s 			page 18
-
-
- 104:External/LBPFeature/Src/lbp_feature.c **** }
- 620              		.loc 1 104 3 view .LVU192
- 104:External/LBPFeature/Src/lbp_feature.c **** }
- 621              		.loc 1 104 34 is_stmt 0 view .LVU193
- 622 002a 87F82860 		strb	r6, [r7, #40]
- 105:External/LBPFeature/Src/lbp_feature.c **** 
- 623              		.loc 1 105 1 view .LVU194
- 624 002e F8BD     		pop	{r3, r4, r5, r6, r7, pc}
- 105:External/LBPFeature/Src/lbp_feature.c **** 
- 625              		.loc 1 105 1 view .LVU195
- 626              		.cfi_endproc
- 627              	.LFE3:
- 629              		.section	.text.lbp_feature_set_integral_image_handler,"ax",%progbits
- 630              		.align	1
- 631              		.global	lbp_feature_set_integral_image_handler
- 632              		.syntax unified
- 633              		.thumb
- 634              		.thumb_func
- 636              	lbp_feature_set_integral_image_handler:
- 637              	.LVL46:
- 638              	.LFB0:
+ 605 01da 0023     		movs	r3, #0
+ 606 01dc A4E7     		b	.L13
+ 607              	.LVL37:
+ 608              	.L22:
+ 609              		.loc 1 191 12 view .LVU191
+ 610              	.LBE35:
+ 611              	.LBE49:
+ 612              	.LBB50:
+ 613              	.LBB38:
+ 614 01de 0023     		movs	r3, #0
+ 615 01e0 BAE7     		b	.L14
+ 616              	.LVL38:
+ 617              	.L23:
+ 618              		.loc 1 191 12 view .LVU192
+ 619              	.LBE38:
+ 620              	.LBE50:
+ 621              	.LBB51:
+ 622              	.LBB41:
+ 623 01e2 0023     		movs	r3, #0
+ 624 01e4 D0E7     		b	.L15
+ 625              	.LVL39:
+ 626              	.L24:
+ 627              		.loc 1 191 12 view .LVU193
+ 628              	.LBE41:
+ 629              	.LBE51:
+ 630              	.LBB52:
+ 631              	.LBB44:
+ 632 01e6 0020     		movs	r0, #0
+ 633 01e8 EAE7     		b	.L16
+ 634              	.L27:
+ 635 01ea 00BF     		.align	2
+ 636              	.L26:
+ 637 01ec 00000000 		.word	integral_image_handler
+ 638              	.LBE44:
+ 639              	.LBE52:
+ 640              		.cfi_endproc
+ 641              	.LFE4:
+ 643              		.section	.text.lbp_feature_set_integral_image_handler,"ax",%progbits
+ 644              		.align	1
+ 645              		.global	lbp_feature_set_integral_image_handler
+ 646              		.syntax unified
+ 647              		.thumb
+ 648              		.thumb_func
+ 650              	lbp_feature_set_integral_image_handler:
+ 651              	.LVL40:
+ 652              	.LFB0:
   43:External/LBPFeature/Src/lbp_feature.c ****   integral_image_handler = handler;
- 639              		.loc 1 43 1 is_stmt 1 view -0
- 640              		.cfi_startproc
- 641              		@ args = 0, pretend = 0, frame = 0
- 642              		@ frame_needed = 0, uses_anonymous_args = 0
- 643              		@ link register save eliminated.
+ 653              		.loc 1 43 1 is_stmt 1 view -0
+ 654              		.cfi_startproc
+ 655              		@ args = 0, pretend = 0, frame = 0
+ 656              		@ frame_needed = 0, uses_anonymous_args = 0
+ 657              		@ link register save eliminated.
   44:External/LBPFeature/Src/lbp_feature.c **** }
- 644              		.loc 1 44 3 view .LVU197
+ 658              		.loc 1 44 3 view .LVU195
   44:External/LBPFeature/Src/lbp_feature.c **** }
- 645              		.loc 1 44 26 is_stmt 0 view .LVU198
- 646 0000 014B     		ldr	r3, .L26
- 647 0002 1860     		str	r0, [r3]
+ 659              		.loc 1 44 26 is_stmt 0 view .LVU196
+ 660 0000 014B     		ldr	r3, .L29
+ARM GAS  /tmp/cc7f15XE.s 			page 18
+
+
+ 661 0002 1860     		str	r0, [r3]
   45:External/LBPFeature/Src/lbp_feature.c **** 
- 648              		.loc 1 45 1 view .LVU199
- 649 0004 7047     		bx	lr
- 650              	.L27:
- 651 0006 00BF     		.align	2
- 652              	.L26:
- 653 0008 00000000 		.word	integral_image_handler
- 654              		.cfi_endproc
- 655              	.LFE0:
- 657              		.section	.text.lbp_feature_reset_integral_image_handler,"ax",%progbits
- 658              		.align	1
- 659              		.global	lbp_feature_reset_integral_image_handler
- 660              		.syntax unified
- 661              		.thumb
- 662              		.thumb_func
- 664              	lbp_feature_reset_integral_image_handler:
- 665              	.LFB1:
+ 662              		.loc 1 45 1 view .LVU197
+ 663 0004 7047     		bx	lr
+ 664              	.L30:
+ 665 0006 00BF     		.align	2
+ 666              	.L29:
+ 667 0008 00000000 		.word	integral_image_handler
+ 668              		.cfi_endproc
+ 669              	.LFE0:
+ 671              		.section	.text.lbp_feature_reset_integral_image_handler,"ax",%progbits
+ 672              		.align	1
+ 673              		.global	lbp_feature_reset_integral_image_handler
+ 674              		.syntax unified
+ 675              		.thumb
+ 676              		.thumb_func
+ 678              	lbp_feature_reset_integral_image_handler:
+ 679              	.LFB1:
   48:External/LBPFeature/Src/lbp_feature.c ****   integral_image_handler = (lbp_feature_integral_image_handler){ 0 };
- 666              		.loc 1 48 1 is_stmt 1 view -0
- 667              		.cfi_startproc
- 668              		@ args = 0, pretend = 0, frame = 0
- 669              		@ frame_needed = 0, uses_anonymous_args = 0
- 670              		@ link register save eliminated.
+ 680              		.loc 1 48 1 is_stmt 1 view -0
+ 681              		.cfi_startproc
+ 682              		@ args = 0, pretend = 0, frame = 0
+ 683              		@ frame_needed = 0, uses_anonymous_args = 0
+ 684              		@ link register save eliminated.
   49:External/LBPFeature/Src/lbp_feature.c **** }
-ARM GAS  /tmp/ccgLfnz8.s 			page 19
-
-
- 671              		.loc 1 49 3 view .LVU201
+ 685              		.loc 1 49 3 view .LVU199
   49:External/LBPFeature/Src/lbp_feature.c **** }
- 672              		.loc 1 49 26 is_stmt 0 view .LVU202
- 673 0000 014B     		ldr	r3, .L29
- 674 0002 0022     		movs	r2, #0
- 675 0004 1A60     		str	r2, [r3]
+ 686              		.loc 1 49 26 is_stmt 0 view .LVU200
+ 687 0000 014B     		ldr	r3, .L32
+ 688 0002 0022     		movs	r2, #0
+ 689 0004 1A60     		str	r2, [r3]
   50:External/LBPFeature/Src/lbp_feature.c **** 
- 676              		.loc 1 50 1 view .LVU203
- 677 0006 7047     		bx	lr
- 678              	.L30:
- 679              		.align	2
- 680              	.L29:
- 681 0008 00000000 		.word	integral_image_handler
- 682              		.cfi_endproc
- 683              	.LFE1:
- 685              		.section	.text.lbp_feature_generate_scaled_rectangles,"ax",%progbits
- 686              		.align	1
- 687              		.global	lbp_feature_generate_scaled_rectangles
- 688              		.syntax unified
- 689              		.thumb
- 690              		.thumb_func
- 692              	lbp_feature_generate_scaled_rectangles:
- 693              	.LVL47:
- 694              	.LFB2:
-  57:External/LBPFeature/Src/lbp_feature.c ****   lbp_feature_allocate_scaled_rectangles(self, scales, scales_amount);
- 695              		.loc 1 57 1 is_stmt 1 view -0
- 696              		.cfi_startproc
- 697              		@ args = 0, pretend = 0, frame = 8
- 698              		@ frame_needed = 0, uses_anonymous_args = 0
-  57:External/LBPFeature/Src/lbp_feature.c ****   lbp_feature_allocate_scaled_rectangles(self, scales, scales_amount);
- 699              		.loc 1 57 1 is_stmt 0 view .LVU205
- 700 0000 70B5     		push	{r4, r5, r6, lr}
- 701              	.LCFI5:
- 702              		.cfi_def_cfa_offset 16
- 703              		.cfi_offset 4, -16
- 704              		.cfi_offset 5, -12
- 705              		.cfi_offset 6, -8
- 706              		.cfi_offset 14, -4
- 707 0002 82B0     		sub	sp, sp, #8
- 708              	.LCFI6:
- 709              		.cfi_def_cfa_offset 24
- 710 0004 0446     		mov	r4, r0
- 711 0006 0E46     		mov	r6, r1
- 712 0008 1546     		mov	r5, r2
-  58:External/LBPFeature/Src/lbp_feature.c **** 
- 713              		.loc 1 58 3 is_stmt 1 view .LVU206
- 714 000a FFF7FEFF 		bl	lbp_feature_allocate_scaled_rectangles
- 715              	.LVL48:
-  60:External/LBPFeature/Src/lbp_feature.c ****   {
- 716              		.loc 1 60 3 view .LVU207
- 717              	.LBB51:
-  60:External/LBPFeature/Src/lbp_feature.c ****   {
- 718              		.loc 1 60 8 view .LVU208
-  60:External/LBPFeature/Src/lbp_feature.c ****   {
- 719              		.loc 1 60 16 is_stmt 0 view .LVU209
- 720 000e 4FF0000E 		mov	lr, #0
-  60:External/LBPFeature/Src/lbp_feature.c ****   {
-ARM GAS  /tmp/ccgLfnz8.s 			page 20
+ 690              		.loc 1 50 1 view .LVU201
+ 691 0006 7047     		bx	lr
+ 692              	.L33:
+ 693              		.align	2
+ 694              	.L32:
+ 695 0008 00000000 		.word	integral_image_handler
+ 696              		.cfi_endproc
+ 697              	.LFE1:
+ 699              		.section	.text.lbp_feature_calculate_vote,"ax",%progbits
+ 700              		.align	1
+ 701              		.global	lbp_feature_calculate_vote
+ 702              		.syntax unified
+ 703              		.thumb
+ 704              		.thumb_func
+ 706              	lbp_feature_calculate_vote:
+ 707              	.LVL41:
+ 708              	.LFB2:
+  56:External/LBPFeature/Src/lbp_feature.c ****   static lbp_feature_rectangle scaled_rectangles[LBP_FEATURE_RECTANGLES_AMOUNT];
+ 709              		.loc 1 56 1 is_stmt 1 view -0
+ 710              		.cfi_startproc
+ 711              		@ args = 0, pretend = 0, frame = 0
+ 712              		@ frame_needed = 0, uses_anonymous_args = 0
+  56:External/LBPFeature/Src/lbp_feature.c ****   static lbp_feature_rectangle scaled_rectangles[LBP_FEATURE_RECTANGLES_AMOUNT];
+ 713              		.loc 1 56 1 is_stmt 0 view .LVU203
+ 714 0000 70B5     		push	{r4, r5, r6, lr}
+ARM GAS  /tmp/cc7f15XE.s 			page 19
 
 
- 721              		.loc 1 60 3 view .LVU210
- 722 0012 43E0     		b	.L32
- 723              	.LVL49:
- 724              	.L34:
- 725              	.LBB52:
- 726              	.LBB53:
- 727              	.LBB54:
-  72:External/LBPFeature/Src/lbp_feature.c ****         self->rectangles[rectangle_index];
- 728              		.loc 1 72 7 is_stmt 1 view .LVU211
-  72:External/LBPFeature/Src/lbp_feature.c ****         self->rectangles[rectangle_index];
- 729              		.loc 1 72 29 is_stmt 0 view .LVU212
- 730 0014 54F82320 		ldr	r2, [r4, r3, lsl #2]
- 731 0018 0192     		str	r2, [sp, #4]
-  75:External/LBPFeature/Src/lbp_feature.c ****         .x = current_rectangle.x * current_scale,
- 732              		.loc 1 75 7 is_stmt 1 view .LVU213
-  75:External/LBPFeature/Src/lbp_feature.c ****         .x = current_rectangle.x * current_scale,
- 733              		.loc 1 75 32 is_stmt 0 view .LVU214
- 734 001a 00EB8301 		add	r1, r0, r3, lsl #2
-  76:External/LBPFeature/Src/lbp_feature.c ****         .y = current_rectangle.y * current_scale,
- 735              		.loc 1 76 31 view .LVU215
- 736 001e 9DF80420 		ldrb	r2, [sp, #4]	@ zero_extendqisi2
- 737 0022 06EE102A 		vmov	s12, r2	@ int
-  76:External/LBPFeature/Src/lbp_feature.c ****         .y = current_rectangle.y * current_scale,
- 738              		.loc 1 76 34 view .LVU216
- 739 0026 B8EEC66A 		vcvt.f32.s32	s12, s12
- 740 002a 26EE256A 		vmul.f32	s12, s12, s11
-  77:External/LBPFeature/Src/lbp_feature.c ****         .width = current_rectangle.width * current_scale,
- 741              		.loc 1 77 31 view .LVU217
- 742 002e 9DF80520 		ldrb	r2, [sp, #5]	@ zero_extendqisi2
- 743 0032 06EE902A 		vmov	s13, r2	@ int
-  77:External/LBPFeature/Src/lbp_feature.c ****         .width = current_rectangle.width * current_scale,
- 744              		.loc 1 77 34 view .LVU218
- 745 0036 F8EEE66A 		vcvt.f32.s32	s13, s13
- 746 003a 66EEA56A 		vmul.f32	s13, s13, s11
-  78:External/LBPFeature/Src/lbp_feature.c ****         .height = current_rectangle.height * current_scale
- 747              		.loc 1 78 35 view .LVU219
- 748 003e 9DF80620 		ldrb	r2, [sp, #6]	@ zero_extendqisi2
- 749 0042 07EE102A 		vmov	s14, r2	@ int
-  78:External/LBPFeature/Src/lbp_feature.c ****         .height = current_rectangle.height * current_scale
- 750              		.loc 1 78 42 view .LVU220
- 751 0046 B8EEC77A 		vcvt.f32.s32	s14, s14
- 752 004a 27EE257A 		vmul.f32	s14, s14, s11
-  79:External/LBPFeature/Src/lbp_feature.c ****       };
- 753              		.loc 1 79 36 view .LVU221
- 754 004e 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
- 755 0052 07EE902A 		vmov	s15, r2	@ int
-  79:External/LBPFeature/Src/lbp_feature.c ****       };
- 756              		.loc 1 79 44 view .LVU222
- 757 0056 F8EEE77A 		vcvt.f32.s32	s15, s15
- 758 005a 67EEA57A 		vmul.f32	s15, s15, s11
-  75:External/LBPFeature/Src/lbp_feature.c ****         .x = current_rectangle.x * current_scale,
- 759              		.loc 1 75 50 view .LVU223
- 760 005e BCEEC66A 		vcvt.u32.f32	s12, s12
- 761 0062 16EE102A 		vmov	r2, s12	@ int
- 762 0066 00F82320 		strb	r2, [r0, r3, lsl #2]
- 763 006a FCEEE66A 		vcvt.u32.f32	s13, s13
- 764 006e 16EE902A 		vmov	r2, s13	@ int
-ARM GAS  /tmp/ccgLfnz8.s 			page 21
+ 715              	.LCFI6:
+ 716              		.cfi_def_cfa_offset 16
+ 717              		.cfi_offset 4, -16
+ 718              		.cfi_offset 5, -12
+ 719              		.cfi_offset 6, -8
+ 720              		.cfi_offset 14, -4
+ 721 0002 0446     		mov	r4, r0
+ 722 0004 0D46     		mov	r5, r1
+  57:External/LBPFeature/Src/lbp_feature.c ****   lbp_feature_generate_scaled_rectangles(
+ 723              		.loc 1 57 3 is_stmt 1 view .LVU204
+  58:External/LBPFeature/Src/lbp_feature.c ****     self,
+ 724              		.loc 1 58 3 view .LVU205
+ 725 0006 124E     		ldr	r6, .L38
+ 726 0008 91ED010A 		vldr.32	s0, [r1, #4]
+ 727 000c 3146     		mov	r1, r6
+ 728              	.LVL42:
+  58:External/LBPFeature/Src/lbp_feature.c ****     self,
+ 729              		.loc 1 58 3 is_stmt 0 view .LVU206
+ 730 000e FFF7FEFF 		bl	lbp_feature_generate_scaled_rectangles
+ 731              	.LVL43:
+  64:External/LBPFeature/Src/lbp_feature.c ****     (lbp_feature_rectangle*)scaled_rectangles,
+ 732              		.loc 1 64 3 is_stmt 1 view .LVU207
+  64:External/LBPFeature/Src/lbp_feature.c ****     (lbp_feature_rectangle*)scaled_rectangles,
+ 733              		.loc 1 64 19 is_stmt 0 view .LVU208
+ 734 0012 2946     		mov	r1, r5
+ 735 0014 3046     		mov	r0, r6
+ 736 0016 FFF7FEFF 		bl	lbp_feature_get_score
+ 737              	.LVL44:
+  69:External/LBPFeature/Src/lbp_feature.c ****     self->right_value : self->left_value;
+ 738              		.loc 1 69 3 is_stmt 1 view .LVU209
+  69:External/LBPFeature/Src/lbp_feature.c ****     self->right_value : self->left_value;
+ 739              		.loc 1 69 29 is_stmt 0 view .LVU210
+ 740 001a C0F34713 		ubfx	r3, r0, #5, #8
+  69:External/LBPFeature/Src/lbp_feature.c ****     self->right_value : self->left_value;
+ 741              		.loc 1 69 22 view .LVU211
+ 742 001e 0A33     		adds	r3, r3, #10
+ 743 0020 04EB8303 		add	r3, r4, r3, lsl #2
+ 744 0024 5A68     		ldr	r2, [r3, #4]
+  69:External/LBPFeature/Src/lbp_feature.c ****     self->right_value : self->left_value;
+ 745              		.loc 1 69 50 view .LVU212
+ 746 0026 00F01F00 		and	r0, r0, #31
+ 747              	.LVL45:
+  69:External/LBPFeature/Src/lbp_feature.c ****     self->right_value : self->left_value;
+ 748              		.loc 1 69 40 view .LVU213
+ 749 002a 0123     		movs	r3, #1
+ 750 002c 8340     		lsls	r3, r3, r0
+  70:External/LBPFeature/Src/lbp_feature.c **** }
+ 751              		.loc 1 70 23 view .LVU214
+ 752 002e 1A42     		tst	r2, r3
+ 753 0030 06D0     		beq	.L35
+  70:External/LBPFeature/Src/lbp_feature.c **** }
+ 754              		.loc 1 70 9 discriminator 1 view .LVU215
+ 755 0032 B4F94E30 		ldrsh	r3, [r4, #78]
+ 756 0036 00EE103A 		vmov	s0, r3	@ int
+  70:External/LBPFeature/Src/lbp_feature.c **** }
+ 757              		.loc 1 70 23 discriminator 1 view .LVU216
+ 758 003a B8EEC00A 		vcvt.f32.s32	s0, s0
+ARM GAS  /tmp/cc7f15XE.s 			page 20
 
 
- 765 0072 4A70     		strb	r2, [r1, #1]
- 766 0074 BCEEC77A 		vcvt.u32.f32	s14, s14
- 767 0078 17EE10CA 		vmov	ip, s14	@ int
- 768 007c 81F802C0 		strb	ip, [r1, #2]
- 769 0080 FCEEE77A 		vcvt.u32.f32	s15, s15
- 770 0084 17EE90CA 		vmov	ip, s15	@ int
- 771 0088 81F803C0 		strb	ip, [r1, #3]
- 772              	.LBE54:
-  69:External/LBPFeature/Src/lbp_feature.c ****     )
- 773              		.loc 1 69 22 is_stmt 1 view .LVU224
- 774 008c 0133     		adds	r3, r3, #1
- 775              	.LVL50:
-  69:External/LBPFeature/Src/lbp_feature.c ****     )
- 776              		.loc 1 69 22 is_stmt 0 view .LVU225
- 777 008e DBB2     		uxtb	r3, r3
- 778              	.LVL51:
- 779              	.L33:
-  68:External/LBPFeature/Src/lbp_feature.c ****       rectangle_index++
- 780              		.loc 1 68 23 is_stmt 1 view .LVU226
- 781 0090 082B     		cmp	r3, #8
- 782 0092 BFD9     		bls	.L34
- 783              	.LBE53:
- 784              	.LBE52:
-  60:External/LBPFeature/Src/lbp_feature.c ****   {
- 785              		.loc 1 60 73 discriminator 2 view .LVU227
- 786 0094 0EF1010E 		add	lr, lr, #1
- 787              	.LVL52:
-  60:External/LBPFeature/Src/lbp_feature.c ****   {
- 788              		.loc 1 60 73 is_stmt 0 discriminator 2 view .LVU228
- 789 0098 5FFA8EFE 		uxtb	lr, lr
- 790              	.LVL53:
- 791              	.L32:
-  60:External/LBPFeature/Src/lbp_feature.c ****   {
- 792              		.loc 1 60 45 is_stmt 1 discriminator 1 view .LVU229
- 793 009c AE45     		cmp	lr, r5
- 794 009e 08D2     		bcs	.L37
- 795              	.LBB56:
-  62:External/LBPFeature/Src/lbp_feature.c ****     lbp_feature_rectangle *current_scaled_rectangles =
- 796              		.loc 1 62 5 view .LVU230
-  62:External/LBPFeature/Src/lbp_feature.c ****     lbp_feature_rectangle *current_scaled_rectangles =
- 797              		.loc 1 62 33 is_stmt 0 view .LVU231
- 798 00a0 06EB8E03 		add	r3, r6, lr, lsl #2
-  62:External/LBPFeature/Src/lbp_feature.c ****     lbp_feature_rectangle *current_scaled_rectangles =
- 799              		.loc 1 62 11 view .LVU232
- 800 00a4 D3ED005A 		vldr.32	s11, [r3]
- 801              	.LVL54:
-  63:External/LBPFeature/Src/lbp_feature.c ****       self->scaled_rectangles[scale_index];
- 802              		.loc 1 63 5 is_stmt 1 view .LVU233
-  64:External/LBPFeature/Src/lbp_feature.c ****     
- 803              		.loc 1 64 11 is_stmt 0 view .LVU234
- 804 00a8 636A     		ldr	r3, [r4, #36]
-  63:External/LBPFeature/Src/lbp_feature.c ****       self->scaled_rectangles[scale_index];
- 805              		.loc 1 63 28 view .LVU235
- 806 00aa 53F82E00 		ldr	r0, [r3, lr, lsl #2]
- 807              	.LVL55:
-  66:External/LBPFeature/Src/lbp_feature.c ****       uint8_t rectangle_index = 0;
- 808              		.loc 1 66 5 is_stmt 1 view .LVU236
-ARM GAS  /tmp/ccgLfnz8.s 			page 22
+ 759              	.L34:
+  71:External/LBPFeature/Src/lbp_feature.c **** 
+ 760              		.loc 1 71 1 view .LVU217
+ 761 003e 70BD     		pop	{r4, r5, r6, pc}
+ 762              	.LVL46:
+ 763              	.L35:
+  70:External/LBPFeature/Src/lbp_feature.c **** }
+ 764              		.loc 1 70 29 discriminator 2 view .LVU218
+ 765 0040 B4F94C30 		ldrsh	r3, [r4, #76]
+ 766 0044 00EE103A 		vmov	s0, r3	@ int
+  70:External/LBPFeature/Src/lbp_feature.c **** }
+ 767              		.loc 1 70 23 discriminator 2 view .LVU219
+ 768 0048 B8EEC00A 		vcvt.f32.s32	s0, s0
+  70:External/LBPFeature/Src/lbp_feature.c **** }
+ 769              		.loc 1 70 23 view .LVU220
+ 770 004c F7E7     		b	.L34
+ 771              	.L39:
+ 772 004e 00BF     		.align	2
+ 773              	.L38:
+ 774 0050 00000000 		.word	scaled_rectangles.0
+ 775              		.cfi_endproc
+ 776              	.LFE2:
+ 778              		.section	.text.lbp_feature_destroy,"ax",%progbits
+ 779              		.align	1
+ 780              		.global	lbp_feature_destroy
+ 781              		.syntax unified
+ 782              		.thumb
+ 783              		.thumb_func
+ 785              	lbp_feature_destroy:
+ 786              	.LVL47:
+ 787              	.LFB6:
+ 192:External/LBPFeature/Src/lbp_feature.c **** }
+ 193:External/LBPFeature/Src/lbp_feature.c **** 
+ 194:External/LBPFeature/Src/lbp_feature.c **** void lbp_feature_destroy(lbp_feature *const self)
+ 195:External/LBPFeature/Src/lbp_feature.c **** {
+ 788              		.loc 1 195 1 is_stmt 1 view -0
+ 789              		.cfi_startproc
+ 790              		@ args = 0, pretend = 0, frame = 0
+ 791              		@ frame_needed = 0, uses_anonymous_args = 0
+ 792              		.loc 1 195 1 is_stmt 0 view .LVU222
+ 793 0000 38B5     		push	{r3, r4, r5, lr}
+ 794              	.LCFI7:
+ 795              		.cfi_def_cfa_offset 16
+ 796              		.cfi_offset 3, -16
+ 797              		.cfi_offset 4, -12
+ 798              		.cfi_offset 5, -8
+ 799              		.cfi_offset 14, -4
+ 196:External/LBPFeature/Src/lbp_feature.c ****   if (self->scaled_rectangles_amount == 0)
+ 800              		.loc 1 196 3 is_stmt 1 view .LVU223
+ 801              		.loc 1 196 11 is_stmt 0 view .LVU224
+ 802 0002 90F82830 		ldrb	r3, [r0, #40]	@ zero_extendqisi2
+ 803              		.loc 1 196 6 view .LVU225
+ 804 0006 9BB1     		cbz	r3, .L40
+ 805 0008 0546     		mov	r5, r0
+ 806              	.LBB53:
+ 197:External/LBPFeature/Src/lbp_feature.c ****     return;
+ 198:External/LBPFeature/Src/lbp_feature.c **** 
+ARM GAS  /tmp/cc7f15XE.s 			page 21
 
 
- 809              	.LBB55:
-  67:External/LBPFeature/Src/lbp_feature.c ****       rectangle_index < LBP_FEATURE_RECTANGLES_AMOUNT;
- 810              		.loc 1 67 7 view .LVU237
-  67:External/LBPFeature/Src/lbp_feature.c ****       rectangle_index < LBP_FEATURE_RECTANGLES_AMOUNT;
- 811              		.loc 1 67 15 is_stmt 0 view .LVU238
- 812 00ae 0023     		movs	r3, #0
-  66:External/LBPFeature/Src/lbp_feature.c ****       uint8_t rectangle_index = 0;
- 813              		.loc 1 66 5 view .LVU239
- 814 00b0 EEE7     		b	.L33
- 815              	.LVL56:
- 816              	.L37:
-  66:External/LBPFeature/Src/lbp_feature.c ****       uint8_t rectangle_index = 0;
- 817              		.loc 1 66 5 view .LVU240
- 818              	.LBE55:
- 819              	.LBE56:
- 820              	.LBE51:
-  83:External/LBPFeature/Src/lbp_feature.c **** 
- 821              		.loc 1 83 1 view .LVU241
- 822 00b2 02B0     		add	sp, sp, #8
- 823              	.LCFI7:
- 824              		.cfi_def_cfa_offset 16
- 825              		@ sp needed
- 826 00b4 70BD     		pop	{r4, r5, r6, pc}
-  83:External/LBPFeature/Src/lbp_feature.c **** 
- 827              		.loc 1 83 1 view .LVU242
- 828              		.cfi_endproc
- 829              	.LFE2:
- 831              		.section	.text.lbp_feature_calculate_vote,"ax",%progbits
- 832              		.align	1
- 833              		.global	lbp_feature_calculate_vote
- 834              		.syntax unified
- 835              		.thumb
- 836              		.thumb_func
- 838              	lbp_feature_calculate_vote:
- 839              	.LVL57:
- 840              	.LFB4:
- 111:External/LBPFeature/Src/lbp_feature.c ****   uint8_t score = lbp_feature_get_score(self, arguments);
- 841              		.loc 1 111 1 is_stmt 1 view -0
- 842              		.cfi_startproc
- 843              		@ args = 0, pretend = 0, frame = 0
- 844              		@ frame_needed = 0, uses_anonymous_args = 0
- 111:External/LBPFeature/Src/lbp_feature.c ****   uint8_t score = lbp_feature_get_score(self, arguments);
- 845              		.loc 1 111 1 is_stmt 0 view .LVU244
- 846 0000 10B5     		push	{r4, lr}
- 847              	.LCFI8:
- 848              		.cfi_def_cfa_offset 8
- 849              		.cfi_offset 4, -8
- 850              		.cfi_offset 14, -4
- 851 0002 0446     		mov	r4, r0
- 112:External/LBPFeature/Src/lbp_feature.c **** 
- 852              		.loc 1 112 3 is_stmt 1 view .LVU245
- 112:External/LBPFeature/Src/lbp_feature.c **** 
- 853              		.loc 1 112 19 is_stmt 0 view .LVU246
- 854 0004 FFF7FEFF 		bl	lbp_feature_get_score
- 855              	.LVL58:
- 114:External/LBPFeature/Src/lbp_feature.c ****     self->right_value : self->left_value;
- 856              		.loc 1 114 3 is_stmt 1 view .LVU247
-ARM GAS  /tmp/ccgLfnz8.s 			page 23
+ 199:External/LBPFeature/Src/lbp_feature.c ****   for (
+ 200:External/LBPFeature/Src/lbp_feature.c ****     uint8_t scaled_rectangles_index = 0;
+ 807              		.loc 1 200 13 view .LVU226
+ 808 000a 0024     		movs	r4, #0
+ 809 000c 06E0     		b	.L42
+ 810              	.LVL48:
+ 811              	.L43:
+ 201:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles_index < self->scaled_rectangles_amount;
+ 202:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles_index++
+ 203:External/LBPFeature/Src/lbp_feature.c ****   )
+ 204:External/LBPFeature/Src/lbp_feature.c ****   {
+ 205:External/LBPFeature/Src/lbp_feature.c ****     free(self->scaled_rectangles[scaled_rectangles_index]);
+ 812              		.loc 1 205 5 is_stmt 1 view .LVU227
+ 813              		.loc 1 205 14 is_stmt 0 view .LVU228
+ 814 000e 6B6A     		ldr	r3, [r5, #36]
+ 815              		.loc 1 205 5 view .LVU229
+ 816 0010 53F82400 		ldr	r0, [r3, r4, lsl #2]
+ 817 0014 FFF7FEFF 		bl	free
+ 818              	.LVL49:
+ 202:External/LBPFeature/Src/lbp_feature.c ****   )
+ 819              		.loc 1 202 28 is_stmt 1 view .LVU230
+ 820 0018 0134     		adds	r4, r4, #1
+ 821              	.LVL50:
+ 202:External/LBPFeature/Src/lbp_feature.c ****   )
+ 822              		.loc 1 202 28 is_stmt 0 view .LVU231
+ 823 001a E4B2     		uxtb	r4, r4
+ 824              	.LVL51:
+ 825              	.L42:
+ 201:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles_index < self->scaled_rectangles_amount;
+ 826              		.loc 1 201 29 is_stmt 1 view .LVU232
+ 201:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles_index < self->scaled_rectangles_amount;
+ 827              		.loc 1 201 35 is_stmt 0 view .LVU233
+ 828 001c 95F82830 		ldrb	r3, [r5, #40]	@ zero_extendqisi2
+ 201:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles_index < self->scaled_rectangles_amount;
+ 829              		.loc 1 201 29 view .LVU234
+ 830 0020 A342     		cmp	r3, r4
+ 831 0022 F4D8     		bhi	.L43
+ 832              	.LBE53:
+ 206:External/LBPFeature/Src/lbp_feature.c ****   }
+ 207:External/LBPFeature/Src/lbp_feature.c ****   free(self->scaled_rectangles);
+ 833              		.loc 1 207 3 is_stmt 1 view .LVU235
+ 834 0024 686A     		ldr	r0, [r5, #36]
+ 835 0026 FFF7FEFF 		bl	free
+ 836              	.LVL52:
+ 208:External/LBPFeature/Src/lbp_feature.c **** 
+ 209:External/LBPFeature/Src/lbp_feature.c ****   self->scaled_rectangles_amount = 0;
+ 837              		.loc 1 209 3 view .LVU236
+ 838              		.loc 1 209 34 is_stmt 0 view .LVU237
+ 839 002a 0023     		movs	r3, #0
+ 840 002c 85F82830 		strb	r3, [r5, #40]
+ 841              	.LVL53:
+ 842              	.L40:
+ 210:External/LBPFeature/Src/lbp_feature.c **** }
+ 843              		.loc 1 210 1 view .LVU238
+ 844 0030 38BD     		pop	{r3, r4, r5, pc}
+ 845              		.cfi_endproc
+ 846              	.LFE6:
+ARM GAS  /tmp/cc7f15XE.s 			page 22
 
 
- 114:External/LBPFeature/Src/lbp_feature.c ****     self->right_value : self->left_value;
- 857              		.loc 1 114 29 is_stmt 0 view .LVU248
- 858 0008 C0F34713 		ubfx	r3, r0, #5, #8
- 114:External/LBPFeature/Src/lbp_feature.c ****     self->right_value : self->left_value;
- 859              		.loc 1 114 22 view .LVU249
- 860 000c 0A33     		adds	r3, r3, #10
- 861 000e 04EB8303 		add	r3, r4, r3, lsl #2
- 862 0012 5A68     		ldr	r2, [r3, #4]
- 114:External/LBPFeature/Src/lbp_feature.c ****     self->right_value : self->left_value;
- 863              		.loc 1 114 50 view .LVU250
- 864 0014 00F01F00 		and	r0, r0, #31
- 865              	.LVL59:
- 114:External/LBPFeature/Src/lbp_feature.c ****     self->right_value : self->left_value;
- 866              		.loc 1 114 40 view .LVU251
- 867 0018 0123     		movs	r3, #1
- 868 001a 8340     		lsls	r3, r3, r0
- 115:External/LBPFeature/Src/lbp_feature.c **** }
- 869              		.loc 1 115 23 view .LVU252
- 870 001c 1A42     		tst	r2, r3
- 871 001e 06D0     		beq	.L39
- 115:External/LBPFeature/Src/lbp_feature.c **** }
- 872              		.loc 1 115 9 discriminator 1 view .LVU253
- 873 0020 B4F94E30 		ldrsh	r3, [r4, #78]
- 874 0024 00EE103A 		vmov	s0, r3	@ int
- 115:External/LBPFeature/Src/lbp_feature.c **** }
- 875              		.loc 1 115 23 discriminator 1 view .LVU254
- 876 0028 B8EEC00A 		vcvt.f32.s32	s0, s0
- 877              	.L38:
- 116:External/LBPFeature/Src/lbp_feature.c **** 
- 878              		.loc 1 116 1 view .LVU255
- 879 002c 10BD     		pop	{r4, pc}
- 880              	.LVL60:
- 881              	.L39:
- 115:External/LBPFeature/Src/lbp_feature.c **** }
- 882              		.loc 1 115 29 discriminator 2 view .LVU256
- 883 002e B4F94C30 		ldrsh	r3, [r4, #76]
- 884 0032 00EE103A 		vmov	s0, r3	@ int
- 115:External/LBPFeature/Src/lbp_feature.c **** }
- 885              		.loc 1 115 23 discriminator 2 view .LVU257
- 886 0036 B8EEC00A 		vcvt.f32.s32	s0, s0
- 115:External/LBPFeature/Src/lbp_feature.c **** }
- 887              		.loc 1 115 23 view .LVU258
- 888 003a F7E7     		b	.L38
- 889              		.cfi_endproc
- 890              	.LFE4:
- 892              		.section	.text.lbp_feature_destroy,"ax",%progbits
- 893              		.align	1
- 894              		.global	lbp_feature_destroy
- 895              		.syntax unified
- 896              		.thumb
- 897              		.thumb_func
- 899              	lbp_feature_destroy:
- 900              	.LVL61:
- 901              	.LFB7:
- 220:External/LBPFeature/Src/lbp_feature.c **** }
- 221:External/LBPFeature/Src/lbp_feature.c **** 
- 222:External/LBPFeature/Src/lbp_feature.c **** void lbp_feature_destroy(lbp_feature *const self)
-ARM GAS  /tmp/ccgLfnz8.s 			page 24
-
-
- 223:External/LBPFeature/Src/lbp_feature.c **** {
- 902              		.loc 1 223 1 is_stmt 1 view -0
- 903              		.cfi_startproc
- 904              		@ args = 0, pretend = 0, frame = 0
- 905              		@ frame_needed = 0, uses_anonymous_args = 0
- 906              		.loc 1 223 1 is_stmt 0 view .LVU260
- 907 0000 38B5     		push	{r3, r4, r5, lr}
- 908              	.LCFI9:
- 909              		.cfi_def_cfa_offset 16
- 910              		.cfi_offset 3, -16
- 911              		.cfi_offset 4, -12
- 912              		.cfi_offset 5, -8
- 913              		.cfi_offset 14, -4
- 224:External/LBPFeature/Src/lbp_feature.c ****   if (self->scaled_rectangles_amount == 0)
- 914              		.loc 1 224 3 is_stmt 1 view .LVU261
- 915              		.loc 1 224 11 is_stmt 0 view .LVU262
- 916 0002 90F82830 		ldrb	r3, [r0, #40]	@ zero_extendqisi2
- 917              		.loc 1 224 6 view .LVU263
- 918 0006 9BB1     		cbz	r3, .L42
- 919 0008 0546     		mov	r5, r0
- 920              	.LBB57:
- 225:External/LBPFeature/Src/lbp_feature.c ****     return;
- 226:External/LBPFeature/Src/lbp_feature.c **** 
- 227:External/LBPFeature/Src/lbp_feature.c ****   for (
- 228:External/LBPFeature/Src/lbp_feature.c ****     uint8_t scaled_rectangles_index = 0;
- 921              		.loc 1 228 13 view .LVU264
- 922 000a 0024     		movs	r4, #0
- 923 000c 06E0     		b	.L44
- 924              	.LVL62:
- 925              	.L45:
- 229:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles_index < self->scaled_rectangles_amount;
- 230:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles_index++
- 231:External/LBPFeature/Src/lbp_feature.c ****   )
- 232:External/LBPFeature/Src/lbp_feature.c ****   {
- 233:External/LBPFeature/Src/lbp_feature.c ****     free(self->scaled_rectangles[scaled_rectangles_index]);
- 926              		.loc 1 233 5 is_stmt 1 view .LVU265
- 927              		.loc 1 233 14 is_stmt 0 view .LVU266
- 928 000e 6B6A     		ldr	r3, [r5, #36]
- 929              		.loc 1 233 5 view .LVU267
- 930 0010 53F82400 		ldr	r0, [r3, r4, lsl #2]
- 931 0014 FFF7FEFF 		bl	free
- 932              	.LVL63:
- 230:External/LBPFeature/Src/lbp_feature.c ****   )
- 933              		.loc 1 230 28 is_stmt 1 view .LVU268
- 934 0018 0134     		adds	r4, r4, #1
- 935              	.LVL64:
- 230:External/LBPFeature/Src/lbp_feature.c ****   )
- 936              		.loc 1 230 28 is_stmt 0 view .LVU269
- 937 001a E4B2     		uxtb	r4, r4
- 938              	.LVL65:
- 939              	.L44:
- 229:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles_index < self->scaled_rectangles_amount;
- 940              		.loc 1 229 29 is_stmt 1 view .LVU270
- 229:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles_index < self->scaled_rectangles_amount;
- 941              		.loc 1 229 35 is_stmt 0 view .LVU271
- 942 001c 95F82830 		ldrb	r3, [r5, #40]	@ zero_extendqisi2
- 229:External/LBPFeature/Src/lbp_feature.c ****     scaled_rectangles_index < self->scaled_rectangles_amount;
-ARM GAS  /tmp/ccgLfnz8.s 			page 25
-
-
- 943              		.loc 1 229 29 view .LVU272
- 944 0020 A342     		cmp	r3, r4
- 945 0022 F4D8     		bhi	.L45
- 946              	.LBE57:
- 234:External/LBPFeature/Src/lbp_feature.c ****   }
- 235:External/LBPFeature/Src/lbp_feature.c ****   free(self->scaled_rectangles);
- 947              		.loc 1 235 3 is_stmt 1 view .LVU273
- 948 0024 686A     		ldr	r0, [r5, #36]
- 949 0026 FFF7FEFF 		bl	free
- 950              	.LVL66:
- 236:External/LBPFeature/Src/lbp_feature.c **** 
- 237:External/LBPFeature/Src/lbp_feature.c ****   self->scaled_rectangles_amount = 0;
- 951              		.loc 1 237 3 view .LVU274
- 952              		.loc 1 237 34 is_stmt 0 view .LVU275
- 953 002a 0023     		movs	r3, #0
- 954 002c 85F82830 		strb	r3, [r5, #40]
- 955              	.LVL67:
- 956              	.L42:
- 238:External/LBPFeature/Src/lbp_feature.c **** }
- 957              		.loc 1 238 1 view .LVU276
- 958 0030 38BD     		pop	{r3, r4, r5, pc}
- 959              		.cfi_endproc
- 960              	.LFE7:
- 962              		.section	.bss.integral_image_handler,"aw",%nobits
- 963              		.align	2
- 966              	integral_image_handler:
- 967 0000 00000000 		.space	4
- 968              		.text
- 969              	.Letext0:
- 970              		.file 2 "/usr/src/arm-gnu-toolchain-13.3/arm-none-eabi/include/machine/_default_types.h"
- 971              		.file 3 "/usr/src/arm-gnu-toolchain-13.3/arm-none-eabi/include/sys/_stdint.h"
- 972              		.file 4 "External/LBPFeature/Inc/lbp_feature_defs.h"
- 973              		.file 5 "/usr/src/arm-gnu-toolchain-13.3/lib/gcc/arm-none-eabi/13.3.1/include/stddef.h"
- 974              		.file 6 "/usr/src/arm-gnu-toolchain-13.3/arm-none-eabi/include/stdlib.h"
-ARM GAS  /tmp/ccgLfnz8.s 			page 26
+ 848              		.section	.bss.scaled_rectangles.0,"aw",%nobits
+ 849              		.align	2
+ 852              	scaled_rectangles.0:
+ 853 0000 00000000 		.space	36
+ 853      00000000 
+ 853      00000000 
+ 853      00000000 
+ 853      00000000 
+ 854              		.section	.bss.integral_image_handler,"aw",%nobits
+ 855              		.align	2
+ 858              	integral_image_handler:
+ 859 0000 00000000 		.space	4
+ 860              		.text
+ 861              	.Letext0:
+ 862              		.file 2 "/usr/src/arm-gnu-toolchain-13.3/arm-none-eabi/include/machine/_default_types.h"
+ 863              		.file 3 "/usr/src/arm-gnu-toolchain-13.3/arm-none-eabi/include/sys/_stdint.h"
+ 864              		.file 4 "External/LBPFeature/Inc/lbp_feature_defs.h"
+ 865              		.file 5 "/usr/src/arm-gnu-toolchain-13.3/arm-none-eabi/include/stdlib.h"
+ARM GAS  /tmp/cc7f15XE.s 			page 23
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 lbp_feature.c
-     /tmp/ccgLfnz8.s:21     .text.lbp_feature_get_score:00000000 $t
-     /tmp/ccgLfnz8.s:26     .text.lbp_feature_get_score:00000000 lbp_feature_get_score
-     /tmp/ccgLfnz8.s:546    .text.lbp_feature_get_score:000001f0 $d
-     /tmp/ccgLfnz8.s:966    .bss.integral_image_handler:00000000 integral_image_handler
-     /tmp/ccgLfnz8.s:553    .text.lbp_feature_allocate_scaled_rectangles:00000000 $t
-     /tmp/ccgLfnz8.s:558    .text.lbp_feature_allocate_scaled_rectangles:00000000 lbp_feature_allocate_scaled_rectangles
-     /tmp/ccgLfnz8.s:630    .text.lbp_feature_set_integral_image_handler:00000000 $t
-     /tmp/ccgLfnz8.s:636    .text.lbp_feature_set_integral_image_handler:00000000 lbp_feature_set_integral_image_handler
-     /tmp/ccgLfnz8.s:653    .text.lbp_feature_set_integral_image_handler:00000008 $d
-     /tmp/ccgLfnz8.s:658    .text.lbp_feature_reset_integral_image_handler:00000000 $t
-     /tmp/ccgLfnz8.s:664    .text.lbp_feature_reset_integral_image_handler:00000000 lbp_feature_reset_integral_image_handler
-     /tmp/ccgLfnz8.s:681    .text.lbp_feature_reset_integral_image_handler:00000008 $d
-     /tmp/ccgLfnz8.s:686    .text.lbp_feature_generate_scaled_rectangles:00000000 $t
-     /tmp/ccgLfnz8.s:692    .text.lbp_feature_generate_scaled_rectangles:00000000 lbp_feature_generate_scaled_rectangles
-     /tmp/ccgLfnz8.s:832    .text.lbp_feature_calculate_vote:00000000 $t
-     /tmp/ccgLfnz8.s:838    .text.lbp_feature_calculate_vote:00000000 lbp_feature_calculate_vote
-     /tmp/ccgLfnz8.s:893    .text.lbp_feature_destroy:00000000 $t
-     /tmp/ccgLfnz8.s:899    .text.lbp_feature_destroy:00000000 lbp_feature_destroy
-     /tmp/ccgLfnz8.s:963    .bss.integral_image_handler:00000000 $d
+     /tmp/cc7f15XE.s:21     .text.lbp_feature_generate_scaled_rectangles:00000000 $t
+     /tmp/cc7f15XE.s:26     .text.lbp_feature_generate_scaled_rectangles:00000000 lbp_feature_generate_scaled_rectangles
+     /tmp/cc7f15XE.s:119    .text.lbp_feature_get_score:00000000 $t
+     /tmp/cc7f15XE.s:124    .text.lbp_feature_get_score:00000000 lbp_feature_get_score
+     /tmp/cc7f15XE.s:637    .text.lbp_feature_get_score:000001ec $d
+     /tmp/cc7f15XE.s:858    .bss.integral_image_handler:00000000 integral_image_handler
+     /tmp/cc7f15XE.s:644    .text.lbp_feature_set_integral_image_handler:00000000 $t
+     /tmp/cc7f15XE.s:650    .text.lbp_feature_set_integral_image_handler:00000000 lbp_feature_set_integral_image_handler
+     /tmp/cc7f15XE.s:667    .text.lbp_feature_set_integral_image_handler:00000008 $d
+     /tmp/cc7f15XE.s:672    .text.lbp_feature_reset_integral_image_handler:00000000 $t
+     /tmp/cc7f15XE.s:678    .text.lbp_feature_reset_integral_image_handler:00000000 lbp_feature_reset_integral_image_handler
+     /tmp/cc7f15XE.s:695    .text.lbp_feature_reset_integral_image_handler:00000008 $d
+     /tmp/cc7f15XE.s:700    .text.lbp_feature_calculate_vote:00000000 $t
+     /tmp/cc7f15XE.s:706    .text.lbp_feature_calculate_vote:00000000 lbp_feature_calculate_vote
+     /tmp/cc7f15XE.s:774    .text.lbp_feature_calculate_vote:00000050 $d
+     /tmp/cc7f15XE.s:852    .bss.scaled_rectangles.0:00000000 scaled_rectangles.0
+     /tmp/cc7f15XE.s:779    .text.lbp_feature_destroy:00000000 $t
+     /tmp/cc7f15XE.s:785    .text.lbp_feature_destroy:00000000 lbp_feature_destroy
+     /tmp/cc7f15XE.s:849    .bss.scaled_rectangles.0:00000000 $d
+     /tmp/cc7f15XE.s:855    .bss.integral_image_handler:00000000 $d
 
 UNDEFINED SYMBOLS
-calloc
 free

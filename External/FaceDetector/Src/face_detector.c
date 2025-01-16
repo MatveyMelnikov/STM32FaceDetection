@@ -34,7 +34,7 @@ static float *face_detector_calculate_scales(
   const uint8_t image_size_x,
   const uint8_t image_size_y
 );
-static void face_detector_calculate_scaled_features(void);
+// static void face_detector_calculate_scaled_features(void);
 static void face_detector_detect_faces(
   const face_detector_arguments *const arguments
 );
@@ -96,13 +96,12 @@ void face_detector_detect(
     arguments->image_size_x,
     arguments->image_size_y
   );
-  face_detector_calculate_scaled_features();
 
   face_detector_detect_faces(arguments);
   face_detector_merge_faces_areas(arguments->min_neighbours);
 
   scales_amount = 0;
-  integral_image_destroy();
+  //integral_image_destroy();
 }
 
 static void face_detector_reset_faces_arrays()
@@ -141,18 +140,6 @@ static float *face_detector_calculate_scales(
   return scales;
 }
 
-static void face_detector_calculate_scaled_features()
-{
-  for (uint8_t i = 0; i < current_stages_amount; i++)
-  {
-    stage_handler.calculate_scaled_features(
-      &stages[i],
-      scales,
-      scales_amount
-    );
-  }
-}
-
 static void face_detector_detect_faces(
   const face_detector_arguments *const arguments
 )
@@ -163,7 +150,7 @@ static void face_detector_detect_faces(
   {
     uint8_t feature_size = scales[scale_index] * FACE_DETECTOR_FEATURE_SIZE;
     uint8_t step = feature_size * arguments->position_increment;
-    feature_arguments.scale_index = scale_index;
+    feature_arguments.scale = scales[scale_index];
 
     for (
       feature_arguments.offset_x = 0;
@@ -191,12 +178,20 @@ inline static void face_detector_detect_face_window(
   uint8_t feature_size
 )
 {
-  for (uint8_t i = 0; i < current_stages_amount; i++)
+  for (
+    uint8_t stage_index = 0;
+    stage_index < current_stages_amount;
+    stage_index++
+  )
   {
     if (
-      !stage_handler.calculate_prediction(&stages[i], feature_arguments)
-    )
+      !stage_handler.calculate_prediction(
+        &stages[stage_index],
+        feature_arguments
+      )
+    ) {
       return;
+    }
   }
 
   if (faces_amount >= FACE_DETECTOR_MAX_FACE_AREAS)

@@ -7,13 +7,13 @@
 // Static variables ----------------------------------------------------------
 
 static uint16_t *integral_image = NULL;
-static void (*fill_line)(
-	FILL_LINE_FUNCTOR,
-	const uint8_t *const,
-	integral_image_size
-);
 static integral_image_size image_size = { 0 };
 static integral_image_size source_image_size = { 0 };
+static void (*fill_image)(
+  FILL_LINE_FUNCTOR,
+  const uint8_t *const,
+  integral_image_size
+);
 
 // Defines -------------------------------------------------------------------
 
@@ -44,12 +44,12 @@ void integral_image_create(integral_image_size size, FILL_IMAGE_FUNCTOR)
   integral_image = (uint16_t*)malloc(
     (image_size.width * image_size.height) * sizeof(uint16_t)
   );
-	fill_line = fill_integral_image_line;
+  fill_image = fill_integral_image_line;
 }
 
-void integral_image_set(const uint8_t *const image_source)
+void integral_image_set(const uint8_t *const image)
 {
-  fill_line(integral_image_fill_line, image_source, source_image_size);
+  fill_image(integral_image_fill_line, image, source_image_size);
 }
 
 static void integral_image_fill_line(
@@ -107,8 +107,8 @@ static void integral_image_calculate_other_elements()
 		for (uint16_t y = 1; y < image_size.height; y++)
 		{
 			GET_PIXEL(integral_image, x, y) +=
-        GET_PIXEL(integral_image, x - 1, y) +
-        GET_PIXEL(integral_image, x, y - 1) -
+				GET_PIXEL(integral_image, x - 1, y) +
+				GET_PIXEL(integral_image, x, y - 1) -
 				GET_PIXEL(integral_image, x - 1, y - 1);
 		}
 	}
@@ -139,8 +139,8 @@ const uint16_t integral_image_get_rectangle(
 		rectangle->bottom_right_corner.y
 	);
 
-  uint16_t res = bottom_right_corner + top_left_corner -
-		top_right_corner - bottom_left_corner;
+	uint16_t res = bottom_right_corner + top_left_corner -
+			top_right_corner - bottom_left_corner;
 
 	return res;
 }

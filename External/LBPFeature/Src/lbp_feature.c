@@ -17,13 +17,13 @@ static lbp_feature_integral_image_handler integral_image_handler;
 
 // Static prototypes ---------------------------------------------------------
 
-static void lbp_feature_allocate_scaled_rectangles(
+static void lbp_feature_generate_scaled_rectangles(
   lbp_feature *const self,
-  const float *const scales,
-  const uint8_t scales_amount
+  lbp_feature_rectangle *const scaled_rectangles,
+  const float scale
 );
 static uint8_t lbp_feature_get_score(
-  lbp_feature *const self,
+  const lbp_feature_rectangle *const scaled_rectangles,
   const lbp_feature_arguments *const arguments
 );
 __attribute__((always_inline))
@@ -49,80 +49,52 @@ void lbp_feature_reset_integral_image_handler()
   integral_image_handler = (lbp_feature_integral_image_handler){ 0 };
 }
 
-void lbp_feature_generate_scaled_rectangles(
-  lbp_feature *const self,
-  const float *const scales,
-  const uint8_t scales_amount
-)
-{
-  lbp_feature_allocate_scaled_rectangles(self, scales, scales_amount);
-
-  for (uint8_t scale_index = 0; scale_index < scales_amount; scale_index++)
-  {
-    float current_scale = scales[scale_index];
-    lbp_feature_rectangle *current_scaled_rectangles =
-      self->scaled_rectangles[scale_index];
-    
-    for (
-      uint8_t rectangle_index = 0;
-      rectangle_index < LBP_FEATURE_RECTANGLES_AMOUNT;
-      rectangle_index++
-    )
-    {
-      lbp_feature_rectangle current_rectangle =
-        self->rectangles[rectangle_index];
-
-      current_scaled_rectangles[rectangle_index] = (lbp_feature_rectangle) {
-        .x = current_rectangle.x * current_scale,
-        .y = current_rectangle.y * current_scale,
-        .width = current_rectangle.width * current_scale,
-        .height = current_rectangle.height * current_scale
-      };
-    }
-  }
-}
-
-static void lbp_feature_allocate_scaled_rectangles(
-  lbp_feature *const self,
-  const float *const scales,
-  const uint8_t scales_amount
-)
-{
-  self->scaled_rectangles = (lbp_feature_rectangle **)calloc(
-    scales_amount,
-    sizeof(void*)
-  );
-
-  for (uint8_t i = 0; i < scales_amount; i++)
-  {
-    self->scaled_rectangles[i] = calloc(
-      LBP_FEATURE_RECTANGLES_AMOUNT,
-      sizeof(lbp_feature_rectangle)
-    );
-  }
-
-  self->scaled_rectangles_amount = scales_amount;
-}
-
 float lbp_feature_calculate_vote(
   lbp_feature *const self,
   const lbp_feature_arguments *const arguments
 )
 {
-  uint8_t score = lbp_feature_get_score(self, arguments);
+  static lbp_feature_rectangle scaled_rectangles[LBP_FEATURE_RECTANGLES_AMOUNT];
+  lbp_feature_generate_scaled_rectangles(
+    self,
+    (lbp_feature_rectangle*)scaled_rectangles,
+    arguments->scale
+  );
+
+  uint8_t score = lbp_feature_get_score(
+    (lbp_feature_rectangle*)scaled_rectangles,
+    arguments
+  );
 
   return (self->masks[score >> 5] & (1 << (score & 31))) ?
     self->right_value : self->left_value;
 }
 
-static uint8_t lbp_feature_get_score(
+static void lbp_feature_generate_scaled_rectangles(
   lbp_feature *const self,
+  lbp_feature_rectangle *const scaled_rectangles,
+  const float scale
+)
+{
+  for (uint8_t i = 0; i < LBP_FEATURE_RECTANGLES_AMOUNT; i++)
+  {
+    lbp_feature_rectangle current_rectangle = self->rectangles[i];
+
+    scaled_rectangles[i] = (lbp_feature_rectangle) {
+      .x = current_rectangle.x * scale,
+      .y = current_rectangle.y * scale,
+      .width = current_rectangle.width * scale,
+      .height = current_rectangle.height * scale
+    };
+  }
+}
+
+static uint8_t lbp_feature_get_score(
+  const lbp_feature_rectangle *const scaled_rectangles,
   const lbp_feature_arguments *const arguments
 )
 {
   uint8_t score = 0;
-  const lbp_feature_rectangle *const scaled_rectangles = 
-    self->scaled_rectangles[arguments->scale_index];
   
   lbp_feature_rectangle center_rect = GET_RECT_WITH_OFFSET(
     scaled_rectangles[LBP_FEATURE_RECT_CENTER],
